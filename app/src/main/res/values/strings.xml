@@ -1,7 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">Exclave</string>
-    <string name="app_desc">The universal proxy toolchain for Android, written in Kotlin.</string>
+    <!-- Location of UnitaVPN Strings <START>-->
+    <!-- VPN -->
+    <string name="facebook_app_id">266286379591311</string>
+    <string name="fb_login_protocol_scheme">fb266286379591311</string>
+    <string name="facebook_client_token">c707fb6a5daadbedbb4b1cb77b566de0</string>
+    <string name="unita_vpn">Unita VPN</string>
+    <string name="plus_thirty_minutes">+30 min</string>
+    <string name="dashboard_connect">Connect</string>
+    <string name="premium">Premium</string>
+    <string name="ping">Ping</string>
+    <string name="preferences">Preferences</string>
+    <string name="general">General</string>
+    <string name="account">Account</string>
+    <string name="comment">Comment</string>
+    <string name="unita_vpn_telegram">Telegram</string>
+    <string name="about">About</string>
+    <string name="Privacy_Policy">Privacy Policy</string>
+    <string name="Terms_of_Service">Terms of Service</string>
+    <string name="ultra_fast_connection_speed">Ultra-fast connection speed</string>
+    <string name="access_to_premium_virtual_locations">Access to premium virtual locations</string>
+    <string name="ad_free_experience">Ad-free experience</string>
+    <string name="no_time_limit">No time limit</string>
+    <string name="thirty_days">30 Days</string>
+    <string name="ninety_days">90 Days</string>
+    <string name="One_hundred_and_eighty_days">180 Days</string>
+    <string name="Three_hundred_and_sixty_five_days">365 Days</string>
+    <string name="verify">Verify</string>
+    <string name="verifying">Verifying…</string>
+    <string name="verify_code">Verify Code:</string>
+    <string name="enter_your_verify_code">Enter Your Verify Code</string>
+    <string name="resend_verify_code">Resend Verify Code</string>
+    <string name="resending_verify_code">Resending Verify Code…</string>
+    <string name="pay">PAY</string>
+    <string name="register">Register</string>
+    <string name="Registering">Registering…</string>
+    <string name="Checking">Checking…</string>
+    <string name="update_now">Update Now</string>
+    <string name="email">Email:</string>
+    <string name="enter_your_email">Enter Your Email</string>
+    <string name="password_">Password:</string>
+    <string name="enter_your_password">Enter Your Password</string>
+    <string name="already_have_account_login">Already have account? login</string>
+    <string name="or_register_with">Or Register With</string>
+    <string name="facebook">Facebook</string>
+    <string name="google">Google</string>
+    <string name="login">Login</string>
+    <string name="Logging_in">Logging in…</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="new_user_signup">New User? Signup</string>
+    <string name="or_login_with">Or Login With</string>
+    <string name="welcome">Welcome\nto</string>
+    <string name="welcome_title">A unique experience of\nspeed and security</string>
+    <string name="info">Info</string>
+    <string name="plan">Plan</string>
+    <string name="expiration_date">Expiration date</string>
+    <string name="dataleft">DataLeft</string>
+    <string name="title">Title</string>
+    <string name="enter_your_title">Enter your title</string>
+    <string name="message">Message</string>
+    <string name="enter_your_message">Enter your Message</string>
+    <string name="send">Send</string>
+    <string name="exit_account">Exit Account</string>
+    <string name="get_more_data">Get more data</string>
+    <string name="connect_state">Connect</string>
+    <string name="connected_state">Connected</string>
+    <string name="connecting_state">Connecting…</string>
+    <string name="Try_Again">Try Again</string>
+
+    <!-- Location of UnitaVPN Strings <END>-->
+    <string name="app_name" translatable="false">UnitaVPN</string>
+    <string name="app_desc">Browse Privately,Access Globally</string>
     <string name="project">Project</string>
     <string name="github">Source code</string>
     <string name="app_version">Version</string>
