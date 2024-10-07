@@ -282,5 +282,18 @@
 
     <color name="fab_color_progress">@color/material_light_black</color>
 
+    <!-- Location of UnitaVPN Colors <START> -->
+    <color name="purple">#800080</color>
+    <color name="navyBlue">#18222E</color>
+    <color name="lightNavyBlue">#192533</color>
+    <color name="darkGray">#2B3340</color>
+    <color name="transparentGray">#4D2B3340</color>
+    <color name="lightGray">#8F939E</color>
+    <color name="Blue">#055C9D</color>
+    <color name="lightBlue">#12aeef</color>
+    <color name="UnitaYellow">#ffd006</color>
+    <color name="red">#FF0000</color>
+    <color name="darkPurple">#11001A</color>
+    <!-- Location of UnitaVPN Colors <END> -->
 
 </resources>

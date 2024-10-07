@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/Geography"
+        android:title="Geography" />
+    <item
+        android:id="@+id/Alphabet"
+        android:title="Alphabet" />
+    <item
+        android:id="@+id/Latency"
+        android:title="Latency" />
+</menu>
