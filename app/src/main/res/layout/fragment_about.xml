@@ -1,0 +1,388 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/navyBlue"
+    tools:context=".vpn.nav.GeneralFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/generalLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="40dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="UseCompoundDrawables">
+
+            <ImageView
+                android:id="@+id/ivAboutIconAngle"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_angle_circle_left" />
+
+            <TextView
+                android:id="@+id/tvPreferences"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:fontFamily="@font/museo_san_rounded900"
+                android:gravity="center"
+                android:text="About"
+                android:textColor="@color/white"
+                android:textSize="22sp" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/locationLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/background_nav_item"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:padding="12dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/generalLayout">
+
+            <ImageView
+                android:id="@+id/iconGeneral"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_weight="1"
+                android:src="@drawable/ic_location_order" />
+
+            <TextView
+                android:id="@+id/tvGeneralTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_weight="2"
+                android:fontFamily="@font/museo_san_rounded700"
+                android:text="Location Order"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tvGeneral"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_weight="20"
+                android:fontFamily="@font/museo_san_rounded700"
+                android:gravity="end"
+                android:text="Geography"
+                android:textColor="@color/lightGray"
+                android:textStyle="normal"
+                android:textSize="14sp" />
+
+            <ImageView
+                android:id="@+id/angelGerenal"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:src="@drawable/ic_angle_small_down" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvGeneralInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:fontFamily="@font/museo_san_rounded700"
+            android:background="@drawable/background_nav_item_info"
+            android:text="Arange the Location List in ascending order of the alphabet, geography or latency."
+            android:padding="10dp"
+            android:justificationMode="inter_word"
+            android:gravity="fill_horizontal"
+            android:textColor="@color/lightGray"
+            android:textSize="12sp"
+            app:layout_constraintTop_toBottomOf="@+id/locationLayout"
+            tools:layout_editor_absoluteX="97dp" />
+
+        <LinearLayout
+            android:id="@+id/DisplaylatencyLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/background_nav_item"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:padding="12dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvGeneralInfo">
+
+            <ImageView
+                android:id="@+id/iconDisplaylatency"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_weight="1"
+                android:src="@drawable/ic_latency" />
+
+            <TextView
+                android:id="@+id/tvDisplaylatencyTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_weight="2"
+                android:fontFamily="@font/museo_san_rounded700"
+                android:text="Display Latency"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tvDisplaylatency"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_weight="20"
+                android:fontFamily="@font/museo_san_rounded700"
+                android:gravity="end"
+                android:text="Ms"
+                android:textColor="@color/lightGray"
+                android:textStyle="normal"
+                android:textSize="14sp" />
+
+            <ImageView
+                android:id="@+id/angelDisplaylatency"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:src="@drawable/ic_angle_small_down" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvDisplaylatencyInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:fontFamily="@font/museo_san_rounded700"
+            android:background="@drawable/background_nav_item_info"
+            android:text="Display latency as signal strength bar or in milliseconds."
+            android:padding="10dp"
+            android:justificationMode="none"
+            android:gravity="fill_horizontal"
+            android:textColor="@color/lightGray"
+            android:textSize="12sp"
+            app:layout_constraintTop_toBottomOf="@+id/DisplaylatencyLayout"
+            tools:layout_editor_absoluteX="97dp" />
+
+        <LinearLayout
+            android:id="@+id/LanguageLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/background_nav_item"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:padding="12dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvDisplaylatencyInfo">
+
+            <ImageView
+                android:id="@+id/iconLanguage"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_weight="1"
+                android:src="@drawable/ic_language" />
+
+            <TextView
+                android:id="@+id/tvLanguageLayoutTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_weight="2"
+                android:fontFamily="@font/museo_san_rounded700"
+                android:text="Language"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tvLanguage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_weight="20"
+                android:fontFamily="@font/museo_san_rounded700"
+                android:gravity="end"
+                android:text="English"
+                android:textColor="@color/lightGray"
+                android:textStyle="normal"
+                android:textSize="14sp" />
+
+            <ImageView
+                android:id="@+id/angelLanguage"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:src="@drawable/ic_angle_small_down" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvLanguageInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:fontFamily="@font/museo_san_rounded700"
+            android:background="@drawable/background_nav_item_info"
+            android:text="Localize supported language."
+            android:padding="10dp"
+            android:justificationMode="inter_word"
+            android:gravity="fill_horizontal"
+            android:textColor="@color/lightGray"
+            android:textSize="12sp"
+            app:layout_constraintTop_toBottomOf="@+id/LanguageLayout"
+            tools:layout_editor_absoluteX="97dp" />
+
+        <LinearLayout
+            android:id="@+id/AppearanceLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/background_nav_item"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:padding="12dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvLanguageInfo">
+
+            <ImageView
+                android:id="@+id/iconAppearance"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_weight="1"
+                android:src="@drawable/ic_appearance" />
+
+            <TextView
+                android:id="@+id/tvAppearanceTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_weight="2"
+                android:fontFamily="@font/museo_san_rounded700"
+                android:text="Appearance"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tvAppearance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_weight="20"
+                android:fontFamily="@font/museo_san_rounded700"
+                android:gravity="end"
+                android:text="Dark"
+                android:textColor="@color/lightGray"
+                android:textStyle="normal"
+                android:textSize="14sp" />
+
+            <ImageView
+                android:id="@+id/angelAppearance"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:src="@drawable/ic_angle_small_down" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvAppearanceInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:fontFamily="@font/museo_san_rounded700"
+            android:background="@drawable/background_nav_item_info"
+            android:text="Light or Dark"
+            android:padding="10dp"
+            android:justificationMode="inter_word"
+            android:gravity="fill_horizontal"
+            android:textColor="@color/lightGray"
+            android:textSize="12sp"
+            app:layout_constraintTop_toBottomOf="@+id/AppearanceLayout"
+            tools:layout_editor_absoluteX="97dp" />
+
+        <LinearLayout
+            android:id="@+id/VersionLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/background_nav_item"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:padding="12dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvAppearanceInfo">
+
+            <TextView
+                android:id="@+id/VersionTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_weight="2"
+                android:fontFamily="@font/museo_san_rounded700"
+                android:text="Version"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tvVersion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_weight="20"
+                android:fontFamily="@font/museo_san_rounded700"
+                android:gravity="end"
+                android:text="1.0.0"
+                android:textColor="@color/lightGray"
+                android:textStyle="normal"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
+
+
+
+

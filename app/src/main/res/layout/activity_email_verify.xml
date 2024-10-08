@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+<ImageView
+    android:id="@+id/register_background"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:scaleType="centerCrop"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:srcCompat="@drawable/background_dashboard" />
+
+<TextView
+    android:id="@+id/tvVerify"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:fontFamily="@font/museo_san_rounded900"
+    android:text="@string/verify"
+    android:textSize="50sp"
+    android:textColor="@color/white"
+    android:textStyle="bold"
+    android:layout_marginTop="52dp"
+    android:layout_marginStart="30dp"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvVerifyCode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="120dp"
+        android:layout_marginStart="20dp"
+        android:fontFamily="@font/museo_san_rounded700"
+        android:text="@string/verify_code"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+<EditText
+    android:id="@+id/txtVerifyCode"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:layout_marginTop="40dp"
+    android:layout_marginStart="20dp"
+    android:layout_marginEnd="20dp"
+    android:paddingStart="20dp"
+    android:background="@drawable/background_edit_text"
+    android:fontFamily="@font/museo_san_rounded500"
+    android:hint="@string/enter_your_verify_code"
+    android:inputType="textEmailAddress"
+    android:textColor="@color/darkGray"
+    android:textSize="18sp"
+    android:layoutDirection="ltr"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/tvVerify" />
+
+<TextView
+    android:id="@+id/tvResendVerifyCode"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="10dp"
+    android:layout_marginStart="30dp"
+    android:fontFamily="@font/museo_san_rounded500"
+    android:text="@string/resend_verify_code"
+    android:textColor="@color/white"
+    android:textSize="18sp"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/txtVerifyCode" />
+
+<TextView
+    android:id="@+id/tvValidationError"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/background_trasparent"
+    android:padding="10dp"
+    android:layout_marginTop="60dp"
+    android:fontFamily="@font/museo_san_rounded500"
+    android:text=""
+    android:textColor="@color/red"
+    android:textSize="20sp"
+    android:visibility="invisible"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/txtVerifyCode" />
+
+<androidx.appcompat.widget.AppCompatButton
+    android:id="@+id/btnVerify"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="120dp"
+    android:paddingStart="60dp"
+    android:paddingEnd="60dp"
+    android:background="@drawable/background_enter_btn"
+    android:fontFamily="@font/museo_san_rounded900"
+    android:text="@string/verify"
+    android:textColor="@color/white"
+    android:textSize="26sp"
+    android:textStyle="bold"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/txtVerifyCode" />
+
+<ProgressBar
+    android:id="@+id/progressBarVerify"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:indeterminate="true"
+    android:indeterminateTint="@color/white"
+    android:indeterminateTintMode="src_atop"
+    android:max="100"
+    android:visibility="gone"
+    android:elevation="10dp"
+    app:layout_constraintBottom_toBottomOf="@+id/btnVerify"
+    app:layout_constraintEnd_toEndOf="@+id/btnVerify"
+    app:layout_constraintTop_toTopOf="@+id/btnVerify" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
