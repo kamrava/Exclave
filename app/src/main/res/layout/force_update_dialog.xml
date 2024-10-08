@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_dashboard"
+    tools:context=".vpn.WelcomeActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/DialogBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_premium"
+        android:padding="30dp"
+
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/DialogTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/museo_san_rounded700"
+            android:gravity="center"
+            android:text="A new version of the app is available. Please update to continue."
+            android:textColor="@color/lightGray"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:padding="10dp"
+            app:layout_constraintEnd_toEndOf="@+id/DialogBox"
+            app:layout_constraintStart_toStartOf="@+id/DialogBox"
+            app:layout_constraintTop_toTopOf="@+id/DialogBox" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnUpdate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/background_enter_btn"
+            android:enabled="true"
+            android:fontFamily="@font/museo_san_rounded900"
+            android:paddingStart="60dp"
+            android:paddingEnd="60dp"
+            android:text="@string/update_now"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:layout_marginTop="30dp"
+            app:layout_constraintBottom_toBottomOf="@+id/DialogBox"
+            app:layout_constraintEnd_toEndOf="@+id/DialogBox"
+            app:layout_constraintStart_toStartOf="@+id/DialogBox"
+            app:layout_constraintTop_toBottomOf="@+id/DialogTitle" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
