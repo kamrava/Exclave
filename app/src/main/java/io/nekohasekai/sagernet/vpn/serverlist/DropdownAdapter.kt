@@ -11,7 +11,6 @@ import io.nekohasekai.sagernet.R
 import io.nekohasekai.sagernet.ktx.getColorAttr
 import io.nekohasekai.sagernet.ktx.getColour
 import io.nekohasekai.sagernet.vpn.repositories.AppRepository
-import moe.matsuri.nb4a.Protocols
 
 class DropdownAdapter(
     private val subItems: MutableList<ListSubItem>,
@@ -68,9 +67,9 @@ class DropdownAdapter(
             }
 
             3 -> {
-                val err = subItem.error ?: ""
-                val msg = Protocols.genFriendlyMsg(err)
-                profileStatusText = if (msg != err) msg else holder.itemView.context.getString(R.string.unavailable)
+//                val err = subItem.error ?: ""
+                val msg = ""
+                profileStatusText = holder.itemView.context.getString(R.string.unavailable)
                 profileStatusColor = holder.itemView.context.getColour(R.color.material_red_500)
             }
         }
