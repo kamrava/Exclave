@@ -61,14 +61,12 @@ object AuthRepository : KoinComponent {
 
     fun getUserAccountInfo(): InfoApiResponse {
         val userAccountDataString = AppRepository.sharedPreferences.getString("userAccountInfo", null)
-        AppRepository.debugLog("STEP_100: " + userAccountDataString.toString())
         if (userAccountDataString == null) {
             return infoApiResponse;
         }
         userAccountDataString?.let {
             userAccountInfo = Gson().fromJson(userAccountDataString, InfoApiResponse::class.java)
         }
-        AppRepository.debugLog("STEP_101: ")
         return userAccountInfo
     }
 
