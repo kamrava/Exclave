@@ -4,6 +4,7 @@ plugins {
     id("com.google.devtools.ksp") version "2.0.21-1.0.25"
     id("kotlin-parcelize")
     id("com.google.protobuf")
+    id("com.google.gms.google-services")
 }
 
 setupApp()
