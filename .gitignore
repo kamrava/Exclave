@@ -9,12 +9,14 @@
 /.idea/misc.xml
 /.idea/assetWizardSettings.xml
 /.idea/runConfigurations.xml
+/.idea/deploymentTargetSelector.xml
 .DS_Store
 build/
 /captures
 .externalNativeBuild
 .cxx
 local.properties
+release.keystore
 /app/libs/
 /app/src/main/assets/v2ray/geo*
 /app/src/main/assets/mozilla_included.pem
