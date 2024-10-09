@@ -8,6 +8,7 @@ apply(from = "../repositories.gradle.kts")
 dependencies {
     implementation("com.android.tools.build:gradle:8.7.0")
     implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:2.0.20")
+    implementation("com.google.gms:google-services:4.4.0")
     implementation("cn.hutool:hutool-http:5.8.32")
     implementation("cn.hutool:hutool-crypto:5.8.32")
     implementation("org.tukaani:xz:1.10")
