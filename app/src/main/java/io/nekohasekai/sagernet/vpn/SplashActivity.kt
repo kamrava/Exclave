@@ -9,6 +9,8 @@ import android.widget.ProgressBar
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.AppCompatButton
 import androidx.lifecycle.lifecycleScope
+import com.facebook.FacebookSdk
+import com.facebook.appevents.AppEventsLogger
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.FullScreenContentCallback
@@ -16,6 +18,7 @@ import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.FirebaseApp
 import com.google.firebase.messaging.FirebaseMessaging
 import io.nekohasekai.sagernet.GroupType
 import io.nekohasekai.sagernet.R
@@ -42,39 +45,39 @@ class SplashActivity : BaseThemeActivity() {
     private lateinit var checkUpdate: AlertDialog
     fun ProxyGroup.init() {
 //        DataStore.groupName = name ?: AppRepository.appName
-        DataStore.groupName = "Ungrouped"
-        DataStore.groupType = 1
+        DataStore.groupType = type
         DataStore.groupOrder = order
-        DataStore.groupIsSelector = isSelector
-        DataStore.frontProxy = frontProxy
-        DataStore.landingProxy = landingProxy
-        DataStore.frontProxyTmp = if (frontProxy >= 0) 3 else 0
-        DataStore.landingProxyTmp = if (landingProxy >= 0) 3 else 0
-
         val subscription = subscription ?: SubscriptionBean().applyDefaultValues()
+        DataStore.subscriptionType = subscription.type
+        DataStore.subscriptionToken = subscription.token
         DataStore.subscriptionLink = AppRepository.getSubscriptionLink()
-//        DataStore.subscriptionLink = subscription.link
         DataStore.subscriptionForceResolve = subscription.forceResolve
         DataStore.subscriptionDeduplication = subscription.deduplication
         DataStore.subscriptionUpdateWhenConnectedOnly = subscription.updateWhenConnectedOnly
         DataStore.subscriptionUserAgent = subscription.customUserAgent
         DataStore.subscriptionAutoUpdate = subscription.autoUpdate
         DataStore.subscriptionAutoUpdateDelay = subscription.autoUpdateDelay
+        DataStore.frontProxyOutbound = frontProxy
+        DataStore.landingProxyOutbound = landingProxy
+        DataStore.frontProxy = if (frontProxy >= 0) 1 else 0
+        DataStore.landingProxy = if (landingProxy >= 0) 1 else 0
     }
 
     fun ProxyGroup.serialize() {
-        name = DataStore.groupName.takeIf { it.isNotBlank() } ?: "My group"
+        name = DataStore.groupName.takeIf { it.isNotBlank() }
+            ?: ("My group " + System.currentTimeMillis() / 1000)
         type = DataStore.groupType
         order = DataStore.groupOrder
-        isSelector = DataStore.groupIsSelector
 
-        frontProxy = if (DataStore.frontProxyTmp == 3) DataStore.frontProxy else -1
-        landingProxy = if (DataStore.landingProxyTmp == 3) DataStore.landingProxy else -1
+        frontProxy = if (DataStore.frontProxy == 1) DataStore.frontProxyOutbound else -1
+        landingProxy = if (DataStore.landingProxy == 1) DataStore.landingProxyOutbound else -1
 
         val isSubscription = type == GroupType.SUBSCRIPTION
         if (isSubscription) {
             subscription = (subscription ?: SubscriptionBean().applyDefaultValues()).apply {
+                type = DataStore.subscriptionType
                 link = DataStore.subscriptionLink
+                token = DataStore.subscriptionToken
                 forceResolve = DataStore.subscriptionForceResolve
                 deduplication = DataStore.subscriptionDeduplication
                 updateWhenConnectedOnly = DataStore.subscriptionUpdateWhenConnectedOnly
@@ -88,6 +91,8 @@ class SplashActivity : BaseThemeActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
+
+
 
         // Initialize the ProgressBar and Try Again Button
         progressBar = findViewById(R.id.progressBar)
@@ -107,7 +112,12 @@ class SplashActivity : BaseThemeActivity() {
         //Show AdMob Interstitial
 //        loadInterstitialAd()
 
+        FacebookSdk.setClientToken("30d63da7ac404d3a92fe9c04a1baf590")
+        FirebaseApp.initializeApp(this)
+        FacebookSdk.sdkInitialize(applicationContext)
+//        AppEventsLogger.activateApp(this@SplashActivity)
         loadFcmToken()
+        return
         AppRepository.sharedPreferences = getSharedPreferences("CountdownPrefs", Context.MODE_PRIVATE)
 
         lifecycleScope.launch(Dispatchers.IO) {
