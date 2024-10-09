@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "257342783944",
+    "project_id": "unitavpn-c5637",
+    "storage_bucket": "unitavpn-c5637.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:257342783944:android:9ebc3fc8dd6f16c634c0fd",
+        "android_client_info": {
+          "package_name": "com.github.dyhkwong.sagernet"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCNMKmmnvWernYxWjR3yXLI-UTvJAGdmbk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

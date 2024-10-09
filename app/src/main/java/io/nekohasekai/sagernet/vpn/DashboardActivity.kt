@@ -123,7 +123,7 @@ class DashboardActivity : BaseThemeActivity(),
             AppRepository.debugLog("getUserSubscriptionLinks: " + it.server_group + " - " + it.sublink)
         }
 
-        AppRepository.sharedPreferences = getSharedPreferences("CountdownPrefs", Context.MODE_PRIVATE)
+        AppRepository.sharedPreferences = getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
 
         val ShareIcon = findViewById<ImageView>(R.id.ivShareIcon)
         val connection = SagerConnection(true)

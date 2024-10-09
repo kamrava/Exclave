@@ -112,18 +112,12 @@ class SplashActivity : BaseThemeActivity() {
         //Show AdMob Interstitial
 //        loadInterstitialAd()
 
-        FacebookSdk.setClientToken("30d63da7ac404d3a92fe9c04a1baf590")
-        FirebaseApp.initializeApp(this)
-        FacebookSdk.sdkInitialize(applicationContext)
-//        AppEventsLogger.activateApp(this@SplashActivity)
         loadFcmToken()
-        return
-        AppRepository.sharedPreferences = getSharedPreferences("CountdownPrefs", Context.MODE_PRIVATE)
+        AppRepository.sharedPreferences = getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
 
         lifecycleScope.launch(Dispatchers.IO) {
             val userConsent = AdRepository.checkAdConsent(this@SplashActivity)
             startLoading()
-            AppRepository.debugLog("HAMED_LOG_TEST_203: " + userConsent.toString())
         }
 
 
