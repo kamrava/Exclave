@@ -118,6 +118,13 @@ object RawUpdater : GroupUpdater() {
                     }
                 } catch (_: Exception) {
                 }
+            } else {
+                subscription.apply {
+                    bytesUsed = -1L
+                    bytesRemaining = -1L
+                    expiryDate = -1L
+                }
+
             }
 
         }
@@ -539,7 +546,7 @@ object RawUpdater : GroupUpdater() {
         }
 
         try {
-            val json = JSONUtil.parse(text)
+            val json = JSONUtil.parse(Libcore.stripJSON(text))
             return parseJSON(json)
         } catch (ignored: JSONException) {
         }
@@ -653,7 +660,7 @@ object RawUpdater : GroupUpdater() {
         val proxies = ArrayList<AbstractBean>()
 
         with(outboundObject) {
-            // v2ray JSONv4 config or Xray config only
+            // v2ray JSONv4 config, Xray config and JSONv4 config of Exclave's v2ray fork only
             when (protocol) {
                 "vmess", "vless", "trojan", "shadowsocks", "socks", "http" -> {
                     val v2rayBean = when (protocol) {
@@ -750,14 +757,14 @@ object RawUpdater : GroupUpdater() {
                                         }
                                     }
                                     path?.also {
-                                        if (it.contains("?ed=")) {
-                                            // https://github.com/MatsuriDayo/NekoBoxForAndroid/blob/2743fcb3f2208f2189d86eb2a9d4655000bcf8fb/app/src/main/java/io/nekohasekai/sagernet/fmt/v2ray/V2RayFmt.kt#L545-L549
-                                            // RPRX's smart-assed invention. This of course will break under some conditions. Do not report issue about this.
-                                            v2rayBean.path = it.substringBefore("?ed=")
-                                            v2rayBean.wsMaxEarlyData = it.substringAfter("?ed=").toIntOrNull() ?: 2048
+                                        v2rayBean.path = it
+                                        // RPRX's smart-assed invention. This of course will break under some conditions.
+                                        val u = Libcore.parseURL(it)
+                                        u.queryParameter("ed")?.let { ed ->
+                                            u.deleteQueryParameter("ed")
+                                            v2rayBean.path = u.string
+                                            v2rayBean.wsMaxEarlyData = ed.toIntOrNull()
                                             v2rayBean.earlyDataHeaderName = "Sec-WebSocket-Protocol"
-                                        } else {
-                                            v2rayBean.path = it
                                         }
                                     }
                                     maxEarlyData?.also {
@@ -765,7 +772,7 @@ object RawUpdater : GroupUpdater() {
                                     }
                                 }
                             }
-                            "http", "h2" -> {
+                            "http", "h2", "h3" -> {
                                 v2rayBean.type = "http"
                                 httpSettings?.apply {
                                     host?.also {
@@ -791,6 +798,9 @@ object RawUpdater : GroupUpdater() {
                             }
                             "grpc", "gun" -> {
                                 v2rayBean.type = "grpc"
+                                // Xray hijacks the share link standard, uses escaped `serviceName` and some other non-standard `serviceName`s and breaks the compatibility with other implementations.
+                                // Fixing the compatibility with Xray will break the compatibility with V2Ray and others.
+                                // So do not fix the compatibility with Xray.
                                 gunSettings?.serviceName?.also {
                                     v2rayBean.grpcServiceName = it
                                 }
@@ -805,6 +815,19 @@ object RawUpdater : GroupUpdater() {
                                     }
                                     path?.also {
                                         v2rayBean.path = it
+                                        // RPRX's smart-assed invention. This of course will break under some conditions.
+                                        val u = Libcore.parseURL(it)
+                                        u.queryParameter("ed")?.let {
+                                            u.deleteQueryParameter("ed")
+                                            v2rayBean.path = u.string
+                                        }
+                                    }
+                                }
+                            }
+                            "meek" -> {
+                                meekSettings?.apply {
+                                    url?.also {
+                                        v2rayBean.meekUrl = it
                                     }
                                 }
                             }
