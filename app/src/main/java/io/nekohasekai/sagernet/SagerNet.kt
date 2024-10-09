@@ -1,24 +1,3 @@
-/******************************************************************************
- *                                                                            *
- * Copyright (C) 2021 by nekohasekai <contact-sagernet@sekai.icu>             *
- * Copyright (C) 2021 by Max Lv <max.c.lv@gmail.com>                          *
- * Copyright (C) 2021 by Mygod Studio <contact-shadowsocks-android@mygod.be>  *
- *                                                                            *
- * This program is free software: you can redistribute it and/or modify       *
- * it under the terms of the GNU General Public License as published by       *
- * the Free Software Foundation, either version 3 of the License, or          *
- *  (at your option) any later version.                                       *
- *                                                                            *
- * This program is distributed in the hope that it will be useful,            *
- * but WITHOUT ANY WARRANTY; without even the implied warranty of             *
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the              *
- * GNU General Public License for more details.                               *
- *                                                                            *
- * You should have received a copy of the GNU General Public License          *
- * along with this program. If not, see <http://www.gnu.org/licenses/>.       *
- *                                                                            *
- ******************************************************************************/
-
 package io.nekohasekai.sagernet
 
 import android.annotation.SuppressLint
@@ -63,10 +42,67 @@ import libcore.UidDumper
 import libcore.UidInfo
 import java.net.InetSocketAddress
 import androidx.work.Configuration as WorkConfiguration
+import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.OnLifecycleEvent
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.MobileAds
+import com.google.android.gms.ads.appopen.AppOpenAd
+import androidx.lifecycle.ProcessLifecycleOwner
+import com.facebook.FacebookSdk
+import com.facebook.appevents.AppEventsLogger
+import com.google.android.gms.ads.AdError
+import com.google.android.gms.ads.FullScreenContentCallback
+import com.google.firebase.FirebaseApp
+import io.nekohasekai.sagernet.vpn.di.appModule
+import io.nekohasekai.sagernet.vpn.repositories.AdRepository
+import io.nekohasekai.sagernet.vpn.repositories.AdRepository.appOpenAdManager
+import io.nekohasekai.sagernet.vpn.repositories.AppRepository
+import java.util.Date
+import org.koin.core.context.startKoin
 
 class SagerNet : Application(),
     UidDumper,
-    WorkConfiguration.Provider {
+    WorkConfiguration.Provider, Application.ActivityLifecycleCallbacks, LifecycleObserver {
+
+    private val LOG_TAG: String = "HAMED_LOG_SagerNet"
+    private var currentActivity: Activity? = null
+
+    /** ActivityLifecycleCallback methods. */
+    override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {}
+
+    override fun onActivityStarted(activity: Activity) {
+        // Updating the currentActivity only when an ad is not showing.
+        if (!appOpenAdManager.isShowingAd) {
+            currentActivity = activity
+        }
+    }
+
+    override fun onActivityResumed(activity: Activity) {}
+
+    override fun onActivityPaused(activity: Activity) {}
+
+    override fun onActivityStopped(activity: Activity) {}
+
+    override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
+
+    override fun onActivityDestroyed(activity: Activity) {}
+
+    /**
+     * Shows an app open ad.
+     *
+     * @param activity the activity that shows the app open ad
+     * @param onShowAdCompleteListener the listener to be notified when an app open ad is complete
+     */
+    fun showAdIfAvailable(activity: Activity, onShowAdCompleteListener: OnShowAdCompleteListener) {
+        // We wrap the showAdIfAvailable to enforce that other classes only interact with MyApplication
+        // class.
+        appOpenAdManager.showAdIfAvailable(activity, onShowAdCompleteListener)
+    }
 
     override fun attachBaseContext(base: Context) {
         super.attachBaseContext(base)
@@ -77,6 +113,16 @@ class SagerNet : Application(),
 
     override fun onCreate() {
         super.onCreate()
+
+        FacebookSdk.setClientToken("30d63da7ac404d3a92fe9c04a1baf590")
+        FirebaseApp.initializeApp(this)
+        FacebookSdk.sdkInitialize(applicationContext)
+        AppEventsLogger.activateApp(this)
+
+        // Loads DI(Dependency Injection) modules
+        startKoin {
+            modules(appModule)
+        }
 
         System.setProperty(DEBUG_PROPERTY_NAME, DEBUG_PROPERTY_VALUE_ON)
         Thread.setDefaultUncaughtExceptionHandler(CrashHandler)
@@ -119,6 +165,21 @@ class SagerNet : Application(),
                 .penaltyLog()
                 .build()
         )
+
+        // Ads
+        registerActivityLifecycleCallbacks(this)
+        MobileAds.initialize(this) {}
+        ProcessLifecycleOwner.get().lifecycle.addObserver(this)
+        appOpenAdManager = AppOpenAdManager()
+    }
+
+    /** LifecycleObserver method that shows the app open ad when the app moves to foreground. */
+    @OnLifecycleEvent(Lifecycle.Event.ON_START)
+    fun onMoveToForeground() {
+        // Show the ad (if available) when the app moves to foreground.
+        currentActivity?.let {
+            appOpenAdManager.showAdIfAvailable(it)
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.Q)
@@ -171,6 +232,7 @@ class SagerNet : Application(),
         @Volatile
         var started = false
 
+        @SuppressLint("StaticFieldLeak")
         lateinit var application: SagerNet
 
         val isTv by lazy {
@@ -286,4 +348,144 @@ class SagerNet : Application(),
         super.onLowMemory()
     }
 
+
+/** Interface definition for a callback to be invoked when an app open ad is complete. */
+    interface OnShowAdCompleteListener {
+        fun onShowAdComplete()
+    }
+
+    /** Inner class that loads and shows app open ads. */
+    inner class AppOpenAdManager {
+        private var isLoadingAd = false
+        var isShowingAd = false
+        /** Keep track of the time an app open ad is loaded to ensure you don't show an expired ad. */
+        private var loadTime: Long = 0
+
+
+        /** Request an ad. */
+        fun loadAd(context: Context) {
+            println("HAMED_LOG_Start_Loading_AppOpen_Ad_0")
+            // Do not load ad if there is an unused ad or one is already loading.
+            if (isLoadingAd || isAdAvailable()) {
+                return
+            }
+
+            isLoadingAd = true
+            val request = AdRequest.Builder().build()
+            println("HAMED_LOG_Start_Loading_AppOpen_Ad_1")
+            AppOpenAd.load(
+                context, AdRepository.getAppOpenAdUnitID(), request,
+                AppOpenAd.APP_OPEN_AD_ORIENTATION_PORTRAIT,
+                object : AppOpenAd.AppOpenAdLoadCallback() {
+
+                    override fun onAdLoaded(ad: AppOpenAd) {
+                        // Called when an app open ad has loaded.
+                        println("HAMED_LOG_Ad was loaded.")
+                        AdRepository.appOpenAd = ad
+                        isLoadingAd = false
+                        loadTime = Date().time
+                    }
+
+                    override fun onAdFailedToLoad(loadAdError: LoadAdError) {
+                        // Called when an app open ad has failed to load.
+                        println("HAMED_LOG_APP_OPEN: " + loadAdError.message)
+
+                        isLoadingAd = false;
+                    }
+                })
+        }
+
+        private fun wasLoadTimeLessThanNHoursAgo(numHours: Long): Boolean {
+            val dateDifference: Long = Date().time - loadTime
+            val numMilliSecondsPerHour: Long = 3600000
+            return dateDifference < numMilliSecondsPerHour * numHours
+        }
+
+        /** Check if ad exists and can be shown. */
+        private fun isAdAvailable(): Boolean {
+            Log.d(LOG_TAG, AdRepository.appOpenAd.toString())
+//            return AdRepository.appOpenAd != null && wasLoadTimeLessThanNHoursAgo(4)
+            return AdRepository.appOpenAd != null
+        }
+
+        /**
+         * Show the ad if one isn't already showing.
+         *
+         * @param activity the activity that shows the app open ad
+         */
+        fun showAdIfAvailable(activity: Activity) {
+            showAdIfAvailable(
+                activity,
+                object : OnShowAdCompleteListener {
+                    override fun onShowAdComplete() {
+                        // Empty because the user will go back to the activity that shows the ad.
+                        println("HAMED_LOG_APP_OPEN_onShowAdComplete")
+                    }
+                }
+            )
+        }
+
+        /**
+         * Show the ad if one isn't already showing.
+         *
+         * @param activity the activity that shows the app open ad
+         * @param onShowAdCompleteListener the listener to be notified when an app open ad is complete
+         */
+        fun showAdIfAvailable(activity: Activity, onShowAdCompleteListener: OnShowAdCompleteListener) {
+            // If the app open ad is already showing, do not show the ad again.
+            if (isShowingAd) {
+                Log.d(LOG_TAG, "The app open ad is already showing.")
+                return
+            }
+
+            // If the app open ad is not available yet, invoke the callback.
+            if (!isAdAvailable()) {
+                Log.d(LOG_TAG, "The app open ad is not ready yet.")
+                onShowAdCompleteListener.onShowAdComplete()
+                if (AdRepository.consentInformation.canRequestAds()) {
+                    loadAd(activity)
+                }
+                return
+            }
+
+            Log.d(LOG_TAG, "Will show ad.")
+
+            AdRepository.appOpenAd?.fullScreenContentCallback =
+                object : FullScreenContentCallback() {
+                    /** Called when full screen content is dismissed. */
+                    override fun onAdDismissedFullScreenContent() {
+                        // Set the reference to null so isAdAvailable() returns false.
+                        AdRepository.appOpenAd = null
+                        isShowingAd = false
+                        Toast.makeText(activity, "onAdDismissedFullScreenContent", Toast.LENGTH_SHORT).show()
+
+                        onShowAdCompleteListener.onShowAdComplete()
+                        if (AdRepository.consentInformation.canRequestAds()) {
+                            loadAd(activity)
+                        }
+                    }
+
+                    /** Called when fullscreen content failed to show. */
+                    override fun onAdFailedToShowFullScreenContent(adError: AdError) {
+                        AdRepository.appOpenAd = null
+                        isShowingAd = false
+                        Log.d(LOG_TAG, "onAdFailedToShowFullScreenContent: " + adError.message)
+                        Toast.makeText(activity, "onAdFailedToShowFullScreenContent", Toast.LENGTH_SHORT).show()
+
+                        onShowAdCompleteListener.onShowAdComplete()
+                        if (AdRepository.consentInformation.canRequestAds()) {
+                            loadAd(activity)
+                        }
+                    }
+
+                    /** Called when fullscreen content is shown. */
+                    override fun onAdShowedFullScreenContent() {
+                        Log.d(LOG_TAG, "onAdShowedFullScreenContent.")
+                        Toast.makeText(activity, "onAdShowedFullScreenContent", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            isShowingAd = true
+            AdRepository.appOpenAd?.show(activity)
+        }
+    }
 }

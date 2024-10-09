@@ -91,7 +91,7 @@ class MyAdapter(
         val dropdownAdapter = DropdownAdapter(item.dropdownItems) { clickedItem ->
             AppRepository.selectedServerId = clickedItem.id
             DataStore.selectedProxy = clickedItem.id
-            if (DataStore.serviceState.connected) {
+            if (SagerNet.started) {
                 SagerNet.reloadService()
             }
         }

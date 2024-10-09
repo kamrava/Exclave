@@ -36,12 +36,12 @@ dependencies {
 //location for UnitVPN implementation <START>
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1")
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
 
     implementation("com.google.android.gms:play-services-ads:22.4.0")
     implementation("com.google.guava:guava:31.1-android")
     implementation("com.google.android.ump:user-messaging-platform:2.1.0")
     implementation("com.airbnb.android:lottie:6.1.0")
-    implementation("com.google.firebase:firebase-auth-ktx:22.1.0")
     implementation("com.facebook.android:facebook-android-sdk:latest.release")
     implementation("com.google.android.gms:play-services-auth:20.6.0")
     implementation("com.google.firebase:firebase-messaging-ktx:23.4.1")
@@ -50,13 +50,16 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 
     implementation("com.google.firebase:firebase-messaging:23.4.0")
-    implementation("com.google.firebase:firebase-bom:32.7.1")
+    implementation("com.google.firebase:firebase-auth-ktx:22.3.1")
+    implementation("com.google.firebase:firebase-auth:22.3.1")
+    implementation(platform("com.google.firebase:firebase-bom:33.4.0"))
 //    implementation("com.google.firebase:firebase-analytics")
     implementation("io.insert-koin:koin-core:3.4.0")
     implementation("io.insert-koin:koin-android:3.4.0")
 
     implementation("androidx.lifecycle:lifecycle-process:2.3.1")
     implementation("androidx.lifecycle:lifecycle-runtime:2.3.1")
+    //noinspection LifecycleAnnotationProcessorWithJava8
     annotationProcessor("androidx.lifecycle:lifecycle-compiler:2.3.1")
 
     //location for UnitVPN implementation <END>
