@@ -66,6 +66,7 @@ object AppRepository {
     var appVersionCode: Int = 0
     var appShouldForceUpdate: Boolean = false
     private var isInternetConnected = true
+    var canStop: Boolean = true
 
     fun setBaseUrl(url: String) {
         baseUrl = url

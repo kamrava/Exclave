@@ -131,15 +131,20 @@ class DashboardActivity : BaseThemeActivity(),
         val clPremium = findViewById<ConstraintLayout>(R.id.clPremium)
         clPremium.setOnClickListener {navigateToPremiumActivity()}
 
-//<DO NOT DELETE THIS COMMENT CODES>
-//        // Set an OnClickListener to MainActivity
-//        ShareIcon.setOnClickListener(object : View.OnClickListener {
-//            override fun onClick(v: View) {
-//                // Start the MainActivity
-//                val intent = Intent(this@DashboardActivity, MainActivity::class.java)
-//                startActivity(intent)
-//            }
-//        })
+        // <DO NOT DELETE THIS COMMENT CODES>
+        // Set an OnClickListener to MainActivity
+        ShareIcon.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(v: View) {
+                // Start the MainActivity
+                val intent = Intent(this@DashboardActivity, MainActivity::class.java)
+                startActivity(intent)
+            }
+        })
+
+        // Set onClickListener for ShareIcon
+//        ShareIcon.setOnClickListener {
+//            shareLinkWithMessage(AppRepository.ShareCustomMessage)
+//        }
 
         // Define shareLinkWithMessage function outside of OnClickListener
         fun shareLinkWithMessage(message: String) {
@@ -155,11 +160,6 @@ class DashboardActivity : BaseThemeActivity(),
             // Start the system's chooser to share the content
             startActivity(Intent.createChooser(sendIntent, "Share link with:"))
         }
-        // Set onClickListener for ShareIcon
-        ShareIcon.setOnClickListener {
-            shareLinkWithMessage(AppRepository.ShareCustomMessage)
-        }
-
 
         // Initialize the fragment container
         val fragmentContainer = findViewById<View>(R.id.flFragmentContainer)
@@ -236,11 +236,9 @@ class DashboardActivity : BaseThemeActivity(),
             val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
             val networkInfo: NetworkInfo? = connectivityManager.activeNetworkInfo
 
-            val pa = activity as MainActivity
-
             if (networkInfo != null && networkInfo.isConnected) {
                 // Internet is connected, proceed with your code
-                if (pa.state.canStop) SagerNet.stopService() else connect.launch(null)
+                if (AppRepository.canStop) SagerNet.stopService() else connect.launch(null)
             } else {
                 // Internet is not connected, show a toast
                 Toast.makeText(this, "No internet connection", Toast.LENGTH_LONG).show()
@@ -458,8 +456,7 @@ class DashboardActivity : BaseThemeActivity(),
         when (key) {
             Key.SERVICE_MODE -> onBinderDied()
             Key.PROXY_APPS, Key.BYPASS_MODE, Key.INDIVIDUAL -> {
-                val pa = activity as MainActivity
-                if (pa.state.canStop) {
+                if (AppRepository.canStop) {
                     snackbar(getString(R.string.need_reload)).setAction(R.string.apply) {
                         SagerNet.reloadService()
                     }.show()
@@ -497,6 +494,7 @@ class DashboardActivity : BaseThemeActivity(),
             showNotConnectedState()
             stopTimer()
         }
+        AppRepository.canStop = state.canStop
 //        binding.fab.changeState(state, DataStore.serviceState, animate)
 //        binding.stats.changeState(state)
 //        if (msg != null) snackbar(getString(R.string.vpn_error, msg)).show()
