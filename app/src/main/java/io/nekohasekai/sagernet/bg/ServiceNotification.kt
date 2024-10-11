@@ -33,6 +33,7 @@ import android.text.format.Formatter
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.ServiceCompat
+import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
 import io.nekohasekai.sagernet.Action
 import io.nekohasekai.sagernet.R
@@ -135,7 +136,7 @@ class ServiceNotification(
         .setContentTitle(profileName)
         .setOnlyAlertOnce(true)
         .setContentIntent(SagerNet.configureIntent(service))
-        .setSmallIcon(R.drawable.ic_service_active)
+        .setSmallIcon(R.drawable.unitavpn_ic_service_active)
         .setCategory(NotificationCompat.CATEGORY_SERVICE)
         .setPriority(if (visible) NotificationCompat.PRIORITY_LOW else NotificationCompat.PRIORITY_MIN)
 
@@ -145,7 +146,8 @@ class ServiceNotification(
 
         Theme.apply(app)
         Theme.apply(service)
-        builder.color = service.getColorAttr(androidx.appcompat.R.attr.colorPrimary)
+        //builder.color = service.getColorAttr(androidx.appcompat.R.attr.colorPrimary)
+        builder.color = ContextCompat.getColor(service, R.color.UnitaYellow)
 
         updateCallback(service.getSystemService<PowerManager>()?.isInteractive != false)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
