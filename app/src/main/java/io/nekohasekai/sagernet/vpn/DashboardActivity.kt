@@ -1,5 +1,6 @@
 package io.nekohasekai.sagernet.vpn
 
+import android.Manifest
 import android.annotation.SuppressLint
 import kotlinx.coroutines.CoroutineScope
 import android.content.Intent
@@ -12,14 +13,17 @@ import android.widget.ImageView
 import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
+import android.os.Build
 import android.os.CountDownTimer
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isGone
 import androidx.fragment.app.FragmentManager
@@ -52,6 +56,7 @@ import io.nekohasekai.sagernet.databinding.LayoutProgressListBinding
 import io.nekohasekai.sagernet.ktx.FixedLinearLayoutManager
 import io.nekohasekai.sagernet.ktx.Logs
 import io.nekohasekai.sagernet.ktx.alert
+import io.nekohasekai.sagernet.ktx.app
 import io.nekohasekai.sagernet.ktx.getColorAttr
 import io.nekohasekai.sagernet.ktx.getColour
 import io.nekohasekai.sagernet.ktx.onMainDispatcher
@@ -122,6 +127,9 @@ class DashboardActivity : BaseThemeActivity(),
         AuthRepository.getUserActiveServices().forEach {
             AppRepository.debugLog("getUserSubscriptionLinks: " + it.server_group + " - " + it.sublink)
         }
+
+        // Ask user's permission for Notifications
+        requestNotification()
 
         AppRepository.sharedPreferences = getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
 
@@ -631,6 +639,7 @@ class DashboardActivity : BaseThemeActivity(),
         val test = TestDialog()
         val dialog = test.builder.show()
         val testJobs = mutableListOf<Job>()
+        var bestPing: Int = 9999999
 
         val mainJob = runOnDefaultDispatcher {
             val group = DataStore.currentGroup()
@@ -665,20 +674,42 @@ class DashboardActivity : BaseThemeActivity(),
                         test.insert(profile)
 
                         try {
+                            var countryCode = ""
+                            var serverName = ""
                             val instance = V2RayTestInstance(profile, link, timeout)
                             val result = instance.use {
                                 it.doTest()
                             }
+
                             profile.status = 1
                             profile.ping = result
+                            val bestServerInfo = AppRepository.setServerPing(profile.id, result, 1)
+                            countryCode = bestServerInfo["countryCode"].toString()
+                            val flagEmoji = AppRepository.countryCodeToFlag(countryCode)
+                            AppRepository.debugLog("flagEmoji $countryCode: $flagEmoji")
+                            if (result < bestPing) {
+                                val emptyList: MutableList<ListSubItem> = mutableListOf()
+                                bestPing = result
+                                AppRepository.isBestServerSelected = true
+                                bestServer = ListItem(
+                                    "$flagEmoji   Best Location",
+                                    countryCode,
+                                    emptyList,
+                                    false,
+                                    true,
+                                    profile.id
+                                )
+                            }
+                            AppRepository.setServerPing(profile.id, result, 1)
                         } catch (e: PluginManager.PluginNotFoundException) {
                             profile.status = -1
                             profile.error = e.readableMessage
+                            AppRepository.setServerPing(profile.id, -1, -1)
                         } catch (e: Exception) {
                             profile.status = 3
                             profile.error = e.readableMessage
+                            AppRepository.setServerPing(profile.id, -1, 3)
                         }
-
                         test.update(profile)
                         ProfileManager.updateProfile(profile)
                     }
@@ -687,7 +718,17 @@ class DashboardActivity : BaseThemeActivity(),
 
             testJobs.joinAll()
             test.close()
+
             onMainDispatcher {
+                bestServer?.let {
+                    if (AppRepository.allServers[0].isBestServer) {
+                        AppRepository.allServers.removeAt(0)
+                    }
+
+                    AppRepository.allServers.add(0, it)
+                    AppRepository.setAllServer(AppRepository.allServers)
+                    AppRepository.refreshServersListView()
+                }
                 test.binding.progressCircular.isGone = true
                 dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setText(android.R.string.ok)
             }
@@ -704,7 +745,7 @@ class DashboardActivity : BaseThemeActivity(),
         val serverName = profile.displayName()
         val countryCode = serverName.substring(serverName.length - 5, serverName.length).substring(0, 2).lowercase()
         val foundItem = AppRepository.allServers.find {
-            it.name == AppRepository.flagNameMapper(countryCode)
+            it.name == AppRepository.getItemName(countryCode)
         }
         val foundSubItem = foundItem?.dropdownItems?.find { it.id == profile.id}
         foundSubItem?.status = status
@@ -715,7 +756,7 @@ class DashboardActivity : BaseThemeActivity(),
             val serverName = profile.displayName()
             val countryCode = serverName.substring(serverName.length - 5, serverName.length).substring(0, 2).lowercase()
             val foundItem = AppRepository.allServers.find {
-                it.name == AppRepository.flagNameMapper(countryCode)
+                it.name == AppRepository.getItemName(countryCode)
             }
             val foundSubItem = foundItem?.dropdownItems?.find { it.id == profile.id}
             foundSubItem?.status = status
@@ -730,6 +771,14 @@ class DashboardActivity : BaseThemeActivity(),
         } catch (e: Exception) {
             AppRepository.debugLog(e.toString())
             null
+        }
+    }
+
+    private fun requestNotification() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (app.checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.POST_NOTIFICATIONS), 0)
+            }
         }
     }
 }
