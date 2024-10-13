@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import io.nekohasekai.sagernet.R
-import io.nekohasekai.sagernet.vpn.repositories.AdRepository
 
 class WelcomeActivity : BaseThemeActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
