@@ -54,8 +54,10 @@ class DropdownAdapter(
 
             1 -> {
                 profileStatusText = holder.itemView.context.getString(R.string.available, subItem.ping)
-                profileStatusColor = if (subItem.ping <= 600) {
+                profileStatusColor = if (subItem.ping <= 300) {
                     holder.itemView.context.getColour(R.color.material_green_500)
+                } else if (subItem.ping <= 600) {
+                    holder.itemView.context.getColour(R.color.material_orange_500)
                 } else {
                     holder.itemView.context.getColour(R.color.material_red_500)
                 }
