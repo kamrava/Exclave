@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.SharedPreferences
+import android.system.ErrnoException
 import android.util.ArrayMap
 import android.util.Log
 import androidx.recyclerview.widget.RecyclerView
@@ -332,7 +333,7 @@ object AppRepository {
         return request.build()
     }
 
-    fun flagNameMapper(countryCode: String): String
+    fun countryMapper(countryCode: String): String
     {
         val countries = mapOf(
             "af" to "Afghanistan",
@@ -559,18 +560,29 @@ object AppRepository {
             "other" to "Others"
         )
 
-//        return countries[countryCode].toString()
-        val name = countries[countryCode] ?: "Unknown"
+        return countries[countryCode].toString()
+    }
 
-        // Don't add flag if country name is "Other"
-        return if (name == "Others" || name == "Unknown") {
-            name
-        } else {
-            val flag = countryCode.uppercase().map { char -> 0x1F1E6 - 'A'.code + char.code }
+    fun countryCodeToFlag(countryCode: String): String
+    {
+        try {
+            var iso = countryCode
+            if (countryCode.lowercase() == "other") {
+                iso = "us"
+            }
+            val flag = iso.uppercase().map { char -> 0x1F1E6 - 'A'.code + char.code }
                 .map { String(Character.toChars(it)) }
                 .joinToString("")
-            "$flag   $name"
+            return flag
+        } catch (e: ErrnoException) {
+            return countryCodeToFlag("us")
         }
+    }
+
+    fun getItemName(countryCode: String): String {
+        val flag = countryCodeToFlag(countryCode)
+        val name = countryMapper(countryCode)
+        return "$flag   $name"
     }
 
     fun countryCodeMapper(countryName: String): String
@@ -853,7 +865,7 @@ object AppRepository {
         allServers.forEach { item ->
             item.dropdownItems.forEach{
                 if(it.id == serverId) {
-                    arrayMap["countryCode"] = countryCodeMapper(item.name)
+                    arrayMap["countryCode"] = item.countryCode
                     arrayMap["serverName"] = it.name
                     it.ping = ping
                     it.status = status
@@ -891,8 +903,7 @@ object AppRepository {
         allServersRaw.entrySet().forEach { entry ->
             val serverSubItems: MutableList<ListSubItem> = mutableListOf()
             val countryCode = entry.key
-            val resourceName = "ic_${countryCode}_flag"
-            val countryName = flagNameMapper(countryCode)
+            val countryName = getItemName(countryCode)
             entry.value.asJsonArray.forEach { it ->
                 val profile = ProfileManager.createProfile(targetId, proxies[counter])
                 val serverId = it.asJsonObject.get("id").asInt
@@ -906,8 +917,8 @@ object AppRepository {
             allServers.add(
                 ListItem(
                     countryName,
-                    serverSubItems,
-                    iconResId = context.resources.getIdentifier(resourceName, "drawable", context.packageName)
+                    countryCode,
+                    serverSubItems
                 )
             )
         }
