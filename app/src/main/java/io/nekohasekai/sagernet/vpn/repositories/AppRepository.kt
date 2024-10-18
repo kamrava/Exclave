@@ -1,7 +1,6 @@
 package io.nekohasekai.sagernet.vpn.repositories
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
 import android.content.SharedPreferences
 import android.system.ErrnoException
@@ -16,7 +15,6 @@ import io.nekohasekai.sagernet.SagerNet
 import android.content.DialogInterface
 import io.nekohasekai.sagernet.SubscriptionType
 import androidx.core.view.isGone
-import io.nekohasekai.sagernet.R
 import io.nekohasekai.sagernet.database.DataStore
 import io.nekohasekai.sagernet.database.ProfileManager
 import io.nekohasekai.sagernet.database.SagerDatabase
@@ -28,14 +26,11 @@ import io.nekohasekai.sagernet.plugin.PluginManager
 import io.nekohasekai.sagernet.bg.test.V2RayTestInstance
 import io.nekohasekai.sagernet.database.GroupManager
 import io.nekohasekai.sagernet.ktx.readableMessage
-import io.nekohasekai.sagernet.ui.ConfigurationFragment
-import io.nekohasekai.sagernet.ui.ConfigurationFragment.GroupFragment
-import io.nekohasekai.sagernet.vpn.DashboardActivity
 import io.nekohasekai.sagernet.vpn.helpers.GenericHelper
 import io.nekohasekai.sagernet.vpn.models.AppSetting
-import io.nekohasekai.sagernet.vpn.serverlist.ListItem
-import io.nekohasekai.sagernet.vpn.serverlist.ListSubItem
-import io.nekohasekai.sagernet.vpn.serverlist.MyAdapter
+import io.nekohasekai.sagernet.vpn.models.ListItem
+import io.nekohasekai.sagernet.vpn.models.ListSubItem
+import io.nekohasekai.sagernet.vpn.serverlist.ListItemAdapter
 import io.nekohasekai.sagernet.vpn.utils.CustomTestDialog
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -309,7 +304,7 @@ object AppRepository {
     }
 
     fun refreshServersListView() {
-        val adapter = MyAdapter(getAllServer()) { }
+        val adapter = ListItemAdapter(getAllServer()) { }
         recyclerView.adapter = adapter
     }
 
@@ -412,9 +407,9 @@ object AppRepository {
                             bestPing = result
                             isBestServerSelected = true
                             bestServer = ListItem(
-                                getItemName(entry.countryCode, true),
-                                entry.countryCode,
-                                emptyList,
+                                name = getItemName(entry.countryCode, true),
+                                countryCode = entry.countryCode,
+                                dropdownItems = emptyList,
                                 isExpanded = false,
                                 isBestServer = true,
                                 id = it.id,
@@ -481,12 +476,12 @@ object AppRepository {
                 val tags = Array(tagsArray.size()) { tagsArray[it].asString }
                 serverSubItems.add(
                     ListSubItem(
-                        profile.id,
-                        serverId,
-                        it.asJsonObject.get("name").asString,
+                        id = profile.id,
+                        serverId = serverId,
+                        name = it.asJsonObject.get("name").asString,
                         profile.status,
-                        profile.error,
-                        profile.ping,
+                        error = profile.error,
+                        ping = profile.ping,
                         tags = tags,
                         profileIndex = counter
                     )
@@ -494,7 +489,9 @@ object AppRepository {
             }
             allServers.add(
                 ListItem(
-                    countryName, countryCode, serverSubItems
+                    name = countryName,
+                    countryCode = countryCode,
+                    dropdownItems = serverSubItems
                 )
             )
         }
@@ -573,12 +570,12 @@ object AppRepository {
                                 bestPing = result
                                 isBestServerSelected = true
                                 bestServer = ListItem(
-                                    getItemName(countryCode, true),
-                                    countryCode,
-                                    emptyList,
-                                    false,
-                                    true,
-                                    profile.id
+                                    id =profile.id,
+                                    name = getItemName(countryCode, true),
+                                    countryCode = countryCode,
+                                    dropdownItems = emptyList,
+                                    isExpanded = false,
+                                    isBestServer = true
                                 )
                             }
                             setServerPing(profile.id, result, 1)
