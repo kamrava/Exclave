@@ -7,7 +7,8 @@ data class ListItem(
     var isExpanded: Boolean = false,
     var isBestServer: Boolean = false,
     var id: Long = -1,
-    var isSelected: Boolean = false
+    var isSelected: Boolean = false,
+    var pointToIndex: Int = -1
 ) {
     // Click listener function that can be set from outside the class
     private var clickListener: (() -> Unit)? = null
