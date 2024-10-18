@@ -87,6 +87,8 @@ class DropdownAdapter(
                 notifyItemChanged(lastSelectedPosition)
             }
 
+            AppRepository.debugLog("profileIndex: " + subItem.profileIndex + " - $lastSelectedPosition")
+
             // Toggle the visibility of selectedView based on isSelected
             holder.selectedView.visibility = View.VISIBLE
             AppRepository.resetAllSubItemsStatus()
