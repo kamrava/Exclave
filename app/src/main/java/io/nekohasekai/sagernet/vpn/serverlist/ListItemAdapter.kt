@@ -66,7 +66,6 @@ class ListItemAdapter(
 
                 // Perform additional logic for the clicked sub-item
                 VpnService.startVpnFromProfile(subItem.id)
-                println("Sub-item clicked: ${subItem.name}")
             }
 
             binding.dropdownList.layoutManager = LinearLayoutManager(binding.root.context)
