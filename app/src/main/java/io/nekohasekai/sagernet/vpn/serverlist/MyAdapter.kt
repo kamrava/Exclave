@@ -10,8 +10,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import io.nekohasekai.sagernet.R
 import io.nekohasekai.sagernet.SagerNet
+import io.nekohasekai.sagernet.SagerNet.Companion.activity
 import io.nekohasekai.sagernet.database.DataStore
+import io.nekohasekai.sagernet.ui.MainActivity
+import io.nekohasekai.sagernet.vpn.DashboardActivity
 import io.nekohasekai.sagernet.vpn.repositories.AppRepository
+import io.nekohasekai.sagernet.vpn.services.VpnService
 import kotlinx.coroutines.sync.Mutex
 
 class MyAdapter(
@@ -53,9 +57,16 @@ class MyAdapter(
         holder.itemHeader.setOnClickListener {
             if (item.isBestServer) {
                 holder.selectedView.visibility = View.VISIBLE
+                itemList[0].isSelected = true
                 AppRepository.isBestServerSelected = true
                 AppRepository.refreshServersListView()
+                VpnService.startVpnFromProfile(item.id)
             } else {
+                if (itemList[0].isBestServer) {
+                    itemList[0].isSelected = false
+                    AppRepository.debugLog("BEST_CLICKED2")
+                    notifyDataSetChanged()
+                }
                 if (lastExpandedPosition != RecyclerView.NO_POSITION && lastExpandedPosition != position) {
                     // Close the last expanded item
                     itemList[lastExpandedPosition].isExpanded = false
@@ -81,8 +92,8 @@ class MyAdapter(
         }
 
         // Set visibility of selectedView based on the last expanded position and isBestServer
-        if (item.isBestServer && AppRepository.isBestServerSelected) {
-            holder.selectedView.visibility = View.VISIBLE
+        if (itemList[0].isBestServer && itemList[0].isSelected) {
+            notifyItemChanged(0)
         } else {
             holder.selectedView.visibility = View.INVISIBLE
         }
