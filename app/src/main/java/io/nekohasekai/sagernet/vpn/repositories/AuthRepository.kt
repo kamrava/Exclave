@@ -121,7 +121,7 @@ object AuthRepository : KoinComponent {
         val formBody = requestBuilder.build()
 
         val client = OkHttpClient()
-        val url = AppRepository.getUserLoginUrl()
+        val url = AppRepository.appSetting.userLoginUrl
 
         val request = Request.Builder()
             .url(url)
@@ -137,6 +137,7 @@ object AuthRepository : KoinComponent {
                 val responseBody = response.body?.string()
                 val gson = Gson()
                 val apiResponse = gson.fromJson(responseBody, InfoApiResponse::class.java)
+
                 setUserAccountInfo(apiResponse)
 
 //                val jsonObject = gson.fromJson(responseBody, JsonObject::class.java)
