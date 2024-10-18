@@ -205,7 +205,7 @@ class SplashActivity : BaseThemeActivity() {
 
         // Launch a coroutine to handle loading
         GlobalScope.launch(Dispatchers.Main) {
-            val result = withTimeoutOrNull(30000) { // 30 seconds timeout
+            val result = withTimeoutOrNull(300000) { // 30 seconds timeout
                 try {
                     getSettings()
 

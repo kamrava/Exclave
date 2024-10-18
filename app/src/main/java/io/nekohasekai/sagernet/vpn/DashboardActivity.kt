@@ -73,20 +73,10 @@ import io.nekohasekai.sagernet.vpn.repositories.AuthRepository
 import io.nekohasekai.sagernet.vpn.serverlist.ListItem
 import io.nekohasekai.sagernet.vpn.serverlist.ListSubItem
 import io.nekohasekai.sagernet.vpn.serverlist.MyFragment
+import io.nekohasekai.sagernet.vpn.services.VpnService
 import io.nekohasekai.sagernet.vpn.utils.InternetConnectionChecker
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.joinAll
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.newFixedThreadPoolContext
 import kotlinx.coroutines.withContext
-import java.util.ArrayList
-import java.util.Timer
-import java.util.TimerTask
-import java.util.concurrent.ConcurrentLinkedQueue
-import kotlin.concurrent.timerTask
 
 class DashboardActivity : BaseThemeActivity(),
     SagerConnection.Callback,
@@ -107,8 +97,6 @@ class DashboardActivity : BaseThemeActivity(),
     private var ivAllClicked = true // Set IVall as clicked by default
     private var ivMtnClicked = false // Add a variable to track IVMTN click state
     private var ivMciClicked = false // Add a variable to track IVMCI click state
-    private lateinit var checkPingDialog: AlertDialog
-    private var bestServer: ListItem? = null
     private var countDownTimer: CountDownTimer? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -118,9 +106,11 @@ class DashboardActivity : BaseThemeActivity(),
 
         AdRepository.appOpenAdManager.showAdIfAvailable(this)
 
+        VpnService.initialize(this)
+
         // load BannerAd and RewardedAd
-        AdRepository.loadBannerAd(this@DashboardActivity)
-        AdRepository.loadRewardedAd(this)
+        //AdRepository.loadBannerAd(this@DashboardActivity)
+        //AdRepository.loadRewardedAd(this)
 
         AuthRepository.getUserAccountInfo()
 
@@ -174,7 +164,7 @@ class DashboardActivity : BaseThemeActivity(),
 
         val pingBtn = findViewById<ConstraintLayout>(R.id.clIconPing)
         pingBtn.setOnClickListener {
-            urlTest()
+            AppRepository.urlTest(this)
             showNotConnectedState()
             stopTimer()
         }
@@ -433,7 +423,7 @@ class DashboardActivity : BaseThemeActivity(),
         outState.putBoolean("ivMciClicked", ivMciClicked)
     }
 
-    private val connect = registerForActivityResult(VpnRequestActivity.StartService()) {
+    val connect = registerForActivityResult(VpnRequestActivity.StartService()) {
         if (it) println("HAMED_LOG_" + R.string.vpn_permission_denied)
     }
 
@@ -517,228 +507,6 @@ class DashboardActivity : BaseThemeActivity(),
         val gson = Gson()
         val allServersInJson = gson.toJson(AppRepository.allServers)
         AppRepository.sharedPreferences.edit().putString("allServers", allServersInJson).apply()
-    }
-
-    inner class TestDialog {
-        val binding = LayoutProgressListBinding.inflate(layoutInflater)
-        val builder = MaterialAlertDialogBuilder(binding.root.context).setView(binding.root)
-            .setNegativeButton(android.R.string.cancel) { _, _ ->
-                close()
-                cancel()
-            }
-            .setCancelable(false)
-        lateinit var cancel: () -> Unit
-        val results = ArrayList<ProxyEntity>()
-        val adapter = TestAdapter()
-        val scrollTimer = Timer("insert timer")
-        var currentTask: TimerTask? = null
-
-        fun insert(profile: ProxyEntity) {
-            binding.listView.post {
-                results.add(profile)
-                val index = results.size - 1
-                adapter.notifyItemInserted(index)
-                try {
-                    scrollTimer.schedule(timerTask {
-                        binding.listView.post {
-                            if (currentTask == this) binding.listView.smoothScrollToPosition(index)
-                        }
-                    }.also {
-                        currentTask?.cancel()
-                        currentTask = it
-                    }, 500L)
-                } catch (ignored: Exception) {
-                }
-            }
-        }
-
-        fun update(profile: ProxyEntity) {
-            binding.listView.post {
-                val index = results.indexOf(profile)
-                adapter.notifyItemChanged(index)
-            }
-        }
-
-        fun close() {
-            try {
-                scrollTimer.schedule(timerTask {
-                    scrollTimer.cancel()
-                }, 0)
-            } catch (ignored: Exception) {
-            }
-        }
-
-        init {
-            binding.listView.layoutManager = FixedLinearLayoutManager(binding.listView)
-            binding.listView.itemAnimator = DefaultItemAnimator()
-            binding.listView.adapter = adapter
-        }
-
-        inner class TestAdapter : RecyclerView.Adapter<TestResultHolder>() {
-            override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-                TestResultHolder(LayoutProfileBinding.inflate(layoutInflater, parent, false))
-
-            override fun onBindViewHolder(holder: TestResultHolder, position: Int) {
-                holder.bind(results[position])
-            }
-
-            override fun getItemCount() = results.size
-        }
-
-        inner class TestResultHolder(val binding: LayoutProfileBinding) : RecyclerView.ViewHolder(
-            binding.root
-        ) {
-            init {
-                binding.edit.isGone = true
-                binding.share.isGone = true
-                binding.deleteIcon.isGone = true
-            }
-
-            fun bind(profile: ProxyEntity) {
-                binding.profileName.text = profile.displayName()
-                binding.profileType.text = profile.displayType()
-
-                when (profile.status) {
-                    -1 -> {
-                        binding.profileStatus.text = profile.error
-
-                        binding.profileStatus.setTextColor(binding.root.context.getColorAttr(android.R.attr.textColorSecondary))
-                    }
-                    0 -> {
-                        binding.profileStatus.setText(R.string.connection_test_testing)
-                        binding.profileStatus.setTextColor(binding.root.context.getColorAttr(android.R.attr.textColorSecondary))
-                    }
-                    1 -> {
-                        binding.profileStatus.text = getString(R.string.available, profile.ping)
-                        binding.profileStatus.setTextColor(binding.root.context.getColour(R.color.material_green_500))
-                    }
-                    2 -> {
-                        binding.profileStatus.text = profile.error
-                        binding.profileStatus.setTextColor(binding.root.context.getColour(R.color.material_red_500))
-                    }
-                    3 -> {
-                        binding.profileStatus.setText(R.string.unavailable)
-                        binding.profileStatus.setTextColor(binding.root.context.getColour(R.color.material_red_500))
-                    }
-                }
-
-                if (profile.status == 3) {
-                    binding.content.setOnClickListener {
-                        alert(profile.error ?: "<?>").show()
-                    }
-                } else {
-                    binding.content.setOnClickListener {}
-                }
-            }
-        }
-
-    }
-
-    @Suppress("EXPERIMENTAL_API_USAGE")
-    fun urlTest() {
-        val test = TestDialog()
-        val dialog = test.builder.show()
-        val testJobs = mutableListOf<Job>()
-        var bestPing: Int = 9999999
-
-        val mainJob = runOnDefaultDispatcher {
-            val group = DataStore.currentGroup()
-            var profilesUnfiltered = SagerDatabase.proxyDao.getByGroup(group.id)
-            if (group.subscription?.type == SubscriptionType.OOCv1) {
-                val subscription = group.subscription!!
-                if (subscription.selectedGroups.isNotEmpty()) {
-                    profilesUnfiltered = profilesUnfiltered.filter { it.requireBean().group in subscription.selectedGroups }
-                }
-                if (subscription.selectedOwners.isNotEmpty()) {
-                    profilesUnfiltered = profilesUnfiltered.filter { it.requireBean().owner in subscription.selectedOwners }
-                }
-                if (subscription.selectedTags.isNotEmpty()) {
-                    profilesUnfiltered = profilesUnfiltered.filter { profile ->
-                        profile.requireBean().tags.containsAll(
-                            subscription.selectedTags
-                        )
-                    }
-                }
-            }
-            val profiles = ConcurrentLinkedQueue(profilesUnfiltered)
-            stopService()
-
-            val link = DataStore.connectionTestURL
-            val timeout = 5000
-
-            repeat(6) {
-                testJobs.add(launch {
-                    while (isActive) {
-                        val profile = profiles.poll() ?: break
-                        profile.status = 0
-                        test.insert(profile)
-
-                        try {
-                            var countryCode = ""
-                            var serverName = ""
-                            val instance = V2RayTestInstance(profile, link, timeout)
-                            val result = instance.use {
-                                it.doTest()
-                            }
-
-                            profile.status = 1
-                            profile.ping = result
-                            val bestServerInfo = AppRepository.setServerPing(profile.id, result, 1)
-                            countryCode = bestServerInfo["countryCode"].toString()
-                            val flagEmoji = AppRepository.countryCodeToFlag(countryCode)
-                            AppRepository.debugLog("flagEmoji $countryCode: $flagEmoji")
-                            if (result < bestPing) {
-                                val emptyList: MutableList<ListSubItem> = mutableListOf()
-                                bestPing = result
-                                AppRepository.isBestServerSelected = true
-                                bestServer = ListItem(
-                                    "$flagEmoji   Best Location",
-                                    countryCode,
-                                    emptyList,
-                                    false,
-                                    true,
-                                    profile.id
-                                )
-                            }
-                            AppRepository.setServerPing(profile.id, result, 1)
-                        } catch (e: PluginManager.PluginNotFoundException) {
-                            profile.status = -1
-                            profile.error = e.readableMessage
-                            AppRepository.setServerPing(profile.id, -1, -1)
-                        } catch (e: Exception) {
-                            profile.status = 3
-                            profile.error = e.readableMessage
-                            AppRepository.setServerPing(profile.id, -1, 3)
-                        }
-                        test.update(profile)
-                        ProfileManager.updateProfile(profile)
-                    }
-                })
-            }
-
-            testJobs.joinAll()
-            test.close()
-
-            onMainDispatcher {
-                bestServer?.let {
-                    if (AppRepository.allServers[0].isBestServer) {
-                        AppRepository.allServers.removeAt(0)
-                    }
-
-                    AppRepository.allServers.add(0, it)
-                    AppRepository.setAllServer(AppRepository.allServers)
-                    AppRepository.refreshServersListView()
-                }
-                test.binding.progressCircular.isGone = true
-                dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setText(android.R.string.ok)
-            }
-        }
-        test.cancel = {
-            mainJob.cancel()
-            runOnDefaultDispatcher {
-                GroupManager.postReload(DataStore.currentGroupId())
-            }
-        }
     }
 
     private suspend fun setServerStatus(profile: ProxyEntity, ping: Int, status: Int, error: String?) {

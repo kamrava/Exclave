@@ -5,12 +5,13 @@ data class ListSubItem(
     var serverId: Int,
     var name: String,
     var status: Int,
-    var error: String?,  // Add error property
+    var error: String?,
     var ping: Int,
     var isSelected: Boolean = false,
     var isFree: Boolean = false,
     var config: String = "",
     var tags: Array<String> = arrayOf(),
+    val profileIndex: Int
 ) {
     // Click listener function that can be set from outside the class
     private var clickListener: (() -> Unit)? = null
