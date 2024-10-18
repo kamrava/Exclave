@@ -43,7 +43,7 @@ import io.nekohasekai.sagernet.vpn.nav.MenuFragment
 import io.nekohasekai.sagernet.vpn.repositories.AdRepository
 import io.nekohasekai.sagernet.vpn.repositories.AppRepository
 import io.nekohasekai.sagernet.vpn.repositories.AuthRepository
-import io.nekohasekai.sagernet.vpn.serverlist.MyFragment
+import io.nekohasekai.sagernet.vpn.serverlist.ServersListFragment
 import io.nekohasekai.sagernet.vpn.services.VpnService
 import io.nekohasekai.sagernet.vpn.utils.InternetConnectionChecker
 import kotlinx.coroutines.Dispatchers
@@ -191,7 +191,7 @@ class DashboardActivity : BaseThemeActivity(),
         // Ensure IVall is selected and fragmentContainer is visible when the activity starts
         fragmentContainer.visibility = if (ivAllClicked) View.VISIBLE else View.INVISIBLE
         if (ivAllClicked) {
-            val fragment = MyFragment()
+            val fragment = ServersListFragment()
             val bundle = Bundle()
             bundle.putString("iconClicked", "IVAll") // Pass the clicked icon value to the fragment
             fragment.arguments = bundle
@@ -226,7 +226,7 @@ class DashboardActivity : BaseThemeActivity(),
             fragmentContainer.visibility = if (ivAllClicked) View.VISIBLE else View.INVISIBLE
             if (ivAllClicked) {
                 AppRepository.filterServersByTag("all")
-                val fragment = MyFragment()
+                val fragment = ServersListFragment()
                 val bundle = Bundle()
                 bundle.putString("iconClicked", "IVAll") // Pass the clicked icon value to the fragment
                 fragment.arguments = bundle
@@ -250,7 +250,7 @@ class DashboardActivity : BaseThemeActivity(),
             fragmentContainer.visibility = if (ivMtnClicked) View.VISIBLE else View.INVISIBLE
             if (ivMtnClicked) {
                 AppRepository.filterServersByTag("mtn")
-                val fragment = MyFragment()
+                val fragment = ServersListFragment()
                 val bundle = Bundle()
                 bundle.putString("iconClicked", "IVMTN") // Pass the clicked icon value to the fragment
                 fragment.arguments = bundle
@@ -274,7 +274,7 @@ class DashboardActivity : BaseThemeActivity(),
             fragmentContainer.visibility = if (ivMciClicked) View.VISIBLE else View.INVISIBLE
             if (ivMciClicked) {
                 AppRepository.filterServersByTag("mci")
-                val fragment = MyFragment()
+                val fragment = ServersListFragment()
                 val bundle = Bundle()
                 bundle.putString("iconClicked", "IVMCI") // Pass the clicked icon value to the fragment
                 fragment.arguments = bundle

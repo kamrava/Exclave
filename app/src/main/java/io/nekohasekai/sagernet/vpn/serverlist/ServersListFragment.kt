@@ -1,6 +1,5 @@
 package io.nekohasekai.sagernet.vpn.serverlist
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,10 +7,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import io.nekohasekai.sagernet.R
-import io.nekohasekai.sagernet.database.SagerDatabase
 import io.nekohasekai.sagernet.vpn.repositories.AppRepository
 
-class MyFragment : Fragment() {
+class ServersListFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
