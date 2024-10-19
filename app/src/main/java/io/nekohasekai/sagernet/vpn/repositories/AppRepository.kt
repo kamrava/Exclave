@@ -76,7 +76,6 @@ object AppRepository {
     var appShouldForceUpdate: Boolean = false
     lateinit var appSetting: AppSetting
     private var isInternetConnected = true
-    var canStop: Boolean = true
 
     fun getAllServer(): MutableList<ListItem> {
         val allServersString = sharedPreferences.getString("allServers", null)
@@ -96,6 +95,18 @@ object AppRepository {
         val gson = Gson()
         val allServersInJson = gson.toJson(servers)
         sharedPreferences.edit().putString("allServers", allServersInJson).apply()
+    }
+
+    fun clearServerSelections() {
+        allServers.map { entry ->
+            entry.isSelected = false
+            entry.dropdownItems.forEach {
+                it.isSelected = false
+            }
+        }
+
+        setAllServer(allServers)
+        refreshServersListView()
     }
 
     fun getSubscriptionLink(): String {
@@ -309,13 +320,19 @@ object AppRepository {
     }
 
     fun resetAllSubItemsStatus() {
-        var servers = allServersOriginal
+        val servers = allServersOriginal
         servers.forEach { item ->
             item.dropdownItems.forEach { subItem ->
                 subItem.isSelected = false
             }
         }
         allServers = servers.filter { element -> element in allServers }.toMutableList()
+    }
+
+    fun clearAllItemsSelections() {
+        val adapter = ListItemAdapter(getAllServer()) { }
+        recyclerView.adapter = adapter
+        adapter.resetAllSubItems(-1L)
     }
 
     fun filterServersByTag(tag: String): Unit {
@@ -570,7 +587,7 @@ object AppRepository {
                                 bestPing = result
                                 isBestServerSelected = true
                                 bestServer = ListItem(
-                                    id =profile.id,
+                                    id = profile.id,
                                     name = getItemName(countryCode, true),
                                     countryCode = countryCode,
                                     dropdownItems = emptyList,
