@@ -31,12 +31,12 @@ class ListItemAdapter(
 
             // Dropdown list setup
             // Pass adapterPosition to setupDropdownList
-            setupDropdownList(binding, item, adapterPosition)
+            setupDropdownList(binding, item)
 
             // Handle click for expansion and selection
             binding.itemHeader.setOnClickListener {
                 if (item.isBestServer) {
-                    resetAllSubItems(-1L)
+                    resetAllSubItems(item.id)
                     // Update the state
                     item.isSelected = true
                     AppRepository.isBestServerSelected = true
@@ -57,7 +57,7 @@ class ListItemAdapter(
         }
 
         // Method to handle dropdown list setup
-        private fun setupDropdownList(binding: ListItemBinding, item: ListItem, position: Int) {
+        private fun setupDropdownList(binding: ListItemBinding, item: ListItem) {
             val dropdownAdapter = ListSubItemAdapter(item.dropdownItems) { subItem ->
                 // Handle sub-item click event
                 resetAllSubItems(subItem.id)  // Reset all sub-items across all list items
@@ -74,12 +74,11 @@ class ListItemAdapter(
     }
 
     // Reset all sub-items to make their llSelectedView visibility invisible
-    private fun resetAllSubItems(exceptProfileId: Long) {
+    fun resetAllSubItems(exceptProfileId: Long) {
+        itemList[0].isSelected = false
         for (listItem in itemList) {
             for (subItem in listItem.dropdownItems) {
-                if (subItem.id != exceptProfileId) {
-                    subItem.isSelected = false
-                }
+                subItem.isSelected = subItem.id == exceptProfileId
             }
         }
     }

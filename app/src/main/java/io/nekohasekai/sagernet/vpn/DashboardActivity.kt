@@ -38,10 +38,11 @@ import io.nekohasekai.sagernet.databinding.ActivityDashboardBinding
 import io.nekohasekai.sagernet.ktx.app
 import io.nekohasekai.sagernet.ui.ConfigurationFragment
 import io.nekohasekai.sagernet.ui.MainActivity
-import io.nekohasekai.sagernet.ui.VpnRequestActivity
+import io.nekohasekai.sagernet.vpn.interfaces.VpnEventListener
 import io.nekohasekai.sagernet.vpn.nav.MenuFragment
 import io.nekohasekai.sagernet.vpn.repositories.AdRepository
 import io.nekohasekai.sagernet.vpn.repositories.AppRepository
+import io.nekohasekai.sagernet.vpn.repositories.AppRepository.debugLog
 import io.nekohasekai.sagernet.vpn.repositories.AuthRepository
 import io.nekohasekai.sagernet.vpn.serverlist.ServersListFragment
 import io.nekohasekai.sagernet.vpn.services.VpnService
@@ -52,7 +53,8 @@ import kotlinx.coroutines.withContext
 class DashboardActivity : BaseThemeActivity(),
     SagerConnection.Callback,
     OnPreferenceDataStoreChangeListener,
-    NavigationView.OnNavigationItemSelectedListener {
+    NavigationView.OnNavigationItemSelectedListener,
+    VpnEventListener {
 
     lateinit var binding: ActivityDashboardBinding
     private lateinit var PowerIcon: LottieAnimationView
@@ -77,6 +79,7 @@ class DashboardActivity : BaseThemeActivity(),
 
         AdRepository.appOpenAdManager.showAdIfAvailable(this)
 
+        VpnService.addVpnEventListener(this)
         VpnService.initialize(this)
 
         // load BannerAd and RewardedAd
@@ -86,7 +89,7 @@ class DashboardActivity : BaseThemeActivity(),
         AuthRepository.getUserAccountInfo()
 
         AuthRepository.getUserActiveServices().forEach {
-            AppRepository.debugLog("getUserSubscriptionLinks: " + it.server_group + " - " + it.sublink)
+            debugLog("getUserSubscriptionLinks: " + it.server_group + " - " + it.sublink)
         }
 
         // Ask user's permission for Notifications
@@ -207,7 +210,7 @@ class DashboardActivity : BaseThemeActivity(),
 
             if (networkInfo != null && networkInfo.isConnected) {
                 // Internet is connected, proceed with your code
-                if (AppRepository.canStop) SagerNet.stopService() else connect.launch(null)
+                VpnService.toggleVpn()
             } else {
                 // Internet is not connected, show a toast
                 Toast.makeText(this, "No internet connection", Toast.LENGTH_LONG).show()
@@ -394,10 +397,6 @@ class DashboardActivity : BaseThemeActivity(),
         outState.putBoolean("ivMciClicked", ivMciClicked)
     }
 
-    val connect = registerForActivityResult(VpnRequestActivity.StartService()) {
-        if (it) println("HAMED_LOG_" + R.string.vpn_permission_denied)
-    }
-
     override fun onResume() {
         super.onResume()
         AdRepository.showAppOpenAd(this)
@@ -425,7 +424,7 @@ class DashboardActivity : BaseThemeActivity(),
         when (key) {
             Key.SERVICE_MODE -> onBinderDied()
             Key.PROXY_APPS, Key.BYPASS_MODE, Key.INDIVIDUAL -> {
-                if (AppRepository.canStop) {
+                if (VpnService.canStop) {
                     snackbar(getString(R.string.need_reload)).setAction(R.string.apply) {
                         SagerNet.reloadService()
                     }.show()
@@ -463,7 +462,7 @@ class DashboardActivity : BaseThemeActivity(),
             showNotConnectedState()
             stopTimer()
         }
-        AppRepository.canStop = state.canStop
+        VpnService.canStop = state.canStop
 //        binding.fab.changeState(state, DataStore.serviceState, animate)
 //        binding.stats.changeState(state)
 //        if (msg != null) snackbar(getString(R.string.vpn_error, msg)).show()
@@ -508,7 +507,7 @@ class DashboardActivity : BaseThemeActivity(),
         return try {
             supportFragmentManager.findFragmentByTag("f" + DataStore.selectedGroup) as ConfigurationFragment.GroupFragment?
         } catch (e: Exception) {
-            AppRepository.debugLog(e.toString())
+            debugLog(e.toString())
             null
         }
     }
@@ -519,5 +518,29 @@ class DashboardActivity : BaseThemeActivity(),
                 ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.POST_NOTIFICATIONS), 0)
             }
         }
+    }
+
+    // Handle the VPN stopped event
+    override fun onVpnStopped() {
+        // Do something when VPN is stopped
+        AppRepository.clearAllItemsSelections()
+        debugLog("VPN was stopped, handling event in MainActivity")
+    }
+
+    // Handle the VPN started event
+    override fun onVpnStarted() {
+        // Do something when VPN is started
+        debugLog("VPN was started, handling event in MainActivity")
+    }
+
+    // Handle the VPN server changed event
+    override fun onVpnServerChanged(newProfileId: Long) {
+        // Do something when VPN server is changed
+        debugLog("VPN was changed to $newProfileId, handling event in MainActivity")
+    }
+
+    override fun onDestroy() {
+        VpnService.removeVpnEventListener(this)
+        super.onDestroy()
     }
 }
