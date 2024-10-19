@@ -11,7 +11,7 @@
 /.idea/runConfigurations.xml
 /.idea/deploymentTargetSelector.xml
 /.idea/appInsightsSettings.xml
-/.idea/*.xml
+/.idea/
 .DS_Store
 build/
 /captures
