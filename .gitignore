@@ -26,3 +26,4 @@ release.keystore
 /service_account_credentials.json
 jniLibs/
 /.kotlin
+/app/src/main/assets/local.properties

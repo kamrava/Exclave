@@ -1,5 +1,9 @@
 package io.nekohasekai.sagernet.vpn.helpers
 
+import android.content.Context
+import io.nekohasekai.sagernet.vpn.repositories.AppRepository
+import java.util.Properties
+
 class GenericHelper {
     companion object {
         fun countryMapper(countryCode: String): String {
@@ -457,6 +461,21 @@ class GenericHelper {
                 "Others" to "other"
             )
             return countries[countryName].toString()
+        }
+
+        fun getEnv(context: Context, keyName: String): String? {
+            val properties = Properties()
+
+            try {
+                context.assets.open("local.properties").use { inputStream ->
+                    properties.load(inputStream)
+                }
+            } catch (e: Exception) {
+                AppRepository.debugLog("Error Loading env file: " + e.message)
+                e.printStackTrace()
+            }
+
+            return properties.getProperty(keyName)
         }
     }
 }
