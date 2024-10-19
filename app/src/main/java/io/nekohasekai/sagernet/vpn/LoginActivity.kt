@@ -28,6 +28,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import io.nekohasekai.sagernet.R
 import io.nekohasekai.sagernet.databinding.ActivityLoginBinding
+import io.nekohasekai.sagernet.vpn.helpers.GenericHelper
 import io.nekohasekai.sagernet.vpn.repositories.AppRepository
 import io.nekohasekai.sagernet.vpn.repositories.AuthRepository
 import io.nekohasekai.sagernet.vpn.repositories.SocialAuthRepository
@@ -107,8 +108,11 @@ class LoginActivity : BaseThemeActivity() {
             binding.LLFacebookSignIn.performClick()
         }
 
-        binding.txtEmail.setText("rifegt@gmail.com")
-        binding.txtPassword.setText("MG7nYUTaA&E2*b9FFZ2FY")
+        val testEmail = GenericHelper.getEnv(this, "TEST_EMAIL")
+        val testPassword = GenericHelper.getEnv(this, "TEST_PASSWORD")
+
+        binding.txtEmail.setText(testEmail)
+        binding.txtPassword.setText(testPassword)
 
         binding.btnLogin.setOnClickListener {
             val email = binding.txtEmail.text.toString()
