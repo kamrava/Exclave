@@ -478,5 +478,20 @@ class GenericHelper {
             )
             return countries[countryName].toString()
         }
+
+        fun getEnv(context: Context, keyName: String): String? {
+            val properties = Properties()
+
+            try {
+                context.assets.open("local.properties").use { inputStream ->
+                    properties.load(inputStream)
+                }
+            } catch (e: Exception) {
+                AppRepository.debugLog("Error Loading env file: " + e.message)
+                e.printStackTrace()
+            }
+
+            return properties.getProperty(keyName)
+        }
     }
 }
