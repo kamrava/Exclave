@@ -10,6 +10,8 @@ data class Service(
     @SerializedName("package") val packageName: String,
     val paid_date: String,
     val expire_date: String,
+    val show_ad: Boolean,
+    val upgradable: Boolean,
     val billing: String,
     val amount: String,
     val iplimit: String,

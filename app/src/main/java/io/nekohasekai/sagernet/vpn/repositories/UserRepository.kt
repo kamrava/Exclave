@@ -2,23 +2,11 @@ package io.nekohasekai.sagernet.vpn.repositories
 
 object UserRepository {
 
-    object User {
-        val token = null
-        val email = null
-        val username = null
-        val group = null
-        val dataUsed = null
+    fun isFreeUser(): Boolean {
+        return AuthRepository.getSelectedService()?.show_ad ?: true
     }
 
-    fun getUser(data: String): User {
-        return User
-    }
-
-    fun setUserState() {
-
-    }
-
-    fun setService() {
-
+    fun hasUpgradableService(): Boolean {
+        return AuthRepository.getSelectedService()?.upgradable ?: true
     }
 }

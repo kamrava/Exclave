@@ -6,12 +6,16 @@
     <string name="fb_login_protocol_scheme">fb266286379591311</string>
     <string name="facebook_client_token">c707fb6a5daadbedbb4b1cb77b566de0</string>
     <string name="unita_vpn">Unita VPN</string>
-    <string name="plus_thirty_minutes">+30 min</string>
+    <string name="plus_x_minutes">+%d min</string>
     <string name="dashboard_connect">Connect</string>
     <string name="premium">Premium</string>
+    <string name="upgrade_service">Upgrade</string>
     <string name="ping">Ping</string>
     <string name="preferences">Preferences</string>
     <string name="general">General</string>
+    <string name="service_activated_successfully">Service %s Activated Successfully</string>
+    <string name="service_name_placeholder">Select a Service</string>
+    <string name="service_name">%s (%s)</string>
     <string name="account">Account</string>
     <string name="comment">Comment</string>
     <string name="unita_vpn_telegram">Telegram</string>

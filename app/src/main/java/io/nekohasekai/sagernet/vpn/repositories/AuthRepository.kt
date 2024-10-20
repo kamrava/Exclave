@@ -55,7 +55,7 @@ object AuthRepository : KoinComponent {
 
     private fun setUserAccountInfo(userAccountInfoPram: InfoApiResponse) {
         userAccountInfo = userAccountInfoPram
-       val userAccountInfoJsonString : String = Gson().toJson(userAccountInfoPram)
+        val userAccountInfoJsonString : String = Gson().toJson(userAccountInfoPram)
         AppRepository.sharedPreferences.edit().putString("userAccountInfo", userAccountInfoJsonString).apply()
     }
 
@@ -68,6 +68,24 @@ object AuthRepository : KoinComponent {
             userAccountInfo = Gson().fromJson(userAccountDataString, InfoApiResponse::class.java)
         }
         return userAccountInfo
+    }
+
+    fun setSelectedService(service: Service) {
+        val selectedService : String = Gson().toJson(service)
+        AppRepository.sharedPreferences.edit().putString("selectedService", selectedService).apply()
+        AppRepository.debugLog("setSelectedServiceCalled: " + service.toString())
+    }
+
+    fun getSelectedService(): Service? {
+        var userSelectedService: Service? = null
+        val userSelectedServiceString = AppRepository.sharedPreferences.getString("selectedService", null)
+        userSelectedServiceString?.let {
+            userSelectedService = Gson().fromJson(
+                userSelectedServiceString,
+                Service::class.java
+            )
+        }
+        return userSelectedService
     }
 
     fun getUserEmail(): String {
@@ -139,6 +157,7 @@ object AuthRepository : KoinComponent {
                 val apiResponse = gson.fromJson(responseBody, InfoApiResponse::class.java)
 
                 setUserAccountInfo(apiResponse)
+                setSelectedService(apiResponse.data.services.last())
 
 //                val jsonObject = gson.fromJson(responseBody, JsonObject::class.java)
 //                val dataJsonObject = gson.fromJson(jsonObject.get("data").asJsonObject, JsonObject::class.java)

@@ -8,7 +8,29 @@ val appModule = module {
     // Define dependencies here
     single {
         listOf(
-            Service(0, 0, "", 0, "", "", "", "", "", "", "", "", "","", "", "", "", "", "")
+            Service(
+                0,
+                0,
+                "",
+                0,
+                "",
+                "",
+                "",
+                true,
+                true,
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+            )
         )
     }
 

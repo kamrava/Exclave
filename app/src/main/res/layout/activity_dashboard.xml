@@ -84,7 +84,7 @@
         android:layout_marginTop="100dp"
         android:fontFamily="@font/museo_san_rounded700"
         android:padding="5dp"
-        android:text="@string/plus_thirty_minutes"
+        android:text="@string/plus_x_minutes"
         android:textColor="@color/black"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="@+id/laPulseButton"

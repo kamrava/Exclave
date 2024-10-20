@@ -20,6 +20,7 @@ import io.nekohasekai.sagernet.vpn.repositories.AuthRepository
 
 class AccountFragment : Fragment() {
     private var isFirstSelection = true
+    private lateinit var adapter: ArrayAdapter<Service>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -54,15 +55,17 @@ class AccountFragment : Fragment() {
 
         val activeServices = AuthRepository.getUserActiveServices()
         val spinner: Spinner = view.findViewById(R.id.serviceSelector)
+        var selectedPosition = 0
+        selectedPosition = activeServices.indexOfFirst { it.sid == AuthRepository.getSelectedService()?.sid }
 
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 if (isFirstSelection) {
-                    isFirstSelection = false // Skip the first trigger
+                    isFirstSelection = false
                 } else {
-                    val selectedObject = parent.getItemAtPosition(position) as Service
-                    val selectedName = selectedObject.packageName
-                    Toast.makeText(requireContext(), "$selectedName فعال شد ", Toast.LENGTH_LONG).show()
+                    val selectedService = parent.getItemAtPosition(position) as Service
+                    AuthRepository.setSelectedService(selectedService)
+                    Toast.makeText(requireContext(), getString(R.string.service_activated_successfully, selectedService.packageName), Toast.LENGTH_LONG).show()
                 }
             }
 
@@ -71,24 +74,24 @@ class AccountFragment : Fragment() {
             }
         }
 
-        val adapter = object : ArrayAdapter<Service>(requireContext(), R.layout.spinner_item, activeServices) {
+        adapter = object : ArrayAdapter<Service>(requireContext(), R.layout.spinner_item, activeServices) {
             override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
                 val dropView = super.getView(position, convertView, parent) as TextView
-                dropView.text = getItem(position)?.packageName + " (شناسه ${getItem(position)?.sid})"
+                val itemName = getString(R.string.service_name, getItem(position)?.packageName, getItem(position)?.sid)
+                dropView.text = itemName
                 return dropView
             }
 
             override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
                 val dropItemView = super.getDropDownView(position, convertView, parent) as TextView
-                dropItemView.text = getItem(position)?.packageName + " (شناسه ${getItem(position)?.sid})"
+                val itemName = getString(R.string.service_name, getItem(position)?.packageName, getItem(position)?.sid)
+                dropItemView.text = itemName
                 return dropItemView
             }
         }
         adapter.setDropDownViewResource(R.layout.spinner_each_item)
-
-
-
         spinner.adapter = adapter
+        spinner.setSelection(selectedPosition)
 
         return view
     }

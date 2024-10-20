@@ -22,6 +22,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.preference.PreferenceDataStore
 import com.airbnb.lottie.LottieAnimationView
+import com.google.android.gms.ads.rewarded.RewardItem
 import com.google.android.material.navigation.NavigationView
 import com.google.gson.Gson
 import io.nekohasekai.sagernet.Key
@@ -38,13 +39,17 @@ import io.nekohasekai.sagernet.databinding.ActivityDashboardBinding
 import io.nekohasekai.sagernet.ktx.app
 import io.nekohasekai.sagernet.ui.ConfigurationFragment
 import io.nekohasekai.sagernet.ui.MainActivity
+import io.nekohasekai.sagernet.vpn.interfaces.RewardedAdListener
 import io.nekohasekai.sagernet.vpn.interfaces.VpnEventListener
 import io.nekohasekai.sagernet.vpn.nav.MenuFragment
 import io.nekohasekai.sagernet.vpn.repositories.AdRepository
 import io.nekohasekai.sagernet.vpn.repositories.AppRepository
 import io.nekohasekai.sagernet.vpn.repositories.AppRepository.debugLog
+import io.nekohasekai.sagernet.vpn.repositories.AppRepository.appSetting
 import io.nekohasekai.sagernet.vpn.repositories.AuthRepository
+import io.nekohasekai.sagernet.vpn.repositories.UserRepository
 import io.nekohasekai.sagernet.vpn.serverlist.ServersListFragment
+import io.nekohasekai.sagernet.vpn.services.AdManagerService
 import io.nekohasekai.sagernet.vpn.services.VpnService
 import io.nekohasekai.sagernet.vpn.utils.InternetConnectionChecker
 import kotlinx.coroutines.Dispatchers
@@ -54,10 +59,11 @@ class DashboardActivity : BaseThemeActivity(),
     SagerConnection.Callback,
     OnPreferenceDataStoreChangeListener,
     NavigationView.OnNavigationItemSelectedListener,
-    VpnEventListener {
+    VpnEventListener,
+    RewardedAdListener {
 
     lateinit var binding: ActivityDashboardBinding
-    private lateinit var PowerIcon: LottieAnimationView
+    private lateinit var powerIcon: LottieAnimationView
     private lateinit var ivAll: ImageView
     private lateinit var ivMtn: ImageView
     private lateinit var ivMci: ImageView
@@ -65,12 +71,14 @@ class DashboardActivity : BaseThemeActivity(),
     private lateinit var timerTextView: TextView
     private lateinit var appTitle: TextView
     private lateinit var addTimeTextView: TextView
+    private lateinit var tvSelectedServer: TextView
     private var timerRunning = false
     private var timeRemainingMillis: Long = 0
     private var ivAllClicked = true // Set IVall as clicked by default
     private var ivMtnClicked = false // Add a variable to track IVMTN click state
     private var ivMciClicked = false // Add a variable to track IVMCI click state
     private var countDownTimer: CountDownTimer? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_dashboard)
@@ -82,9 +90,12 @@ class DashboardActivity : BaseThemeActivity(),
         VpnService.addVpnEventListener(this)
         VpnService.initialize(this)
 
+        AdManagerService.initialize(this)
+        AdManagerService.loadRewardedAd(this)
+
         // load BannerAd and RewardedAd
         //AdRepository.loadBannerAd(this@DashboardActivity)
-        //AdRepository.loadRewardedAd(this)
+//        AdRepository.loadRewardedAd(this)
 
         AuthRepository.getUserAccountInfo()
 
@@ -97,24 +108,30 @@ class DashboardActivity : BaseThemeActivity(),
 
         AppRepository.sharedPreferences = getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
 
-        val ShareIcon = findViewById<ImageView>(R.id.ivShareIcon)
+        val shareIcon = findViewById<ImageView>(R.id.ivShareIcon)
         val connection = SagerConnection(true)
 
+        tvSelectedServer = findViewById<TextView>(R.id.tvSelectedServer)
+
         val clPremium = findViewById<ConstraintLayout>(R.id.clPremium)
+        val tvPremium = findViewById<TextView>(R.id.tvPremium)
+        clPremium.visibility = showForUpgradableServices()
+        tvPremium.text = if (UserRepository.hasUpgradableService()) {
+            getString(R.string.upgrade_service)
+        } else {
+            getString(R.string.premium)
+        }
         clPremium.setOnClickListener {navigateToPremiumActivity()}
 
         // <DO NOT DELETE THIS COMMENT CODES>
         // Set an OnClickListener to MainActivity
-        ShareIcon.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(v: View) {
-                // Start the MainActivity
-                val intent = Intent(this@DashboardActivity, MainActivity::class.java)
-                startActivity(intent)
-            }
-        })
+        shareIcon.setOnClickListener { // Start the MainActivity
+            val intent = Intent(this@DashboardActivity, MainActivity::class.java)
+            startActivity(intent)
+        }
 
-        // Set onClickListener for ShareIcon
-//        ShareIcon.setOnClickListener {
+        // Set onClickListener for shareIcon
+//        shareIcon.setOnClickListener {
 //            shareLinkWithMessage(AppRepository.ShareCustomMessage)
 //        }
 
@@ -160,7 +177,7 @@ class DashboardActivity : BaseThemeActivity(),
             transaction.commit()
         }
 
-        PowerIcon = findViewById(R.id.laPulseButton)
+        powerIcon = findViewById(R.id.laPulseButton)
         ivAll = findViewById(R.id.ivAll)
         ivMtn = findViewById(R.id.ivMtn)
         ivMci = findViewById(R.id.ivMci)
@@ -168,6 +185,10 @@ class DashboardActivity : BaseThemeActivity(),
         timerTextView = findViewById(R.id.tvTimer)
         appTitle = findViewById(R.id.tvApplicationName)
         addTimeTextView = findViewById(R.id.tvAddTime)
+        addTimeTextView.text = getString(R.string.plus_x_minutes, appSetting.freeVpnTimer)
+
+        timerTextView.visibility = showForFreeUsers()
+        addTimeTextView.visibility = showForFreeUsers()
 
         // Check if returning from a fragment
         if (savedInstanceState != null) {
@@ -204,7 +225,7 @@ class DashboardActivity : BaseThemeActivity(),
             transaction.commit()
         }
 
-        PowerIcon.setOnClickListener {
+        powerIcon.setOnClickListener {
             val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
             val networkInfo: NetworkInfo? = connectivityManager.activeNetworkInfo
 
@@ -311,12 +332,11 @@ class DashboardActivity : BaseThemeActivity(),
         ivMci.setImageResource(if (ivMciClicked) R.drawable.ic_mci_hamrahe_aval_colorfull else R.drawable.ic_mci_hamrahe_aval_gray)
     }
 
-    private fun add30MinutesToTimer() {
-        if(!AppRepository.isConnected) {
-            var remainTime = AppRepository.sharedPreferences.getLong("remainingTime", 0)
-            timeRemainingMillis = remainTime + 1800000
-            AppRepository.sharedPreferences.edit().putLong("remainingTime", timeRemainingMillis).apply()
-        }
+    private fun addMinutesToTimer() {
+        val remainTime = AppRepository.sharedPreferences.getLong("remainingTime", 0)
+        val minutes = appSetting.freeVpnTimer
+        timeRemainingMillis = remainTime + (minutes * 60 * 1000L)
+        AppRepository.sharedPreferences.edit().putLong("remainingTime", timeRemainingMillis).apply()
         startTimer()
     }
 
@@ -326,10 +346,7 @@ class DashboardActivity : BaseThemeActivity(),
     }
 
     private fun startTimer() {
-        var initialTimeMillis = AppRepository.sharedPreferences.getLong("remainingTime", 0)
-        if(initialTimeMillis.toInt() === 0) {
-            initialTimeMillis = 1800000;
-        }
+        val initialTimeMillis = AppRepository.sharedPreferences.getLong("remainingTime", 0)
 
         countDownTimer = object : CountDownTimer(initialTimeMillis, 1000) {
             override fun onTick(millisUntilFinished: Long) {
@@ -339,11 +356,8 @@ class DashboardActivity : BaseThemeActivity(),
             }
 
             override fun onFinish() {
-                // Stop the service if isConnected is true and timer is 0
-                if (timerTextView.text == "00:00") {
-                    AppRepository.sharedPreferences.edit().remove("remainingTime").apply()
-                    stopService()
-                }
+                AppRepository.sharedPreferences.edit().remove("remainingTime").apply()
+                VpnService.stopVpn()
             }
         }
         if(!timerRunning) {
@@ -365,26 +379,26 @@ class DashboardActivity : BaseThemeActivity(),
     private fun showConnectingState() {
         timerTextView.visibility = View.INVISIBLE
         addTimeTextView.visibility = View.INVISIBLE
-        PowerIcon.setAnimation(R.raw.pulse_button_yellow)
-        PowerIcon.playAnimation()
+        powerIcon.setAnimation(R.raw.pulse_button_yellow)
+        powerIcon.playAnimation()
         stateTextView.text = getString(R.string.connecting_state)
-        PowerIcon.isEnabled = false
+        powerIcon.isEnabled = false
     }
 
     private fun showConnectedState() {
-        timerTextView.visibility = View.VISIBLE
-        addTimeTextView.visibility = View.INVISIBLE
-        PowerIcon.setAnimation(R.raw.pulse_button_green)
-        PowerIcon.playAnimation()
+        timerTextView.visibility = showForFreeUsers()
+//        addTimeTextView.visibility = showForFreeUsers()
+        powerIcon.setAnimation(R.raw.pulse_button_green)
+        powerIcon.playAnimation()
         stateTextView.text = getString(R.string.connected_state)
-        PowerIcon.isEnabled = true
+        powerIcon.isEnabled = true
     }
 
     private fun showNotConnectedState() {
         timerTextView.visibility = View.INVISIBLE
-        addTimeTextView.visibility = View.VISIBLE
-        PowerIcon.setAnimation(R.raw.pulse_button_gray)
-        PowerIcon.playAnimation()
+        addTimeTextView.visibility = showForFreeUsers()
+        powerIcon.setAnimation(R.raw.pulse_button_gray)
+        powerIcon.playAnimation()
         stateTextView.text = getString(R.string.connect_state)
     }
 
@@ -402,7 +416,8 @@ class DashboardActivity : BaseThemeActivity(),
         AdRepository.showAppOpenAd(this)
         if(DataStore.startedProfile > 0) {
             showConnectedState()
-            AdRepository.showRewardedAd(this)
+//            adManager.showRewardedAd()
+//            AdRepository.showRewardedAd(this)
         } else {
             showNotConnectedState()
         }
@@ -447,12 +462,10 @@ class DashboardActivity : BaseThemeActivity(),
     ) {
 //        DataStore.serviceState = state
         if (state.toString() === "Connected") {
-            println("HAMED_LOG_CONNECT")
-            AdRepository.showRewardedAd(this)
-            add30MinutesToTimer()
+            AdManagerService.showRewardedAd()
+//            AdRepository.showRewardedAd(this)
             AppRepository.isConnected = true
             val profile = SagerDatabase.proxyDao.getById(DataStore.selectedProxy)
-            val tvSelectedServer = findViewById<TextView>(R.id.tvSelectedServer)
             tvSelectedServer.text = profile?.displayName()
             showConnectedState()
         } else if(state.toString() === "Connecting") {
@@ -524,6 +537,7 @@ class DashboardActivity : BaseThemeActivity(),
     override fun onVpnStopped() {
         // Do something when VPN is stopped
         AppRepository.clearAllItemsSelections()
+        tvSelectedServer.text = ""
         debugLog("VPN was stopped, handling event in MainActivity")
     }
 
@@ -539,8 +553,22 @@ class DashboardActivity : BaseThemeActivity(),
         debugLog("VPN was changed to $newProfileId, handling event in MainActivity")
     }
 
+    // Catch the reward event here
+    override fun onUserEarnedReward(rewardItem: RewardItem) {
+        addMinutesToTimer()
+        debugLog("User_earned_the_reward")
+    }
+
     override fun onDestroy() {
         VpnService.removeVpnEventListener(this)
         super.onDestroy()
+    }
+
+    fun showForFreeUsers():Int {
+        return if (UserRepository.isFreeUser()) View.VISIBLE else View.INVISIBLE
+    }
+
+    fun showForUpgradableServices():Int {
+        return if (UserRepository.hasUpgradableService()) View.VISIBLE else showForFreeUsers()
     }
 }
