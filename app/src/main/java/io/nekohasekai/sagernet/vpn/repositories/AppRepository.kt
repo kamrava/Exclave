@@ -30,6 +30,7 @@ import io.nekohasekai.sagernet.vpn.helpers.GenericHelper
 import io.nekohasekai.sagernet.vpn.models.AppSetting
 import io.nekohasekai.sagernet.vpn.models.ListItem
 import io.nekohasekai.sagernet.vpn.models.ListSubItem
+import io.nekohasekai.sagernet.vpn.models.Service
 import io.nekohasekai.sagernet.vpn.serverlist.ListItemAdapter
 import io.nekohasekai.sagernet.vpn.utils.CustomTestDialog
 import kotlinx.coroutines.Dispatchers
@@ -76,6 +77,7 @@ object AppRepository {
     var appShouldForceUpdate: Boolean = false
     lateinit var appSetting: AppSetting
     private var isInternetConnected = true
+    lateinit var selectedService: Service
 
     fun getAllServer(): MutableList<ListItem> {
         val allServersString = sharedPreferences.getString("allServers", null)
@@ -95,18 +97,6 @@ object AppRepository {
         val gson = Gson()
         val allServersInJson = gson.toJson(servers)
         sharedPreferences.edit().putString("allServers", allServersInJson).apply()
-    }
-
-    fun clearServerSelections() {
-        allServers.map { entry ->
-            entry.isSelected = false
-            entry.dropdownItems.forEach {
-                it.isSelected = false
-            }
-        }
-
-        setAllServer(allServers)
-        refreshServersListView()
     }
 
     fun getSubscriptionLink(): String {
