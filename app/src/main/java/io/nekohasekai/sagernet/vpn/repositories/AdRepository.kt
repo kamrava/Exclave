@@ -26,6 +26,7 @@ import io.nekohasekai.sagernet.SagerNet
 import io.nekohasekai.sagernet.ui.MainActivity
 import io.nekohasekai.sagernet.vpn.DashboardActivity
 import io.nekohasekai.sagernet.vpn.WelcomeActivity
+import io.nekohasekai.sagernet.vpn.interfaces.RewardedAdListener
 import io.nekohasekai.sagernet.vpn.utils.InternetConnectionChecker
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.coroutines.resume
@@ -158,6 +159,7 @@ object AdRepository {
                     // Handle the reward.
                     val rewardAmount = rewardItem.amount
                     val rewardType = rewardItem.type
+
                 })
             } ?: run {
 
