@@ -60,7 +60,7 @@
     <string name="info">Info</string>
     <string name="plan">Plan</string>
     <string name="expiration_date">Expiration date</string>
-    <string name="dataleft">DataLeft</string>
+    <string name="dataleft">Data Left: %s</string>
     <string name="title">Title</string>
     <string name="enter_your_title">Enter your title</string>
     <string name="message">Message</string>
