@@ -62,6 +62,9 @@ class AdManagerService private constructor() {
         }
 
         fun showRewardedAd() {
+            if (!shouldShowAd()) {
+                return
+            }
             rewardedAd?.let { ad ->
                 ad.show((this.context as Activity), OnUserEarnedRewardListener { rewardItem ->
                     rewardedAdListener.onUserEarnedReward(rewardItem)
@@ -73,7 +76,6 @@ class AdManagerService private constructor() {
         }
 
         fun shouldShowAd(): Boolean {
-            AppRepository.debugLog(AuthRepository.getSelectedService().toString())
             return AuthRepository.getSelectedService()?.show_ad ?: true
         }
     }
