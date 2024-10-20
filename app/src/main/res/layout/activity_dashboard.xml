@@ -307,7 +307,7 @@
             android:layout_weight="20"
             android:fontFamily="@font/museo_san_rounded700"
             android:layout_marginStart="20dp"
-            android:text="10.00 GB Left"
+            android:text=""
             android:textColor="@color/white"
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="parent"

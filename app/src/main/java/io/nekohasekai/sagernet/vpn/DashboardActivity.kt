@@ -113,6 +113,9 @@ class DashboardActivity : BaseThemeActivity(),
 
         tvSelectedServer = findViewById<TextView>(R.id.tvSelectedServer)
 
+        val tvDataLeft = findViewById<TextView>(R.id.tvDataLeft)
+        tvDataLeft.text = getString(R.string.dataleft, AuthRepository.getSelectedService()?.remain_traffic)
+
         val clPremium = findViewById<ConstraintLayout>(R.id.clPremium)
         val tvPremium = findViewById<TextView>(R.id.tvPremium)
         clPremium.visibility = showForUpgradableServices()

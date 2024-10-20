@@ -19,6 +19,7 @@ data class Service(
     val server_group: String,
     val traffic: String,
     val used_traffic: String,
+    val remain_traffic: String,
     val today: String,
     val recent_omline: String,
     val status: String,
