@@ -20,6 +20,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import androidx.lifecycle.lifecycleScope
 import androidx.preference.PreferenceDataStore
 import com.airbnb.lottie.LottieAnimationView
 import com.google.android.gms.ads.rewarded.RewardItem
@@ -36,6 +37,7 @@ import io.nekohasekai.sagernet.database.ProxyEntity
 import io.nekohasekai.sagernet.database.SagerDatabase
 import io.nekohasekai.sagernet.database.preference.OnPreferenceDataStoreChangeListener
 import io.nekohasekai.sagernet.databinding.ActivityDashboardBinding
+import io.nekohasekai.sagernet.databinding.ActivityForceUpdateBinding
 import io.nekohasekai.sagernet.ktx.app
 import io.nekohasekai.sagernet.ui.ConfigurationFragment
 import io.nekohasekai.sagernet.ui.MainActivity
@@ -46,6 +48,7 @@ import io.nekohasekai.sagernet.vpn.repositories.AdRepository
 import io.nekohasekai.sagernet.vpn.repositories.AppRepository
 import io.nekohasekai.sagernet.vpn.repositories.AppRepository.debugLog
 import io.nekohasekai.sagernet.vpn.repositories.AppRepository.appSetting
+import io.nekohasekai.sagernet.vpn.repositories.AppRepository.recyclerView
 import io.nekohasekai.sagernet.vpn.repositories.AuthRepository
 import io.nekohasekai.sagernet.vpn.repositories.UserRepository
 import io.nekohasekai.sagernet.vpn.serverlist.ServersListFragment
@@ -53,6 +56,7 @@ import io.nekohasekai.sagernet.vpn.services.AdManagerService
 import io.nekohasekai.sagernet.vpn.services.VpnService
 import io.nekohasekai.sagernet.vpn.utils.InternetConnectionChecker
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class DashboardActivity : BaseThemeActivity(),
@@ -81,10 +85,10 @@ class DashboardActivity : BaseThemeActivity(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_dashboard)
+        binding = ActivityDashboardBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         AdRepository.internetChecker = InternetConnectionChecker(this)
-
         AdRepository.appOpenAdManager.showAdIfAvailable(this)
 
         VpnService.addVpnEventListener(this)
@@ -156,12 +160,12 @@ class DashboardActivity : BaseThemeActivity(),
         // Initialize the fragment container
         val fragmentContainer = findViewById<View>(R.id.flFragmentContainer)
 
-        val pingBtn = findViewById<ConstraintLayout>(R.id.clIconPing)
-        pingBtn.setOnClickListener {
-            AppRepository.urlTest(this)
-            showNotConnectedState()
-            stopTimer()
-        }
+//        val pingBtn = findViewById<ConstraintLayout>(R.id.clIconPing)
+//        pingBtn.setOnClickListener {
+//            AppRepository.urlTest(this)
+//            showNotConnectedState()
+//            stopTimer()
+//        }
 
         // Find the NavMenuIcon ImageView and set an OnClickListener
         val navMenuIcon = findViewById<ImageView>(R.id.ivNavMenuIcon)
@@ -238,6 +242,16 @@ class DashboardActivity : BaseThemeActivity(),
             } else {
                 // Internet is not connected, show a toast
                 Toast.makeText(this, "No internet connection", Toast.LENGTH_LONG).show()
+            }
+        }
+
+        binding.clIconPing.setOnClickListener {
+            binding.clIconPing.visibility = View.INVISIBLE
+            binding.pbPing.visibility = View.VISIBLE
+            showNotConnectedState()
+            stopTimer()
+            lifecycleScope.launch {
+                VpnService.silentUrlTestAsync()
             }
         }
 
@@ -561,6 +575,15 @@ class DashboardActivity : BaseThemeActivity(),
         addMinutesToTimer()
         debugLog("User_earned_the_reward")
     }
+
+    override fun onPingTestFinished() {
+        debugLog("onPingTestFinishedCalled")
+//        AppRepository.refreshServersListView()
+//        recyclerView.adapter?.notifyDataSetChanged()
+        binding.pbPing.visibility = View.INVISIBLE
+        binding.clIconPing.visibility = View.VISIBLE
+    }
+
 
     override fun onDestroy() {
         VpnService.removeVpnEventListener(this)

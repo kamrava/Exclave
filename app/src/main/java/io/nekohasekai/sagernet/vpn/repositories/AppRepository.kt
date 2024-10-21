@@ -384,7 +384,7 @@ object AppRepository {
         }
     }
 
-    private suspend fun silentUrlTestAsync() = withContext(Dispatchers.IO) {
+    public suspend fun silentUrlTestAsync() = withContext(Dispatchers.IO) {
         val link = appSetting.urlTest.link
         val timeout = appSetting.urlTest.timeout
         var working = AtomicInteger(0)
