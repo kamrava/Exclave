@@ -86,13 +86,9 @@ class SplashActivity : BaseThemeActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
 
-
-
         // Initialize the ProgressBar and Try Again Button
         progressBar = findViewById(R.id.progressBar)
         tryAgainButton = findViewById(R.id.btnTryAgain)
-
-
 
         // Set the Try Again button click listener
         tryAgainButton.setOnClickListener {
