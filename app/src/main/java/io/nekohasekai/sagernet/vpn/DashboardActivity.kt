@@ -2,24 +2,25 @@ package io.nekohasekai.sagernet.vpn
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.Intent
-import android.os.Bundle
-import android.os.RemoteException
-import android.view.MenuItem
-import android.view.View
-import android.widget.ImageView
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.os.Build
+import android.os.Bundle
 import android.os.CountDownTimer
+import android.os.RemoteException
+import android.view.MenuItem
+import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import androidx.lifecycle.lifecycleScope
 import androidx.preference.PreferenceDataStore
 import com.airbnb.lottie.LottieAnimationView
 import com.google.android.gms.ads.rewarded.RewardItem
@@ -44,8 +45,8 @@ import io.nekohasekai.sagernet.vpn.interfaces.VpnEventListener
 import io.nekohasekai.sagernet.vpn.nav.MenuFragment
 import io.nekohasekai.sagernet.vpn.repositories.AdRepository
 import io.nekohasekai.sagernet.vpn.repositories.AppRepository
-import io.nekohasekai.sagernet.vpn.repositories.AppRepository.debugLog
 import io.nekohasekai.sagernet.vpn.repositories.AppRepository.appSetting
+import io.nekohasekai.sagernet.vpn.repositories.AppRepository.debugLog
 import io.nekohasekai.sagernet.vpn.repositories.AuthRepository
 import io.nekohasekai.sagernet.vpn.repositories.UserRepository
 import io.nekohasekai.sagernet.vpn.serverlist.ServersListFragment
@@ -53,6 +54,7 @@ import io.nekohasekai.sagernet.vpn.services.AdManagerService
 import io.nekohasekai.sagernet.vpn.services.VpnService
 import io.nekohasekai.sagernet.vpn.utils.InternetConnectionChecker
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class DashboardActivity : BaseThemeActivity(),
@@ -81,10 +83,10 @@ class DashboardActivity : BaseThemeActivity(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_dashboard)
+        binding = ActivityDashboardBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         AdRepository.internetChecker = InternetConnectionChecker(this)
-
         AdRepository.appOpenAdManager.showAdIfAvailable(this)
 
         VpnService.addVpnEventListener(this)
@@ -155,13 +157,6 @@ class DashboardActivity : BaseThemeActivity(),
 
         // Initialize the fragment container
         val fragmentContainer = findViewById<View>(R.id.flFragmentContainer)
-
-        val pingBtn = findViewById<ConstraintLayout>(R.id.clIconPing)
-        pingBtn.setOnClickListener {
-            AppRepository.urlTest(this)
-            showNotConnectedState()
-            stopTimer()
-        }
 
         // Find the NavMenuIcon ImageView and set an OnClickListener
         val navMenuIcon = findViewById<ImageView>(R.id.ivNavMenuIcon)
@@ -239,6 +234,22 @@ class DashboardActivity : BaseThemeActivity(),
                 // Internet is not connected, show a toast
                 Toast.makeText(this, "No internet connection", Toast.LENGTH_LONG).show()
             }
+        }
+
+        binding.clIconPing.setOnClickListener {
+            binding.clIconPing.visibility = View.GONE
+            binding.clpbPing.visibility = View.VISIBLE
+            VpnService.stopVpn()
+            showNotConnectedState()
+            stopTimer()
+            lifecycleScope.launch {
+                try {
+                    VpnService.silentUrlTestAsync()
+                } catch (e: Exception) {
+                    debugLog("VpnService: Error during ping test")
+                }
+            }
+
         }
 
         connection.connect(this, this)
@@ -561,6 +572,19 @@ class DashboardActivity : BaseThemeActivity(),
         addMinutesToTimer()
         debugLog("User_earned_the_reward")
     }
+
+    private fun resetPingBtnUI() {
+        runOnUiThread {
+            binding.clpbPing.visibility = View.GONE
+            binding.clIconPing.visibility = View.VISIBLE
+            AppRepository.refreshServersListView()
+        }
+    }
+
+    override fun onPingTestFinished() {
+        resetPingBtnUI()
+    }
+
 
     override fun onDestroy() {
         VpnService.removeVpnEventListener(this)

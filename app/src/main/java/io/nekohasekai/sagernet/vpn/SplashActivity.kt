@@ -2,7 +2,6 @@ package io.nekohasekai.sagernet.vpn
 
 import android.content.Context
 import android.content.Intent
-import kotlinx.coroutines.withTimeoutOrNull
 import android.os.Bundle
 import android.view.View
 import android.widget.ProgressBar
@@ -30,9 +29,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeoutOrNull
 
 class SplashActivity : BaseThemeActivity() {
-
     private lateinit var progressBar: ProgressBar
     private lateinit var tryAgainButton: AppCompatButton
     private var mInterstitialAd: InterstitialAd? = null
@@ -86,13 +85,9 @@ class SplashActivity : BaseThemeActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
 
-
-
         // Initialize the ProgressBar and Try Again Button
         progressBar = findViewById(R.id.progressBar)
         tryAgainButton = findViewById(R.id.btnTryAgain)
-
-
 
         // Set the Try Again button click listener
         tryAgainButton.setOnClickListener {
