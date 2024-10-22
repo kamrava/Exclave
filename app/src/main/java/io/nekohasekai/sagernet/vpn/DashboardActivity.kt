@@ -295,7 +295,7 @@ class DashboardActivity : BaseThemeActivity(),
     }
 
     private fun updateivPremiumServersIcon() {
-        ivPremiumServers.setImageResource(if (ivPremiumServersClicked) R.drawable.ic_premium_titanium else R.drawable.ic_premium_golden)
+        ivPremiumServers.setImageResource(if (ivPremiumServersClicked) R.drawable.ic_premium_servers_gold else R.drawable.ic_premium_servers_gray)
     }
 
 

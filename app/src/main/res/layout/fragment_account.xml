@@ -213,14 +213,14 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
         android:layout_marginEnd="15dp"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="20dp"
         android:background="@drawable/background_nav_item"
         android:orientation="horizontal"
         android:gravity="center"
         android:padding="12dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/llPlan">
+        app:layout_constraintTop_toBottomOf="@+id/llDataLeft">
 
         <Spinner
             android:id="@+id/serviceSelector"
@@ -235,7 +235,6 @@
             app:layout_constraintTop_toBottomOf="@+id/llDataLeft"
             tools:ignore="NotSibling" />
 
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.appcompat.widget.AppCompatButton
@@ -248,7 +247,7 @@
         android:fontFamily="@font/museo_san_rounded700"
         android:text="@string/exit_account"
         android:textColor="@color/material_red_500"
-        android:layout_marginTop="90dp"
+        android:layout_marginTop="160dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/llDataLeft" />
