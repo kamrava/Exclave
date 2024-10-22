@@ -573,7 +573,7 @@ class DashboardActivity : BaseThemeActivity(),
         debugLog("User_earned_the_reward")
     }
 
-    private fun updateUIAfterPingTest() {
+    private fun resetPingBtnUI() {
         runOnUiThread {
             binding.clpbPing.visibility = View.GONE
             binding.clIconPing.visibility = View.VISIBLE
@@ -582,7 +582,7 @@ class DashboardActivity : BaseThemeActivity(),
     }
 
     override fun onPingTestFinished() {
-        updateUIAfterPingTest()
+        resetPingBtnUI()
     }
 
 
