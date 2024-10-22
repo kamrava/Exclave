@@ -2,18 +2,18 @@ package io.nekohasekai.sagernet.vpn
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.Intent
-import android.os.Bundle
-import android.os.RemoteException
-import android.view.MenuItem
-import android.view.View
-import android.widget.ImageView
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.os.Build
+import android.os.Bundle
 import android.os.CountDownTimer
+import android.os.RemoteException
+import android.view.MenuItem
+import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -37,7 +37,6 @@ import io.nekohasekai.sagernet.database.ProxyEntity
 import io.nekohasekai.sagernet.database.SagerDatabase
 import io.nekohasekai.sagernet.database.preference.OnPreferenceDataStoreChangeListener
 import io.nekohasekai.sagernet.databinding.ActivityDashboardBinding
-import io.nekohasekai.sagernet.databinding.ActivityForceUpdateBinding
 import io.nekohasekai.sagernet.ktx.app
 import io.nekohasekai.sagernet.ui.ConfigurationFragment
 import io.nekohasekai.sagernet.ui.MainActivity
@@ -46,9 +45,8 @@ import io.nekohasekai.sagernet.vpn.interfaces.VpnEventListener
 import io.nekohasekai.sagernet.vpn.nav.MenuFragment
 import io.nekohasekai.sagernet.vpn.repositories.AdRepository
 import io.nekohasekai.sagernet.vpn.repositories.AppRepository
-import io.nekohasekai.sagernet.vpn.repositories.AppRepository.debugLog
 import io.nekohasekai.sagernet.vpn.repositories.AppRepository.appSetting
-import io.nekohasekai.sagernet.vpn.repositories.AppRepository.recyclerView
+import io.nekohasekai.sagernet.vpn.repositories.AppRepository.debugLog
 import io.nekohasekai.sagernet.vpn.repositories.AuthRepository
 import io.nekohasekai.sagernet.vpn.repositories.UserRepository
 import io.nekohasekai.sagernet.vpn.serverlist.ServersListFragment
@@ -246,13 +244,19 @@ class DashboardActivity : BaseThemeActivity(),
         }
 
         binding.clIconPing.setOnClickListener {
-            binding.clIconPing.visibility = View.INVISIBLE
-            binding.pbPing.visibility = View.VISIBLE
+            binding.clIconPing.visibility = View.GONE
+            binding.clpbPing.visibility = View.VISIBLE
+            VpnService.stopVpn()
             showNotConnectedState()
             stopTimer()
             lifecycleScope.launch {
-                VpnService.silentUrlTestAsync()
+                try {
+                    VpnService.silentUrlTestAsync()
+                } catch (e: Exception) {
+                    debugLog("VpnService : Error during ping test")
+                }
             }
+
         }
 
         connection.connect(this, this)
@@ -577,11 +581,11 @@ class DashboardActivity : BaseThemeActivity(),
     }
 
     override fun onPingTestFinished() {
-        debugLog("onPingTestFinishedCalled")
-//        AppRepository.refreshServersListView()
-//        recyclerView.adapter?.notifyDataSetChanged()
-        binding.pbPing.visibility = View.INVISIBLE
-        binding.clIconPing.visibility = View.VISIBLE
+        runOnUiThread {
+            binding.clpbPing.visibility = View.GONE
+            binding.clIconPing.visibility = View.VISIBLE
+            AppRepository.refreshServersListView()
+        }
     }
 
 
