@@ -158,13 +158,6 @@ class DashboardActivity : BaseThemeActivity(),
         // Initialize the fragment container
         val fragmentContainer = findViewById<View>(R.id.flFragmentContainer)
 
-//        val pingBtn = findViewById<ConstraintLayout>(R.id.clIconPing)
-//        pingBtn.setOnClickListener {
-//            AppRepository.urlTest(this)
-//            showNotConnectedState()
-//            stopTimer()
-//        }
-
         // Find the NavMenuIcon ImageView and set an OnClickListener
         val navMenuIcon = findViewById<ImageView>(R.id.ivNavMenuIcon)
         navMenuIcon.setOnClickListener {
@@ -253,7 +246,7 @@ class DashboardActivity : BaseThemeActivity(),
                 try {
                     VpnService.silentUrlTestAsync()
                 } catch (e: Exception) {
-                    debugLog("VpnService : Error during ping test")
+                    debugLog("VpnService: Error during ping test")
                 }
             }
 
@@ -580,12 +573,16 @@ class DashboardActivity : BaseThemeActivity(),
         debugLog("User_earned_the_reward")
     }
 
-    override fun onPingTestFinished() {
+    private fun updateUIAfterPingTest() {
         runOnUiThread {
             binding.clpbPing.visibility = View.GONE
             binding.clIconPing.visibility = View.VISIBLE
             AppRepository.refreshServersListView()
         }
+    }
+
+    override fun onPingTestFinished() {
+        updateUIAfterPingTest()
     }
 
 
