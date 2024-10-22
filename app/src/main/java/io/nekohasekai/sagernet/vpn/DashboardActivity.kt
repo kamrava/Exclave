@@ -65,8 +65,7 @@ class DashboardActivity : BaseThemeActivity(),
     lateinit var binding: ActivityDashboardBinding
     private lateinit var powerIcon: LottieAnimationView
     private lateinit var ivAll: ImageView
-    private lateinit var ivMtn: ImageView
-    private lateinit var ivMci: ImageView
+    private lateinit var ivPremiumServers: ImageView
     private lateinit var stateTextView: TextView
     private lateinit var timerTextView: TextView
     private lateinit var appTitle: TextView
@@ -74,9 +73,8 @@ class DashboardActivity : BaseThemeActivity(),
     private lateinit var tvSelectedServer: TextView
     private var timerRunning = false
     private var timeRemainingMillis: Long = 0
-    private var ivAllClicked = true // Set IVall as clicked by default
-    private var ivMtnClicked = false // Add a variable to track IVMTN click state
-    private var ivMciClicked = false // Add a variable to track IVMCI click state
+    private var ivAllClicked = true
+    private var ivPremiumServersClicked = false
     private var countDownTimer: CountDownTimer? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -182,8 +180,7 @@ class DashboardActivity : BaseThemeActivity(),
 
         powerIcon = findViewById(R.id.laPulseButton)
         ivAll = findViewById(R.id.ivAll)
-        ivMtn = findViewById(R.id.ivMtn)
-        ivMci = findViewById(R.id.ivMci)
+        ivPremiumServers = findViewById(R.id.ivPremiumServers)
         stateTextView = findViewById(R.id.tvPowerState)
         timerTextView = findViewById(R.id.tvTimer)
         appTitle = findViewById(R.id.tvApplicationName)
@@ -205,14 +202,12 @@ class DashboardActivity : BaseThemeActivity(),
                 fragmentContainer.visibility = View.INVISIBLE
             }
 
-            // Handle IVall, IVMTN, and IVMCI click states
+            // Handle IVall and ivPremiumServers click states
             ivAllClicked = savedInstanceState.getBoolean("ivAllClicked", true)
-            ivMtnClicked = savedInstanceState.getBoolean("ivMtnClicked", false)
-            ivMciClicked = savedInstanceState.getBoolean("ivMciClicked", false)
+            ivPremiumServersClicked = savedInstanceState.getBoolean("ivPremiumServersClicked", false)
 
-            updateIVAllIcon()
-            updateIVMtnIcon()
-            updateIVMciIcon()
+            updateivAllIcon()
+            updateivPremiumServersIcon()
         }
 
         // Ensure IVall is selected and fragmentContainer is visible when the activity starts
@@ -248,7 +243,7 @@ class DashboardActivity : BaseThemeActivity(),
         // Set an OnClickListener for IVall
         ivAll.setOnClickListener {
             ivAllClicked = !ivAllClicked // Toggle the IVall click state
-            updateIVAllIcon() // Update the IVall icon
+            updateivAllIcon() // Update the IVall icon
             // Show/hide the MyFragment based on the click state
             fragmentContainer.visibility = if (ivAllClicked) View.VISIBLE else View.INVISIBLE
             if (ivAllClicked) {
@@ -262,59 +257,31 @@ class DashboardActivity : BaseThemeActivity(),
                 transaction.replace(R.id.flFragmentContainer, fragment)
                 transaction.commit()
             }
-            // Reset IVMTN and IVMCI click states
-            ivMtnClicked = false
-            ivMciClicked = false
-            updateIVMtnIcon() // Update the IVMTN icon
-            updateIVMciIcon() // Update the IVMCI icon
+            // Reset PremiumServers click states
+            ivPremiumServersClicked = false
+            updateivPremiumServersIcon() // Update the PremiumServers icon
         }
 
-        // Set an OnClickListener for IVMTN
-        ivMtn.setOnClickListener {
-            ivMtnClicked = !ivMtnClicked // Toggle the IVMTN click state
-            updateIVMtnIcon() // Update the IVMTN icon
+        // Set an OnClickListener for ivPremiumServers
+        ivPremiumServers.setOnClickListener {
+            ivPremiumServersClicked = !ivPremiumServersClicked // Toggle the ivPremiumServers click state
+            updateivPremiumServersIcon() // Update the ivPremiumServers icon
             // Show/hide the MyFragment based on the click state
-            fragmentContainer.visibility = if (ivMtnClicked) View.VISIBLE else View.INVISIBLE
-            if (ivMtnClicked) {
-                AppRepository.filterServersByTag("mtn")
+            fragmentContainer.visibility = if (ivPremiumServersClicked) View.VISIBLE else View.INVISIBLE
+            if (ivPremiumServersClicked) {
+                AppRepository.filterServersByTag("premiumservers")
                 val fragment = ServersListFragment()
                 val bundle = Bundle()
-                bundle.putString("iconClicked", "IVMTN") // Pass the clicked icon value to the fragment
+                bundle.putString("iconClicked", "ivPremiumServers") // Pass the clicked icon value to the fragment
                 fragment.arguments = bundle
                 val fragmentManager: FragmentManager = supportFragmentManager
                 val transaction: FragmentTransaction = fragmentManager.beginTransaction()
                 transaction.replace(R.id.flFragmentContainer, fragment)
                 transaction.commit()
             }
-            // Reset IVall and IVMCI click states
+            // Reset IVall click states
             ivAllClicked = false
-            ivMciClicked = false
-            updateIVAllIcon() // Update the IVall icon
-            updateIVMciIcon() // Update the IVMCI icon
-        }
-
-        // Set an OnClickListener for IVMCI
-        ivMci.setOnClickListener {
-            ivMciClicked = !ivMciClicked // Toggle the IVMCI click state
-            updateIVMciIcon() // Update the IVMCI icon
-            // Show/hide the MyFragment based on the click state
-            fragmentContainer.visibility = if (ivMciClicked) View.VISIBLE else View.INVISIBLE
-            if (ivMciClicked) {
-                AppRepository.filterServersByTag("mci")
-                val fragment = ServersListFragment()
-                val bundle = Bundle()
-                bundle.putString("iconClicked", "IVMCI") // Pass the clicked icon value to the fragment
-                fragment.arguments = bundle
-                val fragmentManager: FragmentManager = supportFragmentManager
-                val transaction: FragmentTransaction = fragmentManager.beginTransaction()
-                transaction.replace(R.id.flFragmentContainer, fragment)
-                transaction.commit()
-            }
-            // Reset IVall and IVMTN click states
-            ivAllClicked = false
-            ivMtnClicked = false
-            updateIVAllIcon() // Update the IVall icon
-            updateIVMtnIcon() // Update the IVMTN icon
+            updateivAllIcon() // Update the IVall icon
         }
     }
 
@@ -323,17 +290,14 @@ class DashboardActivity : BaseThemeActivity(),
         startActivity(intent)
     }
 
-    private fun updateIVAllIcon() {
+    private fun updateivAllIcon() {
         ivAll.setImageResource(if (ivAllClicked) R.drawable.ic_all_colorfull else R.drawable.ic_all_gray)
     }
 
-    private fun updateIVMtnIcon() {
-        ivMtn.setImageResource(if (ivMtnClicked) R.drawable.ic_mtn_irancell_colorfull else R.drawable.ic_mtn_irancell_gray)
+    private fun updateivPremiumServersIcon() {
+        ivPremiumServers.setImageResource(if (ivPremiumServersClicked) R.drawable.ic_premium_titanium else R.drawable.ic_premium_golden)
     }
 
-    private fun updateIVMciIcon() {
-        ivMci.setImageResource(if (ivMciClicked) R.drawable.ic_mci_hamrahe_aval_colorfull else R.drawable.ic_mci_hamrahe_aval_gray)
-    }
 
     private fun addMinutesToTimer() {
         val remainTime = AppRepository.sharedPreferences.getLong("remainingTime", 0)
@@ -410,8 +374,7 @@ class DashboardActivity : BaseThemeActivity(),
         outState.putString("currentState", stateTextView.text.toString())
         outState.putBoolean("isFragmentVisible", findViewById<View>(R.id.flFragmentContainer).visibility == View.VISIBLE)
         outState.putBoolean("ivAllClicked", ivAllClicked)
-        outState.putBoolean("ivMtnClicked", ivMtnClicked)
-        outState.putBoolean("ivMciClicked", ivMciClicked)
+        outState.putBoolean("ivPremiumServersClicked", ivPremiumServersClicked)
     }
 
     override fun onResume() {
