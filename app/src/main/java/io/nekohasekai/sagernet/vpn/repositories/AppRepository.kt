@@ -32,6 +32,7 @@ import io.nekohasekai.sagernet.vpn.models.ListItem
 import io.nekohasekai.sagernet.vpn.models.ListSubItem
 import io.nekohasekai.sagernet.vpn.models.Service
 import io.nekohasekai.sagernet.vpn.serverlist.ListItemAdapter
+import io.nekohasekai.sagernet.vpn.services.VpnService
 import io.nekohasekai.sagernet.vpn.utils.CustomTestDialog
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -377,89 +378,12 @@ object AppRepository {
                 val proxies = RawUpdater.parseRaw(serversString)
                 if (!proxies.isNullOrEmpty()) {
                     import(proxies, context)
-                    silentUrlTestAsync()
+                    VpnService.silentUrlTestAsync()
                 }
             }
             "Finished"
         }
     }
-
-    suspend fun silentUrlTestAsync() = withContext(Dispatchers.IO) {
-        val link = appSetting.urlTest.link
-        val timeout = appSetting.urlTest.timeout
-        var working = AtomicInteger(0)
-        var unavailable = AtomicInteger(0)
-        var bestPing = 9999
-        lateinit var bestServer: ListItem
-
-        val allServerItemsDeferred = allServers.map { entry ->
-            async {
-                entry.dropdownItems.forEach {
-                    var result = 99999
-                    var status = 1
-                    var error = ""
-
-                    val profile = ProfileManager.getProfile(it.id)
-                    val instance = profile?.let { profileItem ->
-                        V2RayTestInstance(profileItem, link, timeout)
-                    }
-
-                    try {
-                        result = instance.use { testInstance ->
-                            testInstance?.doTest() ?: -1
-                        }
-                        val workingCounter = working.incrementAndGet()
-                        if (result < bestPing) {
-                            val emptyList: MutableList<ListSubItem> = mutableListOf()
-                            bestPing = result
-                            isBestServerSelected = true
-                            bestServer = ListItem(
-                                name = getItemName(entry.countryCode, true),
-                                countryCode = entry.countryCode,
-                                dropdownItems = emptyList,
-                                isExpanded = false,
-                                isBestServer = true,
-                                id = it.id,
-                                pointToIndex = it.profileIndex
-                            )
-                        }
-                    } catch (e: PluginManager.PluginNotFoundException) {
-                        val unavailableCounter = unavailable.incrementAndGet()
-                        result = -1
-                        status = -1
-                        error = e.readableMessage
-                    } catch (e: Exception) {
-                        val unavailableCounter = unavailable.incrementAndGet()
-                        result = -1
-                        status = 3
-                        error = e.readableMessage
-                    } finally {
-                        it.ping = result
-                        it.status = status
-                        it.error = error
-                    }
-                }
-                entry
-            }
-        }
-        allServers = allServerItemsDeferred.awaitAll().toMutableList()
-
-        bestServer.let {
-            if (allServers[0].isBestServer) {
-                allServers.removeAt(0)
-            }
-
-            allServers.add(0, it)
-        }
-
-        allServersOriginal = allServers
-        setAllServer(allServers)
-        val workingCounter = working.get()
-        val unavailableCounter = unavailable.get()
-        debugLog("WorkingServers: $workingCounter - UnavailableServers: $unavailableCounter")
-        debugLog("BestServer: " + bestServer.countryCode + " - " + bestServer.pointToIndex)
-    }
-
 
     @SuppressLint("DiscouragedApi")
     suspend fun import(proxies: List<AbstractBean>, context: Context) {
