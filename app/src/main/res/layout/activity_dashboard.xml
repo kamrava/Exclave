@@ -201,27 +201,15 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:id="@+id/ivMtn"
+            android:id="@+id/ivPremiumServers"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginStart="30dp"
             android:clickable="true"
             android:focusable="true"
-            android:src="@drawable/ic_mtn_irancell_gray"
+            android:src="@drawable/ic_premium_golden"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/ivAll"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
-            android:id="@+id/ivMci"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginStart="30dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:src="@drawable/ic_mci_hamrahe_aval_gray"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/ivMtn"
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
