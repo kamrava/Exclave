@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/subItemLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -36,13 +37,23 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:id="@+id/ivFastInternet"
+            android:id="@+id/ivPremiumServers"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_marginEnd="75dp"
-            android:src="@drawable/ic_fast_internet"
+            android:src="@drawable/ic_premium_lock"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/ivFastInternet"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginEnd="15dp"
+            android:src="@drawable/ic_10gbps"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/ivPremiumServers"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
