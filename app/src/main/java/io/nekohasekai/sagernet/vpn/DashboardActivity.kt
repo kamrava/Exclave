@@ -1,6 +1,7 @@
 package io.nekohasekai.sagernet.vpn
 
 import android.Manifest
+import android.animation.Animator
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
@@ -234,6 +235,9 @@ class DashboardActivity : BaseThemeActivity(),
         binding.clIconPing.setOnClickListener {
             binding.clIconPing.visibility = View.GONE
             binding.clpbPing.visibility = View.VISIBLE
+            val laPingAnimation = binding.laPingAnimation
+            laPingAnimation.setMinAndMaxFrame(234, 300)
+            laPingAnimation.playAnimation()
             VpnService.stopVpn()
             showNotConnectedState()
             stopTimer()
@@ -241,6 +245,8 @@ class DashboardActivity : BaseThemeActivity(),
                 try {
                     VpnService.silentUrlTestAsync()
                 } catch (e: Exception) {
+                    laPingAnimation.setMinAndMaxFrame(724, 840)
+                    laPingAnimation.playAnimation()
                     debugLog("VpnService: Error during ping test")
                 }
             }
@@ -541,9 +547,33 @@ class DashboardActivity : BaseThemeActivity(),
 
     private fun resetPingBtnUI() {
         runOnUiThread {
-            binding.clpbPing.visibility = View.GONE
-            binding.clIconPing.visibility = View.VISIBLE
-            AppRepository.refreshServersListView()
+            val laPingAnimation = binding.laPingAnimation
+            laPingAnimation.setMinAndMaxFrame(300, 414)
+            laPingAnimation.repeatCount = 0
+            // Add an animator listener to listen for the end of the animation
+            laPingAnimation.addAnimatorListener(object : Animator.AnimatorListener {
+                override fun onAnimationStart(animation: Animator) {
+                    // Do nothing
+                }
+
+                override fun onAnimationEnd(animation: Animator) {
+                    // This block will be called when the animation ends
+                    binding.clpbPing.visibility = View.GONE
+                    binding.clIconPing.visibility = View.VISIBLE
+                    AppRepository.refreshServersListView()
+                }
+
+                override fun onAnimationCancel(animation: Animator) {
+                    // Do nothing
+                }
+
+                override fun onAnimationRepeat(animation: Animator) {
+                    // Do nothing
+                }
+            })
+
+            // Play the animation
+            laPingAnimation.playAnimation()
         }
     }
 
