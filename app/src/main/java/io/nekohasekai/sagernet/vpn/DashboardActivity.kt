@@ -2,21 +2,20 @@ package io.nekohasekai.sagernet.vpn
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.Intent
-import android.os.Bundle
-import android.os.RemoteException
-import android.view.MenuItem
-import android.view.View
-import android.widget.ImageView
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.os.Build
+import android.os.Bundle
 import android.os.CountDownTimer
+import android.os.RemoteException
+import android.view.MenuItem
+import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
@@ -44,8 +43,8 @@ import io.nekohasekai.sagernet.vpn.interfaces.VpnEventListener
 import io.nekohasekai.sagernet.vpn.nav.MenuFragment
 import io.nekohasekai.sagernet.vpn.repositories.AdRepository
 import io.nekohasekai.sagernet.vpn.repositories.AppRepository
-import io.nekohasekai.sagernet.vpn.repositories.AppRepository.debugLog
 import io.nekohasekai.sagernet.vpn.repositories.AppRepository.appSetting
+import io.nekohasekai.sagernet.vpn.repositories.AppRepository.debugLog
 import io.nekohasekai.sagernet.vpn.repositories.AuthRepository
 import io.nekohasekai.sagernet.vpn.repositories.UserRepository
 import io.nekohasekai.sagernet.vpn.serverlist.ServersListFragment
@@ -80,6 +79,8 @@ class DashboardActivity : BaseThemeActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_dashboard)
+        binding = ActivityDashboardBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         AdRepository.internetChecker = InternetConnectionChecker(this)
 
@@ -106,16 +107,16 @@ class DashboardActivity : BaseThemeActivity(),
 
         AppRepository.sharedPreferences = getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
 
-        val shareIcon = findViewById<ImageView>(R.id.ivShareIcon)
+        val shareIcon = binding.ivShareIcon
         val connection = SagerConnection(true)
 
-        tvSelectedServer = findViewById<TextView>(R.id.tvSelectedServer)
+        tvSelectedServer = binding.tvSelectedServer
 
-        val tvDataLeft = findViewById<TextView>(R.id.tvDataLeft)
+        val tvDataLeft = binding.tvDataLeft
         tvDataLeft.text = getString(R.string.dataleft, AuthRepository.getSelectedService()?.remain_traffic)
 
-        val clPremium = findViewById<ConstraintLayout>(R.id.clPremium)
-        val tvPremium = findViewById<TextView>(R.id.tvPremium)
+        val clPremium = binding.clPremium
+        val tvPremium = binding.tvPremium
         clPremium.visibility = showForUpgradableServices()
         tvPremium.text = if (UserRepository.hasUpgradableService()) {
             getString(R.string.upgrade_service)
@@ -152,9 +153,9 @@ class DashboardActivity : BaseThemeActivity(),
         }
 
         // Initialize the fragment container
-        val fragmentContainer = findViewById<View>(R.id.flFragmentContainer)
+        val fragmentContainer = binding.flFragmentContainer
 
-        val pingBtn = findViewById<ConstraintLayout>(R.id.clIconPing)
+        val pingBtn = binding.clIconPing
         pingBtn.setOnClickListener {
             AppRepository.urlTest(this)
             showNotConnectedState()
@@ -162,7 +163,7 @@ class DashboardActivity : BaseThemeActivity(),
         }
 
         // Find the NavMenuIcon ImageView and set an OnClickListener
-        val navMenuIcon = findViewById<ImageView>(R.id.ivNavMenuIcon)
+        val navMenuIcon = binding.ivNavMenuIcon
         navMenuIcon.setOnClickListener {
             // Create an instance of the NavMenuFragment
             val navMenuFragment = MenuFragment()
@@ -178,13 +179,13 @@ class DashboardActivity : BaseThemeActivity(),
             transaction.commit()
         }
 
-        powerIcon = findViewById(R.id.laPulseButton)
-        ivAll = findViewById(R.id.ivAll)
-        ivPremiumServers = findViewById(R.id.ivPremiumServers)
-        stateTextView = findViewById(R.id.tvPowerState)
-        timerTextView = findViewById(R.id.tvTimer)
-        appTitle = findViewById(R.id.tvApplicationName)
-        addTimeTextView = findViewById(R.id.tvAddTime)
+        powerIcon = binding.laPulseButton
+        ivAll = binding.ivAll
+        ivPremiumServers = binding.ivPremiumServers
+        stateTextView = binding.tvPowerState
+        timerTextView = binding.tvTimer
+        appTitle = binding.tvApplicationName
+        addTimeTextView = binding.tvAddTime
         addTimeTextView.text = getString(R.string.plus_x_minutes, appSetting.freeVpnTimer)
 
         timerTextView.visibility = showForFreeUsers()
@@ -206,8 +207,8 @@ class DashboardActivity : BaseThemeActivity(),
             ivAllClicked = savedInstanceState.getBoolean("ivAllClicked", true)
             ivPremiumServersClicked = savedInstanceState.getBoolean("ivPremiumServersClicked", false)
 
-            updateivAllIcon()
-            updateivPremiumServersIcon()
+            updateIvAllIcon()
+            updateIvPremiumServersIcon()
         }
 
         // Ensure IVall is selected and fragmentContainer is visible when the activity starts
@@ -243,7 +244,7 @@ class DashboardActivity : BaseThemeActivity(),
         // Set an OnClickListener for IVall
         ivAll.setOnClickListener {
             ivAllClicked = !ivAllClicked // Toggle the IVall click state
-            updateivAllIcon() // Update the IVall icon
+            updateIvAllIcon() // Update the IVall icon
             // Show/hide the MyFragment based on the click state
             fragmentContainer.visibility = if (ivAllClicked) View.VISIBLE else View.INVISIBLE
             if (ivAllClicked) {
@@ -259,17 +260,17 @@ class DashboardActivity : BaseThemeActivity(),
             }
             // Reset PremiumServers click states
             ivPremiumServersClicked = false
-            updateivPremiumServersIcon() // Update the PremiumServers icon
+            updateIvPremiumServersIcon() // Update the PremiumServers icon
         }
 
         // Set an OnClickListener for ivPremiumServers
         ivPremiumServers.setOnClickListener {
             ivPremiumServersClicked = !ivPremiumServersClicked // Toggle the ivPremiumServers click state
-            updateivPremiumServersIcon() // Update the ivPremiumServers icon
+            updateIvPremiumServersIcon() // Update the ivPremiumServers icon
             // Show/hide the MyFragment based on the click state
             fragmentContainer.visibility = if (ivPremiumServersClicked) View.VISIBLE else View.INVISIBLE
             if (ivPremiumServersClicked) {
-                AppRepository.filterServersByTag("premiumservers")
+                AppRepository.filterServersByTag("premium")
                 val fragment = ServersListFragment()
                 val bundle = Bundle()
                 bundle.putString("iconClicked", "ivPremiumServers") // Pass the clicked icon value to the fragment
@@ -281,7 +282,7 @@ class DashboardActivity : BaseThemeActivity(),
             }
             // Reset IVall click states
             ivAllClicked = false
-            updateivAllIcon() // Update the IVall icon
+            updateIvAllIcon() // Update the IVall icon
         }
     }
 
@@ -290,11 +291,11 @@ class DashboardActivity : BaseThemeActivity(),
         startActivity(intent)
     }
 
-    private fun updateivAllIcon() {
+    private fun updateIvAllIcon() {
         ivAll.setImageResource(if (ivAllClicked) R.drawable.ic_all_colorfull else R.drawable.ic_all_gray)
     }
 
-    private fun updateivPremiumServersIcon() {
+    private fun updateIvPremiumServersIcon() {
         ivPremiumServers.setImageResource(if (ivPremiumServersClicked) R.drawable.ic_premium_servers_gold else R.drawable.ic_premium_servers_gray)
     }
 
@@ -372,7 +373,10 @@ class DashboardActivity : BaseThemeActivity(),
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString("currentState", stateTextView.text.toString())
-        outState.putBoolean("isFragmentVisible", findViewById<View>(R.id.flFragmentContainer).visibility == View.VISIBLE)
+        outState.putBoolean(
+            "isFragmentVisible",
+            binding.flFragmentContainer.visibility == View.VISIBLE
+        )
         outState.putBoolean("ivAllClicked", ivAllClicked)
         outState.putBoolean("ivPremiumServersClicked", ivPremiumServersClicked)
     }
