@@ -20,6 +20,7 @@
 package io.nekohasekai.sagernet.group
 
 import android.net.Uri
+import cn.hutool.core.codec.Base64
 import cn.hutool.json.*
 import com.github.shadowsocks.plugin.PluginOptions
 import io.nekohasekai.sagernet.R
@@ -267,7 +268,7 @@ object RawUpdater : GroupUpdater() {
 
         if (text.contains("proxies:")) {
             try {
-                // clash
+                // Mihomo (f.k.a. Clash.Meta), Clash
                 for (proxy in (Yaml().apply {
                     addTypeDescription(TypeDescription(String::class.java, "str"))
                 }.loadAs(text, Map::class.java)["proxies"] as? (List<Map<String, Any?>>) ?: error(
@@ -528,6 +529,40 @@ object RawUpdater : GroupUpdater() {
                                 })
                             }
                         }
+                        "wireguard" -> {
+                            proxies.add(WireGuardBean().apply {
+                                serverAddress = proxy["server"]?.toString()
+                                serverPort = proxy["port"]?.toString()?.toInt()
+                                privateKey = proxy["private-key"]?.toString()
+                                peerPublicKey = proxy["public-key"]?.toString()
+                                peerPreSharedKey = proxy["pre-shared-key"]?.toString()
+                                mtu = proxy["pre-shared-key"]?.toString()?.toInt() ?: 1408
+                                localAddress = listOfNotNull(proxy["ip"]?.toString(), proxy["ipv6"]?.toString()).joinToString("\n")
+                                name = proxy["name"]?.toString()
+                                (proxy["peers"] as? (List<Map<String, Any?>>))?.forEach {
+                                    serverAddress = it["server"]?.toString()
+                                    serverPort = it["port"]?.toString()?.toInt()
+                                    peerPublicKey = it["public-key"]?.toString()
+                                    peerPreSharedKey = it["pre-shared-key"]?.toString()
+                                    val res = it["reserved"] as? (List<Map<String, Any?>>)
+                                    if (res != null) {
+                                        if (res.size == 3) {
+                                            val res0 = res[0].toString().toIntOrNull()
+                                            val res1 = res[1].toString().toIntOrNull()
+                                            val res2 = res[2].toString().toIntOrNull()
+                                            if (res0 != null && res1 != null && res2 != null) {
+                                                reserved = listOf(res0, res1, res2).joinToString(",")
+                                            }
+                                        }
+                                    } else {
+                                        val res = Base64.decode(it["reserved"]?.toString())
+                                        if (res != null && res.size == 3) {
+                                            reserved = listOf(res[0].toUByte().toInt().toString(), res[1].toUByte().toInt().toString(), res[2].toUByte().toInt().toString()).joinToString(",")
+                                        }
+                                    }
+                                }
+                            })
+                        }
                     }
                 }
                 proxies.forEach { it.initializeDefaultValues() }
@@ -581,9 +616,7 @@ object RawUpdater : GroupUpdater() {
         val bean = WireGuardBean().applyDefaultValues()
         val localAddresses = iface.getAll("Address")
         if (localAddresses.isNullOrEmpty()) error("Empty address in 'Interface' selection")
-        bean.localAddress = localAddresses.flatMap { it.split(",") }.let { address ->
-            address.joinToString("\n") { it.substringBefore("/") }
-        }
+        bean.localAddress = localAddresses.flatMap { it.split(",") }.joinToString("\n")
         bean.privateKey = iface["PrivateKey"]
         val peers = ini.getAll("Peer")
         if (peers.isNullOrEmpty()) error("Missing 'Peer' selections")
@@ -595,7 +628,7 @@ object RawUpdater : GroupUpdater() {
             }
 
             val peerBean = bean.clone()
-            peerBean.serverAddress = endpoint.substringBeforeLast(":")
+            peerBean.serverAddress = endpoint.substringBeforeLast(":").removePrefix("[").removeSuffix("]")
             peerBean.serverPort = endpoint.substringAfterLast(":").toIntOrNull() ?: continue
             peerBean.peerPublicKey = peer["PublicKey"] ?: continue
             peerBean.peerPreSharedKey = peer["PresharedKey"]
@@ -662,12 +695,12 @@ object RawUpdater : GroupUpdater() {
         with(outboundObject) {
             // v2ray JSONv4 config, Xray config and JSONv4 config of Exclave's v2ray fork only
             when (protocol) {
-                "vmess", "vless", "trojan", "shadowsocks", "socks", "http" -> {
+                "vmess", "vless", "trojan", "shadowsocks", "socks", "http", "shadowsocks2022", "shadowsocks-2022" -> {
                     val v2rayBean = when (protocol) {
                         "vmess" -> VMessBean()
                         "vless" -> VLESSBean()
                         "trojan" -> TrojanBean()
-                        "shadowsocks" -> ShadowsocksBean()
+                        "shadowsocks", "shadowsocks2022", "shadowsocks-2022" -> ShadowsocksBean()
                         "socks" -> SOCKSBean()
                         else -> HttpBean()
                     }.applyDefaultValues()
@@ -831,6 +864,19 @@ object RawUpdater : GroupUpdater() {
                                     }
                                 }
                             }
+                            "mekya" -> {
+                                mekyaSettings?.apply {
+                                    url?.also {
+                                        v2rayBean.mekyaUrl = it
+                                    }
+                                    kcp?.seed?.also {
+                                        v2rayBean.mekyaKcpSeed = it
+                                    }
+                                    kcp?.header?.type?.also {
+                                        v2rayBean.mekyaKcpHeaderType = it
+                                    }
+                                }
+                            }
                             "splithttp" -> {
                                 splithttpSettings?.apply {
                                     host?.also {
@@ -901,6 +947,14 @@ object RawUpdater : GroupUpdater() {
                         }
                         "shadowsocks" -> {
                             v2rayBean as ShadowsocksBean
+                            (settings.value as? V2RayConfig.ShadowsocksOutboundConfigurationObject)?.apply {
+                                if (plugin.isNotBlank() && pluginOpts.isBlank()) {
+                                    v2rayBean.plugin = plugin
+                                }
+                                if (plugin.isNotBlank() && pluginOpts.isNotBlank()) {
+                                    v2rayBean.plugin = "$plugin;$pluginOpts"
+                                }
+                            }
                             (settings.value as? V2RayConfig.ShadowsocksOutboundConfigurationObject)?.servers?.forEach {
                                 proxies.add(v2rayBean.clone().apply {
                                     name = tag
@@ -909,6 +963,44 @@ object RawUpdater : GroupUpdater() {
                                     method = it.method
                                     password = it.password
                                 })
+                            }
+                        }
+                        "shadowsocks2022" -> {
+                            v2rayBean as ShadowsocksBean
+                            (settings.value as? V2RayConfig.Shadowsocks_2022OutboundConfigurationObject)?.apply {
+                                if (plugin.isNotBlank() && pluginOpts.isBlank()) {
+                                    v2rayBean.plugin = plugin
+                                }
+                                if (plugin.isNotBlank() && pluginOpts.isNotBlank()) {
+                                    v2rayBean.plugin = "$plugin;$pluginOpts"
+                                }
+                                v2rayBean.name = tag
+                                v2rayBean.serverAddress = address
+                                v2rayBean.serverPort = port
+                                v2rayBean.method = method
+                                if (psk.isNotBlank()) {
+                                    if (ipsk.size > 0) {
+                                        v2rayBean.password = ipsk.joinToString(":") + ":" + psk
+                                    } else {
+                                        v2rayBean.password = psk
+                                    }
+                                }
+                            }
+                        }
+                        "shadowsocks-2022" -> {
+                            v2rayBean as ShadowsocksBean
+                            (settings.value as? V2RayConfig.Shadowsocks2022OutboundConfigurationObject)?.apply {
+                                if (plugin.isNotBlank() && pluginOpts.isBlank()) {
+                                    v2rayBean.plugin = plugin
+                                }
+                                if (plugin.isNotBlank() && pluginOpts.isNotBlank()) {
+                                    v2rayBean.plugin = "$plugin;$pluginOpts"
+                                }
+                                v2rayBean.name = tag
+                                v2rayBean.serverAddress = address
+                                v2rayBean.serverPort = port
+                                v2rayBean.method = method
+                                v2rayBean.password = key
                             }
                         }
                         "trojan" -> {
@@ -1000,12 +1092,58 @@ object RawUpdater : GroupUpdater() {
                                 }
                             }
                         }
-                        (settings.value as? V2RayConfig.Hysteria2OutboundConfigurationObject)?.servers?.forEach {
-                            hysteria2Bean.serverAddress = it.address
-                            hysteria2Bean.serverPorts = it.port.toString()
-                        }
-                        proxies.add(hysteria2Bean)
                     }
+                    (settings.value as? V2RayConfig.Hysteria2OutboundConfigurationObject)?.servers?.forEach {
+                        hysteria2Bean.serverAddress = it.address
+                        hysteria2Bean.serverPorts = it.port.toString()
+                    }
+                    tag?.apply {
+                        hysteria2Bean.name = tag
+                    }
+                    proxies.add(hysteria2Bean)
+                }
+                "wireguard" -> {
+                    val wireguardBean = WireGuardBean().applyDefaultValues()
+                    (settings.value as? V2RayConfig.WireGuardOutboundConfigurationObject).also {
+                        wireguardBean.privateKey = it?.secretKey
+                        wireguardBean.localAddress = it?.address?.joinToString("\n")
+                        wireguardBean.mtu = it?.mtu ?: 1420
+                        it?.peers?.forEach { peer ->
+                            wireguardBean.serverAddress = peer.endpoint.substringBeforeLast(":").removePrefix("[").removeSuffix("]")
+                            wireguardBean.serverPort = peer.endpoint.substringAfterLast(":").toIntOrNull()
+                            wireguardBean.peerPublicKey = peer.publicKey
+                            wireguardBean.peerPreSharedKey = peer.preSharedKey
+                        }
+                        if (it?.reserved != null && it.reserved.size == 3) {
+                            wireguardBean.reserved = listOf(it.reserved[0].toString(), it.reserved[1].toString(), it.reserved[2].toString()).joinToString(",")
+                        }
+                    }
+                    tag?.apply {
+                        wireguardBean.name = tag
+                    }
+                    proxies.add(wireguardBean)
+                }
+                "ssh" -> {
+                    val sshBean = SSHBean().applyDefaultValues()
+                    (settings.value as? V2RayConfig.SSHOutbountConfigurationObject)?.apply {
+                        sshBean.serverAddress = address
+                        sshBean.serverPort = port
+                        sshBean.username = user
+                        sshBean.password = password
+                        if (privateKey.isNotBlank()) {
+                            sshBean.authType = SSHBean.AUTH_TYPE_PRIVATE_KEY
+                            sshBean.privateKey = privateKey
+                            sshBean.privateKeyPassphrase = password
+                        } else if (password.isNotBlank()) {
+                            sshBean.authType = SSHBean.AUTH_TYPE_PASSWORD
+                            sshBean.password = password
+                        }
+                        sshBean.publicKey = publicKey
+                    }
+                    tag?.apply {
+                        sshBean.name = tag
+                    }
+                    proxies.add(sshBean)
                 }
             }
             Unit
@@ -1206,10 +1344,63 @@ object RawUpdater : GroupUpdater() {
                     serverPort = outbound["server_port"]?.toString()?.toInt()
                     username = outbound["user"]?.toString()
                     password = outbound["password"]?.toString()
-                    privateKey = outbound["private_key"]?.toString()
-                    privateKeyPassphrase = outbound["private_key_passphrase"]?.toString()
+                    if (outbound["password"]?.toString()?.isNotBlank() == true) {
+                        authType = SSHBean.AUTH_TYPE_PASSWORD
+                        privateKey = outbound["password"].toString()
+                    }
+                    if (outbound["private_key"]?.toString()?.isNotBlank() == true) {
+                        authType = SSHBean.AUTH_TYPE_PRIVATE_KEY
+                        privateKey = outbound["private_key"].toString()
+                        privateKeyPassphrase = outbound["private_key_passphrase"].toString()
+                    }
                 }
                 proxies.add(sshBean)
+            }
+            "wireguard" -> {
+                val wireGuardBean = WireGuardBean().applyDefaultValues().apply {
+                    name = outbound["tag"]?.toString()
+                    serverAddress = outbound["server"]?.toString()
+                    serverPort = outbound["server_port"]?.toString()?.toInt()
+                    privateKey = outbound["private_key"]?.toString()
+                    peerPublicKey = outbound["peer_public_key"]?.toString()
+                    peerPreSharedKey = outbound["pre_shared_key"]?.toString()
+                    mtu = outbound["mtu"]?.toString()?.toInt() ?: 1408
+                    val localAddr = outbound["local_address"] as? (List<String>)
+                    localAddress = localAddr?.joinToString("\n") ?: outbound["local_address"]?.toString()
+                    val res = outbound["reserved"] as? (List<Int>)
+                    if (res != null) {
+                        if (res.size == 3) {
+                            reserved = listOf(res[0].toString(), res[1].toString(), res[2].toString()).joinToString(",")
+                        }
+                    } else {
+                        val res = Base64.decode(outbound["reserved"]?.toString())
+                        if (res != null && res.size == 3) {
+                            reserved = listOf(res[0].toUByte().toInt().toString(), res[1].toUByte().toInt().toString(), res[2].toUByte().toInt().toString()).joinToString(",")
+                        }
+                    }
+                    if (outbound["peers"] != null) {
+                        val peers = outbound["server"] as? JSONArray
+                        peers?.forEach {
+                            val peer = it as? JSONObject
+                            serverAddress = peer?.get("server")?.toString()
+                            serverPort = peer?.get("server_port")?.toString()?.toInt()
+                            peerPublicKey = peer?.get("public_key")?.toString()
+                            peerPreSharedKey = peer?.get("pre_shared_key")?.toString()
+                            val res = peer?.get("reserved") as? (List<Int>)
+                            if (res != null) {
+                                if (res.size == 3) {
+                                    reserved = listOf(res[0].toString(), res[1].toString(), res[2].toString()).joinToString(",")
+                                }
+                            } else {
+                                val res = Base64.decode(outbound["reserved"]?.toString())
+                                if (res != null && res.size == 3) {
+                                    reserved = listOf(res[0].toUByte().toInt().toString(), res[1].toUByte().toInt().toString(), res[2].toUByte().toInt().toString()).joinToString(",")
+                                }
+                            }
+                        }
+                    }
+                }
+                proxies.add(wireGuardBean)
             }
         }
         return proxies
