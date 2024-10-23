@@ -236,7 +236,8 @@ class DashboardActivity : BaseThemeActivity(),
             binding.clIconPing.visibility = View.GONE
             binding.clpbPing.visibility = View.VISIBLE
             val laPingAnimation = binding.laPingAnimation
-            laPingAnimation.setMinAndMaxFrame(234, 300)
+            laPingAnimation.setMinAndMaxFrame(0, 300)
+            laPingAnimation.repeatCount = 2
             laPingAnimation.playAnimation()
             VpnService.stopVpn()
             showNotConnectedState()
@@ -558,9 +559,9 @@ class DashboardActivity : BaseThemeActivity(),
 
                 override fun onAnimationEnd(animation: Animator) {
                     // This block will be called when the animation ends
+                    AppRepository.refreshServersListView()
                     binding.clpbPing.visibility = View.GONE
                     binding.clIconPing.visibility = View.VISIBLE
-                    AppRepository.refreshServersListView()
                 }
 
                 override fun onAnimationCancel(animation: Animator) {
