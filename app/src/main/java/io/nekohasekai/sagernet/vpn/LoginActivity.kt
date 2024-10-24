@@ -1,17 +1,13 @@
 package io.nekohasekai.sagernet.vpn
 
 import android.content.Intent
-import android.content.res.ColorStateList
-import android.graphics.Color
 import android.os.Bundle
-import android.os.Handler
 import android.text.InputType
 import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
-import android.widget.ProgressBar
 import android.widget.Toast
-import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
 import com.facebook.AccessToken
 import com.facebook.CallbackManager
 import com.facebook.FacebookCallback
@@ -32,12 +28,11 @@ import io.nekohasekai.sagernet.vpn.helpers.GenericHelper
 import io.nekohasekai.sagernet.vpn.repositories.AppRepository
 import io.nekohasekai.sagernet.vpn.repositories.AuthRepository
 import io.nekohasekai.sagernet.vpn.repositories.SocialAuthRepository
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
-import kotlinx.coroutines.*
 
 
 class LoginActivity : BaseThemeActivity() {
@@ -51,8 +46,7 @@ class LoginActivity : BaseThemeActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
-        val view = binding.root
-        setContentView(view)
+        setContentView(binding.root)
 
         // Set the Facebook app client token
         FacebookSdk.setClientToken("30d63da7ac404d3a92fe9c04a1baf590")
@@ -70,9 +64,9 @@ class LoginActivity : BaseThemeActivity() {
 
         SocialAuthRepository.facebookLoginManager.registerCallback(callbackManager, object :
             FacebookCallback<LoginResult> {
-            override fun onSuccess(loginResult: LoginResult) {
+            override fun onSuccess(result: LoginResult) {
                 // Successfully logged in with Facebook, now authenticate with Firebase
-                handleFacebookAccessToken(loginResult.accessToken)
+                handleFacebookAccessToken(result.accessToken)
             }
 
             override fun onCancel() {
@@ -123,10 +117,14 @@ class LoginActivity : BaseThemeActivity() {
                 // Change button text
                 binding.btnLogin.text = getString(R.string.Logging_in)
                 // Show progress bar
-                binding.progressBarLogin.visibility = View.VISIBLE
+                binding.laProgressBarLogin.visibility = View.VISIBLE
+                val laPingAnimation = binding.laProgressBarLogin
+                laPingAnimation.setMinAndMaxFrame(0, 300)
+                laPingAnimation.repeatCount = 2
+                laPingAnimation.playAnimation()
 
                 // Perform login asynchronously
-                GlobalScope.launch(Dispatchers.IO) {
+                lifecycleScope.launch(Dispatchers.IO) {
                     // Call performLogin
                     performLogin(email, password)
 
@@ -134,7 +132,7 @@ class LoginActivity : BaseThemeActivity() {
                     withContext(Dispatchers.Main) {
                         // Revert button text and hide progress bar
                         binding.btnLogin.text = getString(R.string.login)
-                        binding.progressBarLogin.visibility = View.GONE
+                        binding.laProgressBarLogin.visibility = View.GONE
                     }
                 }
             } else {
@@ -191,7 +189,7 @@ class LoginActivity : BaseThemeActivity() {
                     when (responseCode) {
                         200 -> {
                             runOnUiThread {
-                                GlobalScope.launch {
+                                lifecycleScope.launch {
                                     AppRepository.getServersAndImport(this@LoginActivity)
 //                                    binding.tvValidationError.visibility = View.GONE
 //                                    AuthRepository.setUserEmail(email)
