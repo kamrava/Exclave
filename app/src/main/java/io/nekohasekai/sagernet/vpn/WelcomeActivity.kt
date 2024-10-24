@@ -2,26 +2,23 @@ package io.nekohasekai.sagernet.vpn
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
-import io.nekohasekai.sagernet.R
+import io.nekohasekai.sagernet.databinding.ActivityWelcomeBinding
 
 class WelcomeActivity : BaseThemeActivity() {
+
+    private lateinit var binding: ActivityWelcomeBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_welcome)
+        binding = ActivityWelcomeBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        // get init app settings from api server
-        //AppRepository.getSettings()
-
-//        AdRepository.checkAdConsent(this@WelcomeActivity)
-
-        val loginBtn = findViewById<Button>(R.id.btn_login)
-        loginBtn.setOnClickListener {
+        // Set click listeners using binding
+        binding.btnLogin.setOnClickListener {
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
         }
-        val regBtn = findViewById<Button>(R.id.btn_register)
-        regBtn.setOnClickListener {
+
+        binding.btnRegister.setOnClickListener {
             val intent = Intent(this, RegisterActivity::class.java)
             startActivity(intent)
         }

@@ -1,24 +1,23 @@
 package io.nekohasekai.sagernet.vpn.nav
 
 import android.os.Bundle
-import android.widget.ImageView
-import io.nekohasekai.sagernet.R
+import io.nekohasekai.sagernet.databinding.ActivityPrivacyPolicyBinding
 import io.nekohasekai.sagernet.vpn.BaseThemeActivity
 
 class PrivacyPolicyActivity : BaseThemeActivity() {
+    private lateinit var binding: ActivityPrivacyPolicyBinding // Declare binding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_privacy_policy)
+        binding = ActivityPrivacyPolicyBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        val ivPrivacyPolicyIconAngle: ImageView = findViewById(R.id.ivPrivacyPolicyIconAngle)
+        val ivPrivacyPolicyIconAngle = binding.ivPrivacyPolicyIconAngle
 
         ivPrivacyPolicyIconAngle.setOnClickListener {
-            // Handle click event
-            // Set result OK to indicate the action was successful
             setResult(RESULT_OK)
-            // Finish the current activity (PrivacyPolicyActivity)
             finish()
         }
     }
 }
+

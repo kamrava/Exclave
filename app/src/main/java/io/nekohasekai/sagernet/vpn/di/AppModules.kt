@@ -1,7 +1,9 @@
 package io.nekohasekai.sagernet.vpn.di
 
+import io.nekohasekai.sagernet.vpn.models.InfoApiResponse
+import io.nekohasekai.sagernet.vpn.models.Service
+import io.nekohasekai.sagernet.vpn.models.UserData
 import org.koin.dsl.module
-import io.nekohasekai.sagernet.vpn.models.*
 
 val appModule = module {
 

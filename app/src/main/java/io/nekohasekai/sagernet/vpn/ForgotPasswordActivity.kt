@@ -8,6 +8,7 @@ import io.nekohasekai.sagernet.vpn.repositories.AppRepository
 
 class ForgotPasswordActivity : BaseThemeActivity() {
     private lateinit var binding: ActivityForgotPasswordBinding
+
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

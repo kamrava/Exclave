@@ -2,16 +2,17 @@ package io.nekohasekai.sagernet.vpn
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.ImageView
-import io.nekohasekai.sagernet.R
+import io.nekohasekai.sagernet.databinding.ActivityPremiumBinding
 
 class PremiumActivity : BaseThemeActivity() {
+    private lateinit var binding: ActivityPremiumBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_premium)
+        binding = ActivityPremiumBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        val ivIconAngle = findViewById<ImageView>(R.id.ivIconAngle)
-        ivIconAngle.setOnClickListener { navigateToDashboard() }
+        binding.ivIconAngle.setOnClickListener { navigateToDashboard() }
     }
 
     private fun navigateToDashboard() {

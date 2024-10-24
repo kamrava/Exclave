@@ -2,12 +2,12 @@ package io.nekohasekai.sagernet.vpn
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
 import android.text.InputType
 import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
 import com.facebook.AccessToken
 import com.facebook.CallbackManager
 import com.facebook.FacebookCallback
@@ -27,7 +27,6 @@ import io.nekohasekai.sagernet.databinding.ActivityRegisterBinding
 import io.nekohasekai.sagernet.vpn.repositories.AuthRepository
 import io.nekohasekai.sagernet.vpn.repositories.SocialAuthRepository
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
@@ -122,7 +121,7 @@ class RegisterActivity : BaseThemeActivity() {
                 binding.progressBarLogin.visibility = View.VISIBLE
 
                 // Perform register asynchronously
-                GlobalScope.launch(Dispatchers.IO) {
+                lifecycleScope.launch(Dispatchers.IO) {
                     // Check if Email is available
                     checkEmailAvailability(email, password)
 

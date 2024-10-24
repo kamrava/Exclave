@@ -2,27 +2,28 @@ package io.nekohasekai.sagernet.vpn
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
-import android.widget.TextView
-import io.nekohasekai.sagernet.R
+import io.nekohasekai.sagernet.databinding.ActivityProfileBinding
 import io.nekohasekai.sagernet.vpn.repositories.SocialAuthRepository
 
 class ProfileActivity : BaseThemeActivity() {
+    private lateinit var binding: ActivityProfileBinding // Declare binding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_profile)
 
-        val displayNameTextView: TextView = findViewById(R.id.displayNameTextView)
-        val emailTextView: TextView = findViewById(R.id.emailTextView)
-        val signOutButton: Button = findViewById(R.id.signOutButton)
+        // Initialize ViewBinding
+        binding = ActivityProfileBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
+        // Get the current user from Firebase Auth
         val currentUser = SocialAuthRepository.firebaseAuth.currentUser
         if (currentUser != null) {
-            displayNameTextView.text = "Display Name: ${currentUser.displayName}"
-            emailTextView.text = "Email: ${currentUser.email}"
+            binding.displayNameTextView.text = "Display Name: ${currentUser.displayName}"
+            binding.emailTextView.text = "Email: ${currentUser.email}"
         }
 
-        signOutButton.setOnClickListener {
+        // Set click listener for the sign out button using binding
+        binding.signOutButton.setOnClickListener {
             SocialAuthRepository.facebookLoginManager.logOut()
             SocialAuthRepository.firebaseAuth.signOut()
             SocialAuthRepository.googleSignInClient.signOut()
@@ -32,3 +33,4 @@ class ProfileActivity : BaseThemeActivity() {
         }
     }
 }
+

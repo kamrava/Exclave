@@ -6,7 +6,6 @@ import android.text.InputType
 import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
-import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import com.facebook.AccessToken
 import com.facebook.CallbackManager
@@ -109,6 +108,8 @@ class LoginActivity : BaseThemeActivity() {
         binding.txtPassword.setText(testPassword)
 
         binding.btnLogin.setOnClickListener {
+            binding.btnLogin.isEnabled = false
+            binding.tvValidationError.visibility = View.INVISIBLE
             val email = binding.txtEmail.text.toString()
             val password = binding.txtPassword.text.toString()
 
@@ -116,7 +117,7 @@ class LoginActivity : BaseThemeActivity() {
 
                 // Change button text
                 binding.btnLogin.text = getString(R.string.Logging_in)
-                // Show progress bar
+                // Show progress bar animation
                 binding.laProgressBarLogin.visibility = View.VISIBLE
                 val laPingAnimation = binding.laProgressBarLogin
                 laPingAnimation.setMinAndMaxFrame(0, 300)
@@ -127,16 +128,10 @@ class LoginActivity : BaseThemeActivity() {
                 lifecycleScope.launch(Dispatchers.IO) {
                     // Call performLogin
                     performLogin(email, password)
-
-                    // Update UI on the main thread after login completes
-                    withContext(Dispatchers.Main) {
-                        // Revert button text and hide progress bar
-                        binding.btnLogin.text = getString(R.string.login)
-                        binding.laProgressBarLogin.visibility = View.GONE
-                    }
                 }
             } else {
-                Toast.makeText(this, "Please enter email and password.", Toast.LENGTH_LONG).show()
+                onLoginError()
+                binding.tvValidationError.text = getString(R.string.enter_email_and_password)
             }
         }
 
@@ -191,22 +186,22 @@ class LoginActivity : BaseThemeActivity() {
                             runOnUiThread {
                                 lifecycleScope.launch {
                                     AppRepository.getServersAndImport(this@LoginActivity)
-//                                    binding.tvValidationError.visibility = View.GONE
-//                                    AuthRepository.setUserEmail(email)
                                     navigateToDashboardActivity()
                                 }
                             }
                         }
                         500,404 -> {
                             runOnUiThread {
-                                binding.tvValidationError.text = "Email or Password is wrong!"
-                                binding.tvValidationError.visibility = View.VISIBLE
+                                onLoginError()
+                                binding.tvValidationError.text =
+                                    getString(R.string.email_or_password_is_wrong)
                             }
                         }
                         else -> {
                             runOnUiThread {
-                                binding.tvValidationError.text = "Something is wrong!"
-                                binding.tvValidationError.visibility = View.VISIBLE
+                                onLoginError()
+                                binding.tvValidationError.text =
+                                    getString(R.string.Something_is_wrong)
                             }
                         }
                     }
@@ -277,6 +272,16 @@ class LoginActivity : BaseThemeActivity() {
                     // Handle the error
                 }
             }
+    }
+    private fun onLoginError() {
+        binding.btnLogin.text = getString(R.string.login)
+        binding.laProgressBarLogin.visibility = View.VISIBLE
+        val laPingAnimation = binding.laProgressBarLogin
+        laPingAnimation.setMinAndMaxFrame(670, 840)
+        laPingAnimation.repeatCount = 1
+        laPingAnimation.playAnimation()
+        binding.tvValidationError.visibility = View.VISIBLE
+        binding.btnLogin.isEnabled = true
     }
 }
 
