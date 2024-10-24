@@ -7,13 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.ImageView
-import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
 import io.nekohasekai.sagernet.R
+import io.nekohasekai.sagernet.databinding.FragmentAccountBinding
 import io.nekohasekai.sagernet.vpn.WelcomeActivity
 import io.nekohasekai.sagernet.vpn.models.Service
 import io.nekohasekai.sagernet.vpn.repositories.AuthRepository
@@ -21,44 +19,51 @@ import io.nekohasekai.sagernet.vpn.repositories.AuthRepository
 class AccountFragment : Fragment() {
     private var isFirstSelection = true
     private lateinit var adapter: ArrayAdapter<Service>
+    private var _binding: FragmentAccountBinding? = null // Backing property for binding
+    private val binding get() = _binding!! // Non-nullable property for binding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_account, container, false)
-        val iconAngle = view.findViewById<ImageView>(R.id.ivAccountIconAngle)
-        val exitAccountButton = view.findViewById<AppCompatButton>(R.id.btnExitAccount)
+        savedInstanceState: Bundle?
+    ): View {
+        // Initialize ViewBinding
+        _binding = FragmentAccountBinding.inflate(inflater, container, false)
 
+        // Set up UI elements and listeners
+        setupUI()
 
-        // iconAngle click listener
-        iconAngle.setOnClickListener {
+        return binding.root
+    }
+
+    private fun setupUI() {
+        // Set up click listener for iconAngle
+        binding.ivAccountIconAngle.setOnClickListener {
             // Pop the back stack to navigate back to the previous fragment
             requireActivity().supportFragmentManager.popBackStack()
         }
 
-        // set user's email
+        // Set user's email
         val userEmail = AuthRepository.getUserEmail()
-        val tvEmail = view.findViewById<TextView>(R.id.tvEmail)
-        tvEmail.text = userEmail
+        binding.tvEmail.text = userEmail
 
-        // ExitAccountButton
-        exitAccountButton.setOnClickListener {
-//            SocialAuthRepository.facebookLoginManager.logOut()
-//            SocialAuthRepository.firebaseAuth.signOut()
-//            SocialAuthRepository.googleSignInClient.signOut()
+        // Set up exitAccountButton listener
+        binding.btnExitAccount.setOnClickListener {
             AuthRepository.clearUserInfo()
-
             val intent = Intent(requireContext(), WelcomeActivity::class.java)
             startActivity(intent)
             requireActivity().finish()
         }
 
+        // Set up Spinner for active services
         val activeServices = AuthRepository.getUserActiveServices()
-        val spinner: Spinner = view.findViewById(R.id.serviceSelector)
-        var selectedPosition = 0
-        selectedPosition = activeServices.indexOfFirst { it.sid == AuthRepository.getSelectedService()?.sid }
+        val selectedPosition =
+            activeServices.indexOfFirst { it.sid == AuthRepository.getSelectedService()?.sid }
+        setupSpinner(activeServices, selectedPosition)
+    }
 
-        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+    private fun setupSpinner(activeServices: List<Service>, selectedPosition: Int) {
+        binding.serviceSelector.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 if (isFirstSelection) {
                     isFirstSelection = false
@@ -90,9 +95,12 @@ class AccountFragment : Fragment() {
             }
         }
         adapter.setDropDownViewResource(R.layout.spinner_each_item)
-        spinner.adapter = adapter
-        spinner.setSelection(selectedPosition)
+        binding.serviceSelector.adapter = adapter
+        binding.serviceSelector.setSelection(selectedPosition)
+    }
 
-        return view
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null // Clear binding reference to prevent memory leaks
     }
 }

@@ -6,7 +6,6 @@ import android.view.View
 import android.widget.Toast
 import io.nekohasekai.sagernet.R
 import io.nekohasekai.sagernet.databinding.ActivityEmailVerifyBinding
-import io.nekohasekai.sagernet.vpn.repositories.AppRepository
 import io.nekohasekai.sagernet.vpn.repositories.AuthRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -67,7 +66,11 @@ class EmailVerify : BaseThemeActivity() {
                     binding.tvResendVerifyCode.text = getString(R.string.resend_verify_code)
                     binding.tvResendVerifyCode.isEnabled = true
                     binding.tvResendVerifyCode.isClickable = true
-                    Toast.makeText(this@EmailVerify, "Verification code has been sent. Please check your email inbox", Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        this@EmailVerify,
+                        "Verification code has been sent. Please check your email inbox",
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
             }
         }
@@ -85,6 +88,7 @@ class EmailVerify : BaseThemeActivity() {
                                 navigateToDashboardActivity()
                             }
                         }
+
                         else -> {
                             runOnUiThread {
                                 binding.tvValidationError.text = "Verify Code was wrong!"

@@ -72,6 +72,9 @@
     <string name="connected_state">Connected</string>
     <string name="connecting_state">Connecting…</string>
     <string name="Try_Again">Try Again</string>
+    <string name="enter_email_and_password">Please enter email and password.</string>
+    <string name="Something_is_wrong">Something is wrong!</string>
+    <string name="email_or_password_is_wrong">Email or Password is wrong!</string>
 
     <!-- Location of UnitaVPN Strings <END>-->
     <string name="app_name" translatable="false">UnitaVPN</string>

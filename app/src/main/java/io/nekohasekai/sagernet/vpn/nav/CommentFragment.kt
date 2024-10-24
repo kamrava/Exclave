@@ -1,35 +1,41 @@
 package io.nekohasekai.sagernet.vpn.nav
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
-import android.widget.ImageView
 import android.widget.Toast
-import androidx.appcompat.widget.AppCompatButton
-import io.nekohasekai.sagernet.R
+import androidx.fragment.app.Fragment
+import io.nekohasekai.sagernet.databinding.FragmentCommentBinding
+
 class CommentFragment : Fragment() {
+
+    private var _binding: FragmentCommentBinding? = null // Backing property for binding
+    private val binding get() = _binding!! // Non-nullable property for binding
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(R.layout.fragment_comment, container, false)
-        val iconAngle = view.findViewById<ImageView>(R.id.ivCommentIconAngle)
-        val btnSend = view.findViewById<AppCompatButton>(R.id.btnSend)
-        val tvTitleBox = view.findViewById<EditText>(R.id.tvTitleBox)
-        val tvMessageBox = view.findViewById<EditText>(R.id.tvMessageBox)
+    ): View {
+        // Initialize ViewBinding
+        _binding = FragmentCommentBinding.inflate(inflater, container, false)
 
+        // Set up click listeners
+        setupClickListeners()
+
+        return binding.root
+    }
+
+    private fun setupClickListeners() {
         // Add click listener to iconAngle
-        iconAngle.setOnClickListener {
+        binding.ivCommentIconAngle.setOnClickListener {
             // Pop the back stack to navigate back to the previous fragment
             requireActivity().supportFragmentManager.popBackStack()
         }
 
-        btnSend.setOnClickListener {
-            val titleText = tvTitleBox.text.toString().trim()
-            val messageText = tvMessageBox.text.toString().trim()
+        binding.btnSend.setOnClickListener {
+            val titleText = binding.tvTitleBox.text.toString().trim()
+            val messageText = binding.tvMessageBox.text.toString().trim()
 
             if (titleText.isNotEmpty() && messageText.isNotEmpty()) {
                 // Both title and message are not empty, proceed with your logic
@@ -40,7 +46,10 @@ class CommentFragment : Fragment() {
                 Toast.makeText(context, "Please fill in both title and message", Toast.LENGTH_LONG).show()
             }
         }
+    }
 
-        return view
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null // Clear binding reference to prevent memory leaks
     }
 }

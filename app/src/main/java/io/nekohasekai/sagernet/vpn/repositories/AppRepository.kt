@@ -2,30 +2,30 @@ package io.nekohasekai.sagernet.vpn.repositories
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.DialogInterface
 import android.content.SharedPreferences
 import android.system.ErrnoException
 import android.util.ArrayMap
 import android.util.Log
+import androidx.core.view.isGone
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.reflect.TypeToken
 import io.nekohasekai.sagernet.BuildConfig
 import io.nekohasekai.sagernet.SagerNet
-import android.content.DialogInterface
 import io.nekohasekai.sagernet.SubscriptionType
-import androidx.core.view.isGone
+import io.nekohasekai.sagernet.bg.test.V2RayTestInstance
 import io.nekohasekai.sagernet.database.DataStore
+import io.nekohasekai.sagernet.database.GroupManager
 import io.nekohasekai.sagernet.database.ProfileManager
 import io.nekohasekai.sagernet.database.SagerDatabase
 import io.nekohasekai.sagernet.fmt.AbstractBean
 import io.nekohasekai.sagernet.group.RawUpdater
 import io.nekohasekai.sagernet.ktx.onMainDispatcher
+import io.nekohasekai.sagernet.ktx.readableMessage
 import io.nekohasekai.sagernet.ktx.runOnDefaultDispatcher
 import io.nekohasekai.sagernet.plugin.PluginManager
-import io.nekohasekai.sagernet.bg.test.V2RayTestInstance
-import io.nekohasekai.sagernet.database.GroupManager
-import io.nekohasekai.sagernet.ktx.readableMessage
 import io.nekohasekai.sagernet.vpn.helpers.GenericHelper
 import io.nekohasekai.sagernet.vpn.models.AppSetting
 import io.nekohasekai.sagernet.vpn.models.ListItem
@@ -35,6 +35,10 @@ import io.nekohasekai.sagernet.vpn.serverlist.ListItemAdapter
 import io.nekohasekai.sagernet.vpn.services.VpnService
 import io.nekohasekai.sagernet.vpn.utils.CustomTestDialog
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.joinAll
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.Call
 import okhttp3.Callback
@@ -45,8 +49,6 @@ import okhttp3.Response
 import java.io.IOException
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.TimeUnit
-import kotlinx.coroutines.*
-import java.util.concurrent.atomic.AtomicInteger
 
 object AppRepository {
     var LogTag: String = "HAMED_LOG"

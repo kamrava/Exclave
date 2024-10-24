@@ -17,7 +17,6 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
@@ -115,7 +114,8 @@ class DashboardActivity : BaseThemeActivity(),
         tvSelectedServer = binding.tvSelectedServer
 
         val tvDataLeft = binding.tvDataLeft
-        tvDataLeft.text = getString(R.string.dataleft, AuthRepository.getSelectedService()?.remain_traffic)
+        tvDataLeft.text =
+            getString(R.string.dataleft, AuthRepository.getSelectedService()?.remain_traffic)
 
         val clPremium = binding.clPremium
         val tvPremium = binding.tvPremium
@@ -125,7 +125,7 @@ class DashboardActivity : BaseThemeActivity(),
         } else {
             getString(R.string.premium)
         }
-        clPremium.setOnClickListener {navigateToPremiumActivity()}
+        clPremium.setOnClickListener { navigateToPremiumActivity() }
 
         // <DO NOT DELETE THIS COMMENT CODES>
         // Set an OnClickListener to MainActivity
@@ -200,7 +200,8 @@ class DashboardActivity : BaseThemeActivity(),
 
             // Handle IVall and ivPremiumServers click states
             ivAllClicked = savedInstanceState.getBoolean("ivAllClicked", true)
-            ivPremiumServersClicked = savedInstanceState.getBoolean("ivPremiumServersClicked", false)
+            ivPremiumServersClicked =
+                savedInstanceState.getBoolean("ivPremiumServersClicked", false)
 
             updateIvAllIcon()
             updateIvPremiumServersIcon()
@@ -220,7 +221,8 @@ class DashboardActivity : BaseThemeActivity(),
         }
 
         powerIcon.setOnClickListener {
-            val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            val connectivityManager =
+                getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
             val networkInfo: NetworkInfo? = connectivityManager.activeNetworkInfo
 
             if (networkInfo != null && networkInfo.isConnected) {
@@ -246,7 +248,7 @@ class DashboardActivity : BaseThemeActivity(),
                 try {
                     VpnService.silentUrlTestAsync()
                 } catch (e: Exception) {
-                    laPingAnimation.setMinAndMaxFrame(724, 840)
+                    laPingAnimation.setMinAndMaxFrame(670, 840)
                     laPingAnimation.playAnimation()
                     debugLog("VpnService: Error during ping test")
                 }
@@ -268,7 +270,10 @@ class DashboardActivity : BaseThemeActivity(),
                 AppRepository.filterServersByTag("all")
                 val fragment = ServersListFragment()
                 val bundle = Bundle()
-                bundle.putString("iconClicked", "IVAll") // Pass the clicked icon value to the fragment
+                bundle.putString(
+                    "iconClicked",
+                    "IVAll"
+                ) // Pass the clicked icon value to the fragment
                 fragment.arguments = bundle
                 val fragmentManager: FragmentManager = supportFragmentManager
                 val transaction: FragmentTransaction = fragmentManager.beginTransaction()
@@ -282,15 +287,20 @@ class DashboardActivity : BaseThemeActivity(),
 
         // Set an OnClickListener for ivPremiumServers
         ivPremiumServers.setOnClickListener {
-            ivPremiumServersClicked = !ivPremiumServersClicked // Toggle the ivPremiumServers click state
+            ivPremiumServersClicked =
+                !ivPremiumServersClicked // Toggle the ivPremiumServers click state
             updateIvPremiumServersIcon() // Update the ivPremiumServers icon
             // Show/hide the MyFragment based on the click state
-            fragmentContainer.visibility = if (ivPremiumServersClicked) View.VISIBLE else View.INVISIBLE
+            fragmentContainer.visibility =
+                if (ivPremiumServersClicked) View.VISIBLE else View.INVISIBLE
             if (ivPremiumServersClicked) {
                 AppRepository.filterServersByTag("premium")
                 val fragment = ServersListFragment()
                 val bundle = Bundle()
-                bundle.putString("iconClicked", "ivPremiumServers") // Pass the clicked icon value to the fragment
+                bundle.putString(
+                    "iconClicked",
+                    "ivPremiumServers"
+                ) // Pass the clicked icon value to the fragment
                 fragment.arguments = bundle
                 val fragmentManager: FragmentManager = supportFragmentManager
                 val transaction: FragmentTransaction = fragmentManager.beginTransaction()
@@ -336,7 +346,8 @@ class DashboardActivity : BaseThemeActivity(),
         countDownTimer = object : CountDownTimer(initialTimeMillis, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 timeRemainingMillis = millisUntilFinished
-                AppRepository.sharedPreferences.edit().putLong("remainingTime", timeRemainingMillis).apply()
+                AppRepository.sharedPreferences.edit().putLong("remainingTime", timeRemainingMillis)
+                    .apply()
                 updateTimerText(timeRemainingMillis)
             }
 
@@ -345,7 +356,7 @@ class DashboardActivity : BaseThemeActivity(),
                 VpnService.stopVpn()
             }
         }
-        if(!timerRunning) {
+        if (!timerRunning) {
             timerRunning = true
             countDownTimer?.start()
         }
@@ -401,7 +412,7 @@ class DashboardActivity : BaseThemeActivity(),
     override fun onResume() {
         super.onResume()
         AdRepository.showAppOpenAd(this)
-        if(DataStore.startedProfile > 0) {
+        if (DataStore.startedProfile > 0) {
             showConnectedState()
 //            adManager.showRewardedAd()
 //            AdRepository.showRewardedAd(this)
@@ -455,9 +466,9 @@ class DashboardActivity : BaseThemeActivity(),
             val profile = SagerDatabase.proxyDao.getById(DataStore.selectedProxy)
             tvSelectedServer.text = profile?.displayName()
             showConnectedState()
-        } else if(state.toString() === "Connecting") {
+        } else if (state.toString() === "Connecting") {
             showConnectingState()
-        } else if(state.toString() === "Stopped") {
+        } else if (state.toString() === "Stopped") {
             AppRepository.isConnected = false
             showNotConnectedState()
             stopTimer()
@@ -479,24 +490,33 @@ class DashboardActivity : BaseThemeActivity(),
         AppRepository.sharedPreferences.edit().putString("allServers", allServersInJson).apply()
     }
 
-    private suspend fun setServerStatus(profile: ProxyEntity, ping: Int, status: Int, error: String?) {
+    private suspend fun setServerStatus(
+        profile: ProxyEntity,
+        ping: Int,
+        status: Int,
+        error: String?
+    ) {
         val serverName = profile.displayName()
-        val countryCode = serverName.substring(serverName.length - 5, serverName.length).substring(0, 2).lowercase()
+        val countryCode =
+            serverName.substring(serverName.length - 5, serverName.length).substring(0, 2)
+                .lowercase()
         val foundItem = AppRepository.allServers.find {
             it.name == AppRepository.getItemName(countryCode)
         }
-        val foundSubItem = foundItem?.dropdownItems?.find { it.id == profile.id}
+        val foundSubItem = foundItem?.dropdownItems?.find { it.id == profile.id }
         foundSubItem?.status = status
         foundSubItem?.ping = ping
         foundSubItem?.error = error
 
         withContext(Dispatchers.Main) {
             val serverName = profile.displayName()
-            val countryCode = serverName.substring(serverName.length - 5, serverName.length).substring(0, 2).lowercase()
+            val countryCode =
+                serverName.substring(serverName.length - 5, serverName.length).substring(0, 2)
+                    .lowercase()
             val foundItem = AppRepository.allServers.find {
                 it.name == AppRepository.getItemName(countryCode)
             }
-            val foundSubItem = foundItem?.dropdownItems?.find { it.id == profile.id}
+            val foundSubItem = foundItem?.dropdownItems?.find { it.id == profile.id }
             foundSubItem?.status = status
             foundSubItem?.ping = ping
             foundSubItem?.error = error
@@ -515,7 +535,11 @@ class DashboardActivity : BaseThemeActivity(),
     private fun requestNotification() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (app.checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.POST_NOTIFICATIONS), 0)
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                    0
+                )
             }
         }
     }
@@ -588,11 +612,11 @@ class DashboardActivity : BaseThemeActivity(),
         super.onDestroy()
     }
 
-    fun showForFreeUsers():Int {
+    fun showForFreeUsers(): Int {
         return if (UserRepository.isFreeUser()) View.VISIBLE else View.INVISIBLE
     }
 
-    fun showForUpgradableServices():Int {
+    fun showForUpgradableServices(): Int {
         return if (UserRepository.hasUpgradableService()) View.VISIBLE else showForFreeUsers()
     }
 }

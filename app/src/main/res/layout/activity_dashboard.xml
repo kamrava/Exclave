@@ -271,7 +271,7 @@
                 android:layout_marginTop="-40dp"
                 app:lottie_autoPlay="true"
                 app:lottie_loop="true"
-                app:lottie_rawRes="@raw/animated_progress_bar"
+                app:lottie_rawRes="@raw/animated_progress_bar_blue"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 tools:ignore="MissingConstraints" />
