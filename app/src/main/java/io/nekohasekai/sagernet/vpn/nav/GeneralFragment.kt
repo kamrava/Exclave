@@ -1,37 +1,41 @@
 package io.nekohasekai.sagernet.vpn.nav
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.PopupMenu
-import android.widget.TextView
+import androidx.fragment.app.Fragment
 import io.nekohasekai.sagernet.R
+import io.nekohasekai.sagernet.databinding.FragmentGeneralBinding
 
 class GeneralFragment : Fragment() {
+
+    private var _binding: FragmentGeneralBinding? = null // Backing property for binding
+    private val binding get() = _binding!! // Non-nullable property for binding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(R.layout.fragment_general, container, false)
-        val tvGeneral = view.findViewById<TextView>(R.id.tvGeneral)
-        val iconGeneral = view.findViewById<ImageView>(R.id.ivLocationOrderIcon)
-        val iconAngle = view.findViewById<ImageView>(R.id.ivConnectionIconAngle)
+    ): View {
+        _binding = FragmentGeneralBinding.inflate(inflater, container, false)
 
-        tvGeneral.setOnClickListener { showPopupMenu(tvGeneral) }
+        setupClickListeners()
 
-        iconGeneral.setOnClickListener { showPopupMenu(tvGeneral) }
+        return binding.root
+    }
+
+    private fun setupClickListeners() {
+        // Access views through binding
+        binding.tvGeneral.setOnClickListener { showPopupMenu(binding.tvGeneral) }
+
+        binding.ivLocationOrderIcon.setOnClickListener { showPopupMenu(binding.tvGeneral) }
 
         // Add click listener to iconAngle
-        iconAngle.setOnClickListener {
+        binding.ivConnectionIconAngle.setOnClickListener {
             // Pop the back stack to navigate back to the previous fragment
             requireActivity().supportFragmentManager.popBackStack()
         }
-
-        return view
     }
 
     private fun showPopupMenu(anchorView: View) {
@@ -43,22 +47,19 @@ class GeneralFragment : Fragment() {
             when (item.itemId) {
                 R.id.Geography -> {
                     // Handle Item 1 click and update tvGeneral text
-                    updatetvGeneralText("Geography")
+                    updateTvGeneralText("Geography")
                     true
                 }
-
                 R.id.Alphabet -> {
                     // Handle Item 2 click and update tvGeneral text
-                    updatetvGeneralText("Alphabet")
+                    updateTvGeneralText("Alphabet")
                     true
                 }
-
                 R.id.Latency -> {
                     // Handle Item 3 click and update tvGeneral text
-                    updatetvGeneralText("Latency")
+                    updateTvGeneralText("Latency")
                     true
                 }
-
                 else -> false
             }
         }
@@ -66,8 +67,12 @@ class GeneralFragment : Fragment() {
         popupMenu.show()
     }
 
-    private fun updatetvGeneralText(text: String) {
-        val tvGeneral = view?.findViewById<TextView>(R.id.tvGeneral)
-        tvGeneral?.text = text
+    private fun updateTvGeneralText(text: String) {
+        binding.tvGeneral.text = text
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null // Clear binding reference to prevent memory leaks
     }
 }

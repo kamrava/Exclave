@@ -1,6 +1,7 @@
 package io.nekohasekai.sagernet.vpn
 
 import android.Manifest
+import android.animation.Animator
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
@@ -16,7 +17,6 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
@@ -108,23 +108,24 @@ class DashboardActivity : BaseThemeActivity(),
 
         AppRepository.sharedPreferences = getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
 
-        val shareIcon = findViewById<ImageView>(R.id.ivShareIcon)
+        val shareIcon = binding.ivShareIcon
         val connection = SagerConnection(true)
 
-        tvSelectedServer = findViewById<TextView>(R.id.tvSelectedServer)
+        tvSelectedServer = binding.tvSelectedServer
 
-        val tvDataLeft = findViewById<TextView>(R.id.tvDataLeft)
-        tvDataLeft.text = getString(R.string.dataleft, AuthRepository.getSelectedService()?.remain_traffic)
+        val tvDataLeft = binding.tvDataLeft
+        tvDataLeft.text =
+            getString(R.string.dataleft, AuthRepository.getSelectedService()?.remain_traffic)
 
-        val clPremium = findViewById<ConstraintLayout>(R.id.clPremium)
-        val tvPremium = findViewById<TextView>(R.id.tvPremium)
+        val clPremium = binding.clPremium
+        val tvPremium = binding.tvPremium
         clPremium.visibility = showForUpgradableServices()
         tvPremium.text = if (UserRepository.hasUpgradableService()) {
             getString(R.string.upgrade_service)
         } else {
             getString(R.string.premium)
         }
-        clPremium.setOnClickListener {navigateToPremiumActivity()}
+        clPremium.setOnClickListener { navigateToPremiumActivity() }
 
         // <DO NOT DELETE THIS COMMENT CODES>
         // Set an OnClickListener to MainActivity
@@ -154,10 +155,10 @@ class DashboardActivity : BaseThemeActivity(),
         }
 
         // Initialize the fragment container
-        val fragmentContainer = findViewById<View>(R.id.flFragmentContainer)
+        val fragmentContainer = binding.flFragmentContainer
 
         // Find the NavMenuIcon ImageView and set an OnClickListener
-        val navMenuIcon = findViewById<ImageView>(R.id.ivNavMenuIcon)
+        val navMenuIcon = binding.ivNavMenuIcon
         navMenuIcon.setOnClickListener {
             // Create an instance of the NavMenuFragment
             val navMenuFragment = MenuFragment()
@@ -173,13 +174,13 @@ class DashboardActivity : BaseThemeActivity(),
             transaction.commit()
         }
 
-        powerIcon = findViewById(R.id.laPulseButton)
-        ivAll = findViewById(R.id.ivAll)
-        ivPremiumServers = findViewById(R.id.ivPremiumServers)
-        stateTextView = findViewById(R.id.tvPowerState)
-        timerTextView = findViewById(R.id.tvTimer)
-        appTitle = findViewById(R.id.tvApplicationName)
-        addTimeTextView = findViewById(R.id.tvAddTime)
+        powerIcon = binding.laPulseButton
+        ivAll = binding.ivAll
+        ivPremiumServers = binding.ivPremiumServers
+        stateTextView = binding.tvPowerState
+        timerTextView = binding.tvTimer
+        appTitle = binding.tvApplicationName
+        addTimeTextView = binding.tvAddTime
         addTimeTextView.text = getString(R.string.plus_x_minutes, appSetting.freeVpnTimer)
 
         timerTextView.visibility = showForFreeUsers()
@@ -199,10 +200,11 @@ class DashboardActivity : BaseThemeActivity(),
 
             // Handle IVall and ivPremiumServers click states
             ivAllClicked = savedInstanceState.getBoolean("ivAllClicked", true)
-            ivPremiumServersClicked = savedInstanceState.getBoolean("ivPremiumServersClicked", false)
+            ivPremiumServersClicked =
+                savedInstanceState.getBoolean("ivPremiumServersClicked", false)
 
-            updateivAllIcon()
-            updateivPremiumServersIcon()
+            updateIvAllIcon()
+            updateIvPremiumServersIcon()
         }
 
         // Ensure IVall is selected and fragmentContainer is visible when the activity starts
@@ -219,7 +221,8 @@ class DashboardActivity : BaseThemeActivity(),
         }
 
         powerIcon.setOnClickListener {
-            val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            val connectivityManager =
+                getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
             val networkInfo: NetworkInfo? = connectivityManager.activeNetworkInfo
 
             if (networkInfo != null && networkInfo.isConnected) {
@@ -234,6 +237,10 @@ class DashboardActivity : BaseThemeActivity(),
         binding.clIconPing.setOnClickListener {
             binding.clIconPing.visibility = View.GONE
             binding.clpbPing.visibility = View.VISIBLE
+            val laPingAnimation = binding.laPingAnimation
+            laPingAnimation.setMinAndMaxFrame(0, 300)
+            laPingAnimation.repeatCount = 2
+            laPingAnimation.playAnimation()
             VpnService.stopVpn()
             showNotConnectedState()
             stopTimer()
@@ -241,6 +248,8 @@ class DashboardActivity : BaseThemeActivity(),
                 try {
                     VpnService.silentUrlTestAsync()
                 } catch (e: Exception) {
+                    laPingAnimation.setMinAndMaxFrame(670, 840)
+                    laPingAnimation.playAnimation()
                     debugLog("VpnService: Error during ping test")
                 }
             }
@@ -254,14 +263,17 @@ class DashboardActivity : BaseThemeActivity(),
         // Set an OnClickListener for IVall
         ivAll.setOnClickListener {
             ivAllClicked = !ivAllClicked // Toggle the IVall click state
-            updateivAllIcon() // Update the IVall icon
+            updateIvAllIcon() // Update the IVall icon
             // Show/hide the MyFragment based on the click state
             fragmentContainer.visibility = if (ivAllClicked) View.VISIBLE else View.INVISIBLE
             if (ivAllClicked) {
                 AppRepository.filterServersByTag("all")
                 val fragment = ServersListFragment()
                 val bundle = Bundle()
-                bundle.putString("iconClicked", "IVAll") // Pass the clicked icon value to the fragment
+                bundle.putString(
+                    "iconClicked",
+                    "IVAll"
+                ) // Pass the clicked icon value to the fragment
                 fragment.arguments = bundle
                 val fragmentManager: FragmentManager = supportFragmentManager
                 val transaction: FragmentTransaction = fragmentManager.beginTransaction()
@@ -270,20 +282,25 @@ class DashboardActivity : BaseThemeActivity(),
             }
             // Reset PremiumServers click states
             ivPremiumServersClicked = false
-            updateivPremiumServersIcon() // Update the PremiumServers icon
+            updateIvPremiumServersIcon() // Update the PremiumServers icon
         }
 
         // Set an OnClickListener for ivPremiumServers
         ivPremiumServers.setOnClickListener {
-            ivPremiumServersClicked = !ivPremiumServersClicked // Toggle the ivPremiumServers click state
-            updateivPremiumServersIcon() // Update the ivPremiumServers icon
+            ivPremiumServersClicked =
+                !ivPremiumServersClicked // Toggle the ivPremiumServers click state
+            updateIvPremiumServersIcon() // Update the ivPremiumServers icon
             // Show/hide the MyFragment based on the click state
-            fragmentContainer.visibility = if (ivPremiumServersClicked) View.VISIBLE else View.INVISIBLE
+            fragmentContainer.visibility =
+                if (ivPremiumServersClicked) View.VISIBLE else View.INVISIBLE
             if (ivPremiumServersClicked) {
-                AppRepository.filterServersByTag("premiumservers")
+                AppRepository.filterServersByTag("premium")
                 val fragment = ServersListFragment()
                 val bundle = Bundle()
-                bundle.putString("iconClicked", "ivPremiumServers") // Pass the clicked icon value to the fragment
+                bundle.putString(
+                    "iconClicked",
+                    "ivPremiumServers"
+                ) // Pass the clicked icon value to the fragment
                 fragment.arguments = bundle
                 val fragmentManager: FragmentManager = supportFragmentManager
                 val transaction: FragmentTransaction = fragmentManager.beginTransaction()
@@ -292,7 +309,7 @@ class DashboardActivity : BaseThemeActivity(),
             }
             // Reset IVall click states
             ivAllClicked = false
-            updateivAllIcon() // Update the IVall icon
+            updateIvAllIcon() // Update the IVall icon
         }
     }
 
@@ -301,11 +318,11 @@ class DashboardActivity : BaseThemeActivity(),
         startActivity(intent)
     }
 
-    private fun updateivAllIcon() {
+    private fun updateIvAllIcon() {
         ivAll.setImageResource(if (ivAllClicked) R.drawable.ic_all_colorfull else R.drawable.ic_all_gray)
     }
 
-    private fun updateivPremiumServersIcon() {
+    private fun updateIvPremiumServersIcon() {
         ivPremiumServers.setImageResource(if (ivPremiumServersClicked) R.drawable.ic_premium_servers_gold else R.drawable.ic_premium_servers_gray)
     }
 
@@ -329,7 +346,8 @@ class DashboardActivity : BaseThemeActivity(),
         countDownTimer = object : CountDownTimer(initialTimeMillis, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 timeRemainingMillis = millisUntilFinished
-                AppRepository.sharedPreferences.edit().putLong("remainingTime", timeRemainingMillis).apply()
+                AppRepository.sharedPreferences.edit().putLong("remainingTime", timeRemainingMillis)
+                    .apply()
                 updateTimerText(timeRemainingMillis)
             }
 
@@ -338,7 +356,7 @@ class DashboardActivity : BaseThemeActivity(),
                 VpnService.stopVpn()
             }
         }
-        if(!timerRunning) {
+        if (!timerRunning) {
             timerRunning = true
             countDownTimer?.start()
         }
@@ -383,7 +401,10 @@ class DashboardActivity : BaseThemeActivity(),
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString("currentState", stateTextView.text.toString())
-        outState.putBoolean("isFragmentVisible", findViewById<View>(R.id.flFragmentContainer).visibility == View.VISIBLE)
+        outState.putBoolean(
+            "isFragmentVisible",
+            binding.flFragmentContainer.visibility == View.VISIBLE
+        )
         outState.putBoolean("ivAllClicked", ivAllClicked)
         outState.putBoolean("ivPremiumServersClicked", ivPremiumServersClicked)
     }
@@ -391,7 +412,7 @@ class DashboardActivity : BaseThemeActivity(),
     override fun onResume() {
         super.onResume()
         AdRepository.showAppOpenAd(this)
-        if(DataStore.startedProfile > 0) {
+        if (DataStore.startedProfile > 0) {
             showConnectedState()
 //            adManager.showRewardedAd()
 //            AdRepository.showRewardedAd(this)
@@ -445,9 +466,9 @@ class DashboardActivity : BaseThemeActivity(),
             val profile = SagerDatabase.proxyDao.getById(DataStore.selectedProxy)
             tvSelectedServer.text = profile?.displayName()
             showConnectedState()
-        } else if(state.toString() === "Connecting") {
+        } else if (state.toString() === "Connecting") {
             showConnectingState()
-        } else if(state.toString() === "Stopped") {
+        } else if (state.toString() === "Stopped") {
             AppRepository.isConnected = false
             showNotConnectedState()
             stopTimer()
@@ -469,24 +490,33 @@ class DashboardActivity : BaseThemeActivity(),
         AppRepository.sharedPreferences.edit().putString("allServers", allServersInJson).apply()
     }
 
-    private suspend fun setServerStatus(profile: ProxyEntity, ping: Int, status: Int, error: String?) {
+    private suspend fun setServerStatus(
+        profile: ProxyEntity,
+        ping: Int,
+        status: Int,
+        error: String?
+    ) {
         val serverName = profile.displayName()
-        val countryCode = serverName.substring(serverName.length - 5, serverName.length).substring(0, 2).lowercase()
+        val countryCode =
+            serverName.substring(serverName.length - 5, serverName.length).substring(0, 2)
+                .lowercase()
         val foundItem = AppRepository.allServers.find {
             it.name == AppRepository.getItemName(countryCode)
         }
-        val foundSubItem = foundItem?.dropdownItems?.find { it.id == profile.id}
+        val foundSubItem = foundItem?.dropdownItems?.find { it.id == profile.id }
         foundSubItem?.status = status
         foundSubItem?.ping = ping
         foundSubItem?.error = error
 
         withContext(Dispatchers.Main) {
             val serverName = profile.displayName()
-            val countryCode = serverName.substring(serverName.length - 5, serverName.length).substring(0, 2).lowercase()
+            val countryCode =
+                serverName.substring(serverName.length - 5, serverName.length).substring(0, 2)
+                    .lowercase()
             val foundItem = AppRepository.allServers.find {
                 it.name == AppRepository.getItemName(countryCode)
             }
-            val foundSubItem = foundItem?.dropdownItems?.find { it.id == profile.id}
+            val foundSubItem = foundItem?.dropdownItems?.find { it.id == profile.id }
             foundSubItem?.status = status
             foundSubItem?.ping = ping
             foundSubItem?.error = error
@@ -505,7 +535,11 @@ class DashboardActivity : BaseThemeActivity(),
     private fun requestNotification() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (app.checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.POST_NOTIFICATIONS), 0)
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                    0
+                )
             }
         }
     }
@@ -538,9 +572,33 @@ class DashboardActivity : BaseThemeActivity(),
 
     private fun resetPingBtnUI() {
         runOnUiThread {
-            binding.clpbPing.visibility = View.GONE
-            binding.clIconPing.visibility = View.VISIBLE
-            AppRepository.refreshServersListView()
+            val laPingAnimation = binding.laPingAnimation
+            laPingAnimation.setMinAndMaxFrame(300, 414)
+            laPingAnimation.repeatCount = 0
+            // Add an animator listener to listen for the end of the animation
+            laPingAnimation.addAnimatorListener(object : Animator.AnimatorListener {
+                override fun onAnimationStart(animation: Animator) {
+                    // Do nothing
+                }
+
+                override fun onAnimationEnd(animation: Animator) {
+                    // This block will be called when the animation ends
+                    AppRepository.refreshServersListView()
+                    binding.clpbPing.visibility = View.GONE
+                    binding.clIconPing.visibility = View.VISIBLE
+                }
+
+                override fun onAnimationCancel(animation: Animator) {
+                    // Do nothing
+                }
+
+                override fun onAnimationRepeat(animation: Animator) {
+                    // Do nothing
+                }
+            })
+
+            // Play the animation
+            laPingAnimation.playAnimation()
         }
     }
 
@@ -554,11 +612,11 @@ class DashboardActivity : BaseThemeActivity(),
         super.onDestroy()
     }
 
-    fun showForFreeUsers():Int {
+    fun showForFreeUsers(): Int {
         return if (UserRepository.isFreeUser()) View.VISIBLE else View.INVISIBLE
     }
 
-    fun showForUpgradableServices():Int {
+    fun showForUpgradableServices(): Int {
         return if (UserRepository.hasUpgradableService()) View.VISIBLE else showForFreeUsers()
     }
 }

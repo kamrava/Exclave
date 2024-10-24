@@ -1,6 +1,7 @@
 package io.nekohasekai.sagernet.vpn.utils
 
 import android.content.Context
+import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.isGone
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -14,11 +15,9 @@ import io.nekohasekai.sagernet.ktx.FixedLinearLayoutManager
 import io.nekohasekai.sagernet.ktx.alert
 import io.nekohasekai.sagernet.ktx.getColorAttr
 import io.nekohasekai.sagernet.ktx.getColour
-import java.util.ArrayList
 import java.util.Timer
 import java.util.TimerTask
 import kotlin.concurrent.timerTask
-import android.view.LayoutInflater
 
 class CustomTestDialog(val context: Context) {
     val inflater: LayoutInflater = LayoutInflater.from(context)
