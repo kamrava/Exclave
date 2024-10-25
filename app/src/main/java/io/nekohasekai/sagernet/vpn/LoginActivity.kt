@@ -116,7 +116,7 @@ class LoginActivity : BaseThemeActivity() {
             val password = binding.txtPassword.text.toString()
             if (email.isNotEmpty() && password.isNotEmpty()) {
 
-                binding.laProgressBarLogin.playLoadingAnimation()
+                binding.laProgressBarLogin.playInProgressAnimation()
 
                 // Perform login asynchronously
                 lifecycleScope.launch(Dispatchers.IO) {
@@ -125,7 +125,7 @@ class LoginActivity : BaseThemeActivity() {
             } else {
                 binding.tvValidationError.visibility = View.VISIBLE
                 binding.tvValidationError.text = getString(R.string.enter_email_and_password)
-                binding.laProgressBarLogin.playLoginErrorAnimation {
+                binding.laProgressBarLogin.playErrorAnimation {
                     binding.btnLogin.visibility = View.VISIBLE
                 }
             }
@@ -189,7 +189,7 @@ class LoginActivity : BaseThemeActivity() {
                                 binding.tvValidationError.visibility = View.VISIBLE
                                 binding.tvValidationError.text =
                                     getString(R.string.email_or_password_is_wrong)
-                                binding.laProgressBarLogin.playLoginErrorAnimation {
+                                binding.laProgressBarLogin.playErrorAnimation {
                                     binding.btnLogin.visibility = View.VISIBLE
                                 }
                             }
@@ -199,7 +199,7 @@ class LoginActivity : BaseThemeActivity() {
                                 binding.tvValidationError.visibility = View.VISIBLE
                                 binding.tvValidationError.text =
                                     getString(R.string.Something_is_wrong)
-                                binding.laProgressBarLogin.playLoginErrorAnimation {
+                                binding.laProgressBarLogin.playErrorAnimation {
                                     binding.btnLogin.visibility = View.VISIBLE
                                 }
                             }

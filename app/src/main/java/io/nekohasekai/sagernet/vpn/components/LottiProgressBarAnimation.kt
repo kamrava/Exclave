@@ -39,7 +39,7 @@ class LottiProgressBarAnimation @JvmOverloads constructor(
         )
     }
 
-    fun playLoadingAnimation() {
+    fun playInProgressAnimation() {
         val color = ContextCompat.getColor(context, R.color.lightBlue)
         changeProgressBarColor(color)
         binding.laProgressBarAnimation.visibility = View.VISIBLE
@@ -48,12 +48,30 @@ class LottiProgressBarAnimation @JvmOverloads constructor(
         binding.laProgressBarAnimation.playAnimation()
     }
 
-    fun playLoginErrorAnimation(onAnimationEnd: () -> Unit) {
+    fun playErrorAnimation(onAnimationEnd: () -> Unit) {
         val color = ContextCompat.getColor(context, R.color.material_red_600)
         changeProgressBarColor(color)
         binding.laProgressBarAnimation.visibility = View.VISIBLE
         binding.laProgressBarAnimation.setMinAndMaxFrame(670, 840)
         binding.laProgressBarAnimation.repeatCount = 1
+        binding.laProgressBarAnimation.playAnimation()
+
+        // Set a listener to know when the animation ends
+        binding.laProgressBarAnimation.addAnimatorListener(object : AnimatorListenerAdapter() {
+            override fun onAnimationEnd(animation: Animator) {
+                super.onAnimationEnd(animation)
+                binding.laProgressBarAnimation.visibility = View.GONE
+                onAnimationEnd()
+            }
+        })
+    }
+
+    fun playSuccessAnimation(onAnimationEnd: () -> Unit) {
+        val color = ContextCompat.getColor(context, R.color.material_green_600)
+        changeProgressBarColor(color)
+        binding.laProgressBarAnimation.visibility = View.VISIBLE
+        binding.laProgressBarAnimation.setMinAndMaxFrame(300, 414)
+        binding.laProgressBarAnimation.repeatCount = 0
         binding.laProgressBarAnimation.playAnimation()
 
         // Set a listener to know when the animation ends
