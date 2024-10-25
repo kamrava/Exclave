@@ -238,7 +238,7 @@ class DashboardActivity : BaseThemeActivity(),
             binding.clIconPing.visibility = View.GONE
             binding.clpbPing.visibility = View.VISIBLE
             val laPingAnimation = binding.laPingAnimation
-            laPingAnimation.setMinAndMaxFrame(0, 300)
+            laPingAnimation.setMinAndMaxFrame(0, 239)
             laPingAnimation.repeatCount = 2
             laPingAnimation.playAnimation()
             VpnService.stopVpn()

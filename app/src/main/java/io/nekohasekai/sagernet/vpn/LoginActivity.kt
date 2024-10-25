@@ -108,34 +108,28 @@ class LoginActivity : BaseThemeActivity() {
         binding.txtPassword.setText(testPassword)
 
         binding.btnLogin.setOnClickListener {
-            binding.btnLogin.isEnabled = false
+
+            binding.btnLogin.visibility = View.INVISIBLE
             binding.tvValidationError.visibility = View.INVISIBLE
+
             val email = binding.txtEmail.text.toString()
             val password = binding.txtPassword.text.toString()
-
             if (email.isNotEmpty() && password.isNotEmpty()) {
 
-                // Change button text
-                binding.btnLogin.text = getString(R.string.Logging_in)
-                // Show progress bar animation
-                binding.laProgressBarLogin.visibility = View.VISIBLE
-                val laPingAnimation = binding.laProgressBarLogin
-                laPingAnimation.setMinAndMaxFrame(0, 300)
-                laPingAnimation.repeatCount = 2
-                laPingAnimation.playAnimation()
+                binding.laProgressBarLogin.playLoadingAnimation()
 
                 // Perform login asynchronously
                 lifecycleScope.launch(Dispatchers.IO) {
-                    // Call performLogin
                     performLogin(email, password)
                 }
             } else {
-                onLoginError()
+                binding.tvValidationError.visibility = View.VISIBLE
                 binding.tvValidationError.text = getString(R.string.enter_email_and_password)
+                binding.laProgressBarLogin.playLoginErrorAnimation {
+                    binding.btnLogin.visibility = View.VISIBLE
+                }
             }
         }
-
-
 
         //Forgot Password link
         binding.tvForgetPassword.setOnClickListener {
@@ -192,16 +186,22 @@ class LoginActivity : BaseThemeActivity() {
                         }
                         500,404 -> {
                             runOnUiThread {
-                                onLoginError()
+                                binding.tvValidationError.visibility = View.VISIBLE
                                 binding.tvValidationError.text =
                                     getString(R.string.email_or_password_is_wrong)
+                                binding.laProgressBarLogin.playLoginErrorAnimation {
+                                    binding.btnLogin.visibility = View.VISIBLE
+                                }
                             }
                         }
                         else -> {
                             runOnUiThread {
-                                onLoginError()
+                                binding.tvValidationError.visibility = View.VISIBLE
                                 binding.tvValidationError.text =
                                     getString(R.string.Something_is_wrong)
+                                binding.laProgressBarLogin.playLoginErrorAnimation {
+                                    binding.btnLogin.visibility = View.VISIBLE
+                                }
                             }
                         }
                     }
@@ -272,16 +272,6 @@ class LoginActivity : BaseThemeActivity() {
                     // Handle the error
                 }
             }
-    }
-    private fun onLoginError() {
-        binding.btnLogin.text = getString(R.string.login)
-        binding.laProgressBarLogin.visibility = View.VISIBLE
-        val laPingAnimation = binding.laProgressBarLogin
-        laPingAnimation.setMinAndMaxFrame(670, 840)
-        laPingAnimation.repeatCount = 1
-        laPingAnimation.playAnimation()
-        binding.tvValidationError.visibility = View.VISIBLE
-        binding.btnLogin.isEnabled = true
     }
 }
 
