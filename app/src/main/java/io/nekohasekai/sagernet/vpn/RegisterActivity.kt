@@ -2,12 +2,11 @@ package io.nekohasekai.sagernet.vpn
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
 import android.text.InputType
 import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
-import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
 import com.facebook.AccessToken
 import com.facebook.CallbackManager
 import com.facebook.FacebookCallback
@@ -27,7 +26,6 @@ import io.nekohasekai.sagernet.databinding.ActivityRegisterBinding
 import io.nekohasekai.sagernet.vpn.repositories.AuthRepository
 import io.nekohasekai.sagernet.vpn.repositories.SocialAuthRepository
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
@@ -111,30 +109,26 @@ class RegisterActivity : BaseThemeActivity() {
         }
 
         binding.btnRegister.setOnClickListener {
+
+            binding.btnRegister.visibility = View.INVISIBLE
+            binding.tvValidationError.visibility = View.INVISIBLE
+
             val email = binding.txtEmail.text.toString()
             val password = binding.txtPassword.text.toString()
-
             if (email.isNotEmpty() && password.isNotEmpty()) {
 
-                // Change button text
-                binding.btnRegister.text = getString(R.string.Checking)
-                // Show progress bar
-                binding.progressBarLogin.visibility = View.VISIBLE
+                binding.laProgressBarRegister.playInProgressAnimation()
 
-                // Perform register asynchronously
-                GlobalScope.launch(Dispatchers.IO) {
-                    // Check if Email is available
-                    checkEmailAvailability(email, password)
-
-                    // Update UI on the main thread after login completes
-                    withContext(Dispatchers.Main) {
-                        // Revert button text and hide progress bar
-                        binding.btnRegister.text = getString(R.string.register)
-                        binding.progressBarLogin.visibility = View.GONE
-                    }
+                // Perform login asynchronously
+                lifecycleScope.launch(Dispatchers.IO) {
+                    performRegister(email, password)
                 }
             } else {
-                Toast.makeText(this, "Please enter email and password.", Toast.LENGTH_LONG).show()
+                binding.tvValidationError.visibility = View.VISIBLE
+                binding.tvValidationError.text = getString(R.string.enter_email_and_password)
+                binding.laProgressBarRegister.playErrorAnimation {
+                    binding.btnRegister.visibility = View.VISIBLE
+                }
             }
         }
 
@@ -186,68 +180,41 @@ class RegisterActivity : BaseThemeActivity() {
         runBlocking {
             try {
                 withContext(Dispatchers.IO) {
-                    val responseCode = AuthRepository.register(email, password)
-                    when (responseCode) {
-                        200 -> {
-                            runOnUiThread {
-                                binding.tvValidationError.visibility = View.INVISIBLE
-                                navigateToVerifyActivity(email, password)
-                            }
-                        }
-                        409 -> {
-                            runOnUiThread {
-                                binding.tvValidationError.text = "This Email is already registered"
-                                binding.tvValidationError.visibility = View.VISIBLE
-                            }
-                        }
-                        422 -> {
-                            runOnUiThread {
-                                binding.tvValidationError.text = AuthRepository.getLastValidationError()
-                                binding.tvValidationError.visibility = View.VISIBLE
-                            }
-                        }
-                        else -> {
-                            runOnUiThread {
-                                binding.tvValidationError.text = "Something is wrong!"
-                                binding.tvValidationError.visibility = View.VISIBLE
-                            }
-                        }
-                    }
-                }
-            } catch (e: Exception) {
-                println("Request failed: ${e.message}")
-            }
-        }
-    }
-
-    private fun checkEmailAvailability(email: String, password: String) {
-        runBlocking {
-            try {
-                withContext(Dispatchers.IO) {
                     val responseCode = AuthRepository.checkEmailAvailabilityAndSendCode(email)
                     when (responseCode) {
                         200 -> {
                             runOnUiThread {
-                                binding.tvValidationError.visibility = View.INVISIBLE
                                 navigateToVerifyActivity(email, password)
                             }
                         }
                         409 -> {
                             runOnUiThread {
-                                binding.tvValidationError.text = "Email is not available!"
                                 binding.tvValidationError.visibility = View.VISIBLE
+                                binding.tvValidationError.text =
+                                    getString(R.string.email_already_registered)
+                                binding.laProgressBarRegister.playErrorAnimation {
+                                    binding.btnRegister.visibility = View.VISIBLE
+                                }
                             }
                         }
                         422 -> {
                             runOnUiThread {
-                                binding.tvValidationError.text = AuthRepository.getLastValidationError()
                                 binding.tvValidationError.visibility = View.VISIBLE
+                                binding.tvValidationError.text =
+                                    AuthRepository.getLastValidationError()
+                                binding.laProgressBarRegister.playErrorAnimation {
+                                    binding.btnRegister.visibility = View.VISIBLE
+                                }
                             }
                         }
                         else -> {
                             runOnUiThread {
-                                binding.tvValidationError.text = "Something is wrong!"
                                 binding.tvValidationError.visibility = View.VISIBLE
+                                binding.tvValidationError.text =
+                                    getString(R.string.something_is_wrong)
+                                binding.laProgressBarRegister.playErrorAnimation {
+                                    binding.btnRegister.visibility = View.VISIBLE
+                                }
                             }
                         }
                     }
@@ -297,7 +264,7 @@ class RegisterActivity : BaseThemeActivity() {
     }
 
     private fun navigateToVerifyActivity(email: String, password: String) {
-        val intent = Intent(this, EmailVerify::class.java)
+        val intent = Intent(this, EmailVerifyActivity::class.java)
         AuthRepository.setUserEmail(email)
         intent.putExtra("email", email)
         intent.putExtra("password", password)

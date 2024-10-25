@@ -4,50 +4,47 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
 import io.nekohasekai.sagernet.R
 import io.nekohasekai.sagernet.databinding.ActivityEmailVerifyBinding
 import io.nekohasekai.sagernet.vpn.repositories.AppRepository
 import io.nekohasekai.sagernet.vpn.repositories.AuthRepository
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 
-class EmailVerify : BaseThemeActivity() {
-    private lateinit var binding: ActivityEmailVerifyBinding
+class EmailVerifyActivity : BaseThemeActivity() {
+
+    lateinit var binding: ActivityEmailVerifyBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityEmailVerifyBinding.inflate(layoutInflater)
-        val view = binding.root
-        setContentView(view)
+        setContentView(binding.root)
 
         val email: String = intent.getStringExtra("email").toString()
         val password: String = intent.getStringExtra("password").toString()
 
-
         binding.btnVerify.setOnClickListener {
+
+            binding.btnVerify.visibility = View.INVISIBLE
+            binding.tvValidationError.visibility = View.INVISIBLE
+
             val verifyCode = binding.txtVerifyCode.text.toString()
+            if (verifyCode.isNotEmpty()) {
 
-            if (verifyCode.isEmpty()) {
-                return@setOnClickListener
-            }
+                binding.laProgressBarVerify.playInProgressAnimation()
 
-            // Change button text
-            binding.btnVerify.text = getString(R.string.verifying)
-            // Show progress bar
-            binding.progressBarVerify.visibility = View.VISIBLE
-
-            // Perform register asynchronously
-            GlobalScope.launch(Dispatchers.IO) {
-                performVerify(email, password, verifyCode)
-
-                // Update UI on the main thread after login completes
-                withContext(Dispatchers.Main) {
-                    // Revert button text and hide progress bar
-                    binding.btnVerify.text = getString(R.string.verify)
-                    binding.progressBarVerify.visibility = View.GONE
+                // Perform login asynchronously
+                lifecycleScope.launch(Dispatchers.IO) {
+                    performVerify(email, password, verifyCode)
+                }
+            } else {
+                binding.tvValidationError.visibility = View.VISIBLE
+                binding.tvValidationError.text = getString(R.string.enter_your_verify_code)
+                binding.laProgressBarVerify.playErrorAnimation {
+                    binding.btnVerify.visibility = View.VISIBLE
                 }
             }
         }
@@ -58,7 +55,7 @@ class EmailVerify : BaseThemeActivity() {
             binding.tvResendVerifyCode.isEnabled = false
             binding.tvResendVerifyCode.isClickable = false
 
-            GlobalScope.launch(Dispatchers.IO) {
+            lifecycleScope.launch(Dispatchers.IO) {
                 AuthRepository.checkEmailAvailabilityAndSendCode(email)
 
                 // Update UI on the main thread after login completes
@@ -67,7 +64,11 @@ class EmailVerify : BaseThemeActivity() {
                     binding.tvResendVerifyCode.text = getString(R.string.resend_verify_code)
                     binding.tvResendVerifyCode.isEnabled = true
                     binding.tvResendVerifyCode.isClickable = true
-                    Toast.makeText(this@EmailVerify, "Verification code has been sent. Please check your email inbox", Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        this@EmailVerifyActivity,
+                        "Verification code has been sent. Please check your email inbox",
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
             }
         }
@@ -81,14 +82,21 @@ class EmailVerify : BaseThemeActivity() {
                     when (responseCode) {
                         200 -> {
                             runOnUiThread {
-                                binding.tvValidationError.visibility = View.INVISIBLE
-                                navigateToDashboardActivity()
+                                lifecycleScope.launch {
+                                    AppRepository.getServersAndImport(this@EmailVerifyActivity)
+                                    navigateToDashboardActivity()
+                                }
                             }
                         }
+
                         else -> {
                             runOnUiThread {
-                                binding.tvValidationError.text = "Verify Code was wrong!"
                                 binding.tvValidationError.visibility = View.VISIBLE
+                                binding.tvValidationError.text =
+                                    getString(R.string.verify_code_is_wrong)
+                                binding.laProgressBarVerify.playErrorAnimation {
+                                    binding.btnVerify.visibility = View.VISIBLE
+                                }
                             }
                         }
                     }

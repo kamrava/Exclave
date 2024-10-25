@@ -13,9 +13,7 @@ class ForceUpdateActivity : BaseThemeActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_force_update)
-
         binding = ActivityForceUpdateBinding.inflate(layoutInflater)
-
         setContentView(binding.root)
 
         binding.btnForceUpdate.setOnClickListener {
@@ -27,10 +25,20 @@ class ForceUpdateActivity : BaseThemeActivity() {
     private fun redirectToPlayStore() {
         val appPackageName = packageName
         try {
-            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$appPackageName")))
+            startActivity(
+                Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse("market://details?id=$appPackageName")
+                )
+            )
         } catch (e: ActivityNotFoundException) {
             // Play Store app is not installed, open the website.
-            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$appPackageName")))
+            startActivity(
+                Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse("https://play.google.com/store/apps/details?id=$appPackageName")
+                )
+            )
         }
     }
 }

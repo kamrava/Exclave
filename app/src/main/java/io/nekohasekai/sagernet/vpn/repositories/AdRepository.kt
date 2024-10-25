@@ -3,7 +3,6 @@ package io.nekohasekai.sagernet.vpn.repositories
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.widget.FrameLayout
 import androidx.preference.PreferenceManager
 import com.google.android.gms.ads.AdError
@@ -23,10 +22,6 @@ import com.google.android.ump.ConsentRequestParameters
 import com.google.android.ump.UserMessagingPlatform
 import io.nekohasekai.sagernet.R
 import io.nekohasekai.sagernet.SagerNet
-import io.nekohasekai.sagernet.ui.MainActivity
-import io.nekohasekai.sagernet.vpn.DashboardActivity
-import io.nekohasekai.sagernet.vpn.WelcomeActivity
-import io.nekohasekai.sagernet.vpn.interfaces.RewardedAdListener
 import io.nekohasekai.sagernet.vpn.utils.InternetConnectionChecker
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.coroutines.resume

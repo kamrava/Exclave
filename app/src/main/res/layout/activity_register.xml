@@ -128,7 +128,7 @@
         android:id="@+id/btnRegister"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="90dp"
         android:paddingStart="60dp"
         android:paddingEnd="60dp"
         android:background="@drawable/background_enter_btn"
@@ -141,19 +141,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtPassword" />
 
-    <ProgressBar
-        android:id="@+id/progressBarLogin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:indeterminate="true"
-        android:indeterminateTint="@color/white"
-        android:indeterminateTintMode="src_atop"
-        android:max="100"
-        android:visibility="gone"
-        android:elevation="10dp"
-        app:layout_constraintBottom_toBottomOf="@+id/btnRegister"
-        app:layout_constraintEnd_toEndOf="@+id/btnRegister"
-        app:layout_constraintTop_toTopOf="@+id/btnRegister" />
+    <io.nekohasekai.sagernet.vpn.components.LottiProgressBarAnimation
+        android:id="@+id/laProgressBarRegister"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="90dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtPassword" />
 
     <TextView
         android:id="@+id/tvLogin"

@@ -35,7 +35,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/background_enter_btn"
         android:fontFamily="@font/museo_san_rounded900"
-        android:text="@string/Try_Again"
+        android:text="@string/try_again"
         android:textColor="@color/white"
         android:textSize="26sp"
         android:textStyle="bold"

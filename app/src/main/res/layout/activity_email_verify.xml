@@ -109,18 +109,13 @@
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toBottomOf="@+id/txtVerifyCode" />
 
-<ProgressBar
-    android:id="@+id/progressBarVerify"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:indeterminate="true"
-    android:indeterminateTint="@color/white"
-    android:indeterminateTintMode="src_atop"
-    android:max="100"
-    android:visibility="gone"
-    android:elevation="10dp"
-    app:layout_constraintBottom_toBottomOf="@+id/btnVerify"
-    app:layout_constraintEnd_toEndOf="@+id/btnVerify"
-    app:layout_constraintTop_toTopOf="@+id/btnVerify" />
+    <io.nekohasekai.sagernet.vpn.components.LottiProgressBarAnimation
+        android:id="@+id/laProgressBarVerify"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="120dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtVerifyCode" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
