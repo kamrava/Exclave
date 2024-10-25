@@ -76,6 +76,7 @@
     <string name="Something_is_wrong">Something is wrong!</string>
     <string name="email_or_password_is_wrong">Email or Password is wrong!</string>
     <string name="Verify_Code_is_wrong">Verify Code is wrong!</string>
+    <string name="email_already_registered">This Email is already registered</string>
 
     <!-- Location of UnitaVPN Strings <END>-->
     <string name="app_name" translatable="false">UnitaVPN</string>
