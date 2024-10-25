@@ -296,7 +296,7 @@ class RegisterActivity : BaseThemeActivity() {
     }
 
     private fun navigateToVerifyActivity(email: String, password: String) {
-        val intent = Intent(this, EmailVerify::class.java)
+        val intent = Intent(this, EmailVerifyActivity::class.java)
         AuthRepository.setUserEmail(email)
         intent.putExtra("email", email)
         intent.putExtra("password", password)

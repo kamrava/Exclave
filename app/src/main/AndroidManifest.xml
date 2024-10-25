@@ -88,7 +88,7 @@
             android:name=".vpn.PremiumActivity"
             android:exported="false" />
         <activity
-            android:name=".vpn.EmailVerify"
+            android:name=".vpn.EmailVerifyActivity"
             android:exported="false" />
         <activity
             android:name=".vpn.NotificationActivity"
