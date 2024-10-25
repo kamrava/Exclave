@@ -1,7 +1,6 @@
 package io.nekohasekai.sagernet.vpn
 
 import android.Manifest
-import android.animation.Animator
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
@@ -235,12 +234,9 @@ class DashboardActivity : BaseThemeActivity(),
         }
 
         binding.clIconPing.setOnClickListener {
-            binding.clIconPing.visibility = View.GONE
+            binding.clIconPing.visibility = View.INVISIBLE
             binding.clpbPing.visibility = View.VISIBLE
-            val laPingAnimation = binding.laPingAnimation
-            laPingAnimation.setMinAndMaxFrame(0, 239)
-            laPingAnimation.repeatCount = 2
-            laPingAnimation.playAnimation()
+            binding.laPingAnimation.playInProgressAnimation()
             VpnService.stopVpn()
             showNotConnectedState()
             stopTimer()
@@ -248,9 +244,9 @@ class DashboardActivity : BaseThemeActivity(),
                 try {
                     VpnService.silentUrlTestAsync()
                 } catch (e: Exception) {
-                    laPingAnimation.setMinAndMaxFrame(670, 840)
-                    laPingAnimation.playAnimation()
-                    debugLog("VpnService: Error during ping test")
+                    binding.laPingAnimation.playErrorAnimation {
+                        debugLog("VpnService: Error during ping test")
+                    }
                 }
             }
 
@@ -572,33 +568,11 @@ class DashboardActivity : BaseThemeActivity(),
 
     private fun resetPingBtnUI() {
         runOnUiThread {
-            val laPingAnimation = binding.laPingAnimation
-            laPingAnimation.setMinAndMaxFrame(300, 414)
-            laPingAnimation.repeatCount = 0
-            // Add an animator listener to listen for the end of the animation
-            laPingAnimation.addAnimatorListener(object : Animator.AnimatorListener {
-                override fun onAnimationStart(animation: Animator) {
-                    // Do nothing
-                }
-
-                override fun onAnimationEnd(animation: Animator) {
-                    // This block will be called when the animation ends
-                    AppRepository.refreshServersListView()
-                    binding.clpbPing.visibility = View.GONE
-                    binding.clIconPing.visibility = View.VISIBLE
-                }
-
-                override fun onAnimationCancel(animation: Animator) {
-                    // Do nothing
-                }
-
-                override fun onAnimationRepeat(animation: Animator) {
-                    // Do nothing
-                }
-            })
-
-            // Play the animation
-            laPingAnimation.playAnimation()
+            binding.laPingAnimation.playSuccessAnimation {
+                AppRepository.refreshServersListView()
+                binding.clpbPing.visibility = View.INVISIBLE
+                binding.clIconPing.visibility = View.VISIBLE
+            }
         }
     }
 
@@ -612,11 +586,11 @@ class DashboardActivity : BaseThemeActivity(),
         super.onDestroy()
     }
 
-    fun showForFreeUsers(): Int {
+    private fun showForFreeUsers(): Int {
         return if (UserRepository.isFreeUser()) View.VISIBLE else View.INVISIBLE
     }
 
-    fun showForUpgradableServices(): Int {
+    private fun showForUpgradableServices(): Int {
         return if (UserRepository.hasUpgradableService()) View.VISIBLE else showForFreeUsers()
     }
 }
