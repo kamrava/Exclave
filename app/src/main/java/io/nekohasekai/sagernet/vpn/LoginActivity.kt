@@ -198,7 +198,7 @@ class LoginActivity : BaseThemeActivity() {
                             runOnUiThread {
                                 binding.tvValidationError.visibility = View.VISIBLE
                                 binding.tvValidationError.text =
-                                    getString(R.string.Something_is_wrong)
+                                    getString(R.string.something_is_wrong)
                                 binding.laProgressBarLogin.playErrorAnimation {
                                     binding.btnLogin.visibility = View.VISIBLE
                                 }
