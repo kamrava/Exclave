@@ -93,7 +93,7 @@ class EmailVerifyActivity : BaseThemeActivity() {
                             runOnUiThread {
                                 binding.tvValidationError.visibility = View.VISIBLE
                                 binding.tvValidationError.text =
-                                    getString(R.string.Verify_Code_is_wrong)
+                                    getString(R.string.verify_code_is_wrong)
                                 binding.laProgressBarVerify.playErrorAnimation {
                                     binding.btnVerify.visibility = View.VISIBLE
                                 }

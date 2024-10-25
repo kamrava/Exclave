@@ -20,8 +20,8 @@
     <string name="comment">Comment</string>
     <string name="unita_vpn_telegram">Telegram</string>
     <string name="about">About</string>
-    <string name="Privacy_Policy">Privacy Policy</string>
-    <string name="Terms_of_Service">Terms of Service</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="terms_of_service">Terms of Service</string>
     <string name="need_reload">Reload proxy service to apply changes</string>
     <string name="ultra_fast_connection_speed">Ultra-fast connection speed</string>
     <string name="access_to_premium_virtual_locations">Access to premium virtual locations</string>
@@ -29,8 +29,8 @@
     <string name="no_time_limit">No time limit</string>
     <string name="thirty_days">30 Days</string>
     <string name="ninety_days">90 Days</string>
-    <string name="One_hundred_and_eighty_days">180 Days</string>
-    <string name="Three_hundred_and_sixty_five_days">365 Days</string>
+    <string name="one_hundred_and_eighty_days">180 Days</string>
+    <string name="three_hundred_and_sixty_five_days">365 Days</string>
     <string name="verify">Verify</string>
     <string name="verifying">Verifying…</string>
     <string name="verify_code">Verify Code:</string>
@@ -71,11 +71,11 @@
     <string name="connect_state">Connect</string>
     <string name="connected_state">Connected</string>
     <string name="connecting_state">Connecting…</string>
-    <string name="Try_Again">Try Again</string>
+    <string name="try_again">Try Again</string>
     <string name="enter_email_and_password">Please enter email and password.</string>
-    <string name="Something_is_wrong">Something is wrong!</string>
+    <string name="something_is_wrong">Something is wrong!</string>
     <string name="email_or_password_is_wrong">Email or Password is wrong!</string>
-    <string name="Verify_Code_is_wrong">Verify Code is wrong!</string>
+    <string name="verify_code_is_wrong">Verify Code is wrong!</string>
     <string name="email_already_registered">This Email is already registered</string>
 
     <!-- Location of UnitaVPN Strings <END>-->
