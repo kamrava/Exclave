@@ -48,6 +48,9 @@ class AccountFragment : Fragment() {
 
         // Set up exitAccountButton listener
         binding.btnExitAccount.setOnClickListener {
+//            SocialAuthRepository.facebookLoginManager.logOut()
+//            SocialAuthRepository.firebaseAuth.signOut()
+//            SocialAuthRepository.googleSignInClient.signOut()
             AuthRepository.clearUserInfo()
             val intent = Intent(requireContext(), WelcomeActivity::class.java)
             startActivity(intent)

@@ -23,7 +23,6 @@ import io.nekohasekai.sagernet.vpn.repositories.AdRepository
 import io.nekohasekai.sagernet.vpn.repositories.AppRepository
 import io.nekohasekai.sagernet.vpn.repositories.AuthRepository
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
@@ -104,7 +103,7 @@ class SplashActivity : BaseThemeActivity() {
         }
 
 
-//        GlobalScope.launch(Dispatchers.Main) {
+//        lifecycleScope.launch(Dispatchers.Main) {
             // Check Ad Consent
 
 //              startWelcomeActivity()
@@ -176,8 +175,8 @@ class SplashActivity : BaseThemeActivity() {
         binding.progressBar.visibility = View.VISIBLE
         binding.btnTryAgain.visibility = View.GONE
 
-        GlobalScope.launch(Dispatchers.Main) {
-            val result = withTimeoutOrNull(30000) {
+        lifecycleScope.launch(Dispatchers.Main) {
+            val result = withTimeoutOrNull(300000) {
                 try {
                     getSettings()
                     binding.progressBar.progress = 40

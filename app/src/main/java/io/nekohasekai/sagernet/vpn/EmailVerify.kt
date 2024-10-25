@@ -4,11 +4,11 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
 import io.nekohasekai.sagernet.R
 import io.nekohasekai.sagernet.databinding.ActivityEmailVerifyBinding
 import io.nekohasekai.sagernet.vpn.repositories.AuthRepository
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
@@ -39,7 +39,7 @@ class EmailVerify : BaseThemeActivity() {
             binding.progressBarVerify.visibility = View.VISIBLE
 
             // Perform register asynchronously
-            GlobalScope.launch(Dispatchers.IO) {
+            lifecycleScope.launch(Dispatchers.IO) {
                 performVerify(email, password, verifyCode)
 
                 // Update UI on the main thread after login completes
@@ -57,7 +57,7 @@ class EmailVerify : BaseThemeActivity() {
             binding.tvResendVerifyCode.isEnabled = false
             binding.tvResendVerifyCode.isClickable = false
 
-            GlobalScope.launch(Dispatchers.IO) {
+            lifecycleScope.launch(Dispatchers.IO) {
                 AuthRepository.checkEmailAvailabilityAndSendCode(email)
 
                 // Update UI on the main thread after login completes
