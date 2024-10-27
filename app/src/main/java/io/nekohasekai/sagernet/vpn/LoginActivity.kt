@@ -179,6 +179,7 @@ class LoginActivity : BaseThemeActivity() {
                         200 -> {
                             runOnUiThread {
                                 lifecycleScope.launch {
+                                    binding.btnLogin.visibility = View.INVISIBLE
                                     AppRepository.getServersAndImport(this@LoginActivity)
                                     navigateToDashboardActivity()
                                 }
