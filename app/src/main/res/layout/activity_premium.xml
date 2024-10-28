@@ -105,7 +105,7 @@
                         android:layout_weight="1"
                         android:background="@drawable/background_premium_table_top_edge_golden"
                         android:paddingTop="5dp"
-                        android:paddingBottom="5dp"></androidx.constraintlayout.widget.ConstraintLayout>
+                        android:paddingBottom="5dp" />
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="0dp"
@@ -271,7 +271,7 @@
                         android:layout_weight="1"
                         android:background="@drawable/background_premium_table_golden"
                         android:paddingTop="5dp"
-                        android:paddingBottom="5dp"></androidx.constraintlayout.widget.ConstraintLayout>
+                        android:paddingBottom="5dp" />
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="0dp"
@@ -1801,18 +1801,32 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
+            android:id="@+id/tvShowServiceSelector"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:fontFamily="@font/museo_san_rounded700"
+            android:text="@string/select_service_text"
+            android:textColor="@color/UnitaYellow"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/clPremiumTable" />
+
+        <TextView
             android:id="@+id/tvServiceSelector"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="10dp"
             android:fontFamily="@font/museo_san_rounded700"
             android:text="@string/service"
             android:textColor="@color/white"
             android:textSize="14sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/clPremiumTable" />
+            app:layout_constraintTop_toBottomOf="@+id/tvShowServiceSelector" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/clServiceSelector"
@@ -1834,10 +1848,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/background_nav_item"
-            android:textColor="@color/white"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            android:layout_marginTop="20dp"
+            android:popupBackground="@color/darkGray"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -1880,9 +1891,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/background_nav_item"
-        android:textColor="@color/white"
-        android:textSize="14sp"
-        android:textStyle="bold"
+        android:popupBackground="@color/darkGray"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -1890,50 +1899,152 @@
         tools:ignore="NotSibling" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <TextView
+            android:id="@+id/tvShowInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:fontFamily="@font/museo_san_rounded700"
+            android:text="@string/invoices"
+            android:textColor="@color/UnitaYellow"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/clServiceSubItem" />
+
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/clServerInfo"
+        android:id="@+id/clShowSelectedEmail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="15dp"
+        android:background="@drawable/background_nav_item"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="12dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/clServiceSubItem">
+        app:layout_constraintTop_toBottomOf="@+id/tvShowInfo">
+
 
         <TextView
-            android:id="@+id/tvShowSelectedEmail"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="15dp"
-            android:layout_marginTop="5dp"
-            android:background="@drawable/background_nav_item"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:id="@+id/tvSelectedEmail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/museo_san_rounded700"
+            android:text="@string/email"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/tvShowSelectedPlan"
+            android:id="@+id/tvShowSelectedEmail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/museo_san_rounded700"
+            android:gravity="end"
+            android:text=""
+            android:textColor="@color/lightGray"
+            android:textSize="14sp"
+            android:textStyle="normal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/clShowSelectedPlan"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="15dp"
             android:layout_marginTop="10dp"
             android:background="@drawable/background_nav_item"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="12dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvShowSelectedEmail" />
+            app:layout_constraintTop_toBottomOf="@+id/clShowSelectedEmail">
+
+
+            <TextView
+                android:id="@+id/tvSelectedPlan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/museo_san_rounded700"
+                android:text="@string/selected_plan"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvShowSelectedPlan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/museo_san_rounded700"
+            android:gravity="end"
+            android:text=""
+            android:textColor="@color/lightGray"
+            android:textSize="14sp"
+            android:textStyle="normal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/clShowInvoice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/background_nav_item"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="12dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/clShowSelectedPlan">
+
+
+            <TextView
+                android:id="@+id/tvInvoice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/museo_san_rounded700"
+                android:text="@string/invoice"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tvShowInvoice"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="15dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/background_nav_item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/museo_san_rounded700"
+            android:gravity="end"
+            android:text=""
+            android:textColor="@color/lightGray"
+            android:textSize="14sp"
+            android:textStyle="normal"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvShowSelectedPlan" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -1944,7 +2055,7 @@
             android:layout_marginTop="30dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/clServerInfo">
+            app:layout_constraintTop_toBottomOf="@+id/clShowInvoice">
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnPremiumPay"
@@ -1959,7 +2070,6 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
-
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
