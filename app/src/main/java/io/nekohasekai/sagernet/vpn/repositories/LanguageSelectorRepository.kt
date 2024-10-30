@@ -25,10 +25,10 @@ object LanguageSelectorRepository {
 
         languageSpinner.adapter = ArrayAdapter(
             context,
-            android.R.layout.simple_spinner_item,
+            R.layout.spinner_item,
             languages
         ).apply {
-            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            setDropDownViewResource(R.layout.spinner_each_item)
         }
 
         // Set the spinner's selected position to the current language
