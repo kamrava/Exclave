@@ -5,10 +5,12 @@ import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.lifecycle.lifecycleScope
 import io.nekohasekai.sagernet.R
 import io.nekohasekai.sagernet.databinding.ActivityPremiumBinding
 import io.nekohasekai.sagernet.vpn.repositories.AuthRepository
 import io.nekohasekai.sagernet.vpn.repositories.PremiumServicesRepository
+import kotlinx.coroutines.launch
 
 class PremiumActivity : BaseThemeActivity() {
     private lateinit var binding: ActivityPremiumBinding
@@ -20,10 +22,20 @@ class PremiumActivity : BaseThemeActivity() {
 
         binding.ivIconAngle.setOnClickListener { navigateToDashboard() }
 
+        // Fetch service data and set up spinners
+        lifecycleScope.launch {
+            PremiumServicesRepository.fetchServiceData()
+            setupServiceSelector()
+        }
+    }
+
+    private fun setupServiceSelector() {
+        val serviceNames = PremiumServicesRepository.services.map { it.name }
+
         binding.spServiceSelector.adapter = ArrayAdapter(
             this,
             R.layout.spinner_item,
-            listOf(PremiumServicesRepository.GOLDEN_SERVICE, PremiumServicesRepository.TITANIUM_SERVICE)
+            serviceNames
         )
 
         binding.spServiceSelector.onItemSelectedListener =
@@ -34,18 +46,8 @@ class PremiumActivity : BaseThemeActivity() {
                     position: Int,
                     id: Long
                 ) {
-                    val selectedService = parent.getItemAtPosition(position).toString()
-                    val items = if (selectedService == PremiumServicesRepository.GOLDEN_SERVICE) {
-                        PremiumServicesRepository.goldenServiceItems
-                    } else {
-                        PremiumServicesRepository.titaniumServiceItems
-                    }
-
-                    binding.serviceSubItem.adapter = ArrayAdapter(
-                        this@PremiumActivity,
-                        R.layout.spinner_item,
-                        items
-                    )
+                    val selectedService = PremiumServicesRepository.services[position]
+                    setupServiceItems(selectedService)
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>) {
@@ -55,6 +57,14 @@ class PremiumActivity : BaseThemeActivity() {
                     binding.clShowSelectedPlan.visibility = View.GONE
                 }
             }
+    }
+
+    private fun setupServiceItems(service: PremiumServicesRepository.ServiceData) {
+        binding.serviceSubItem.adapter = ArrayAdapter(
+            this,
+            R.layout.spinner_item,
+            service.items
+        )
 
         binding.serviceSubItem.onItemSelectedListener =
             object : AdapterView.OnItemSelectedListener {
@@ -65,17 +75,11 @@ class PremiumActivity : BaseThemeActivity() {
                     id: Long
                 ) {
                     val selectedPlan = parent.getItemAtPosition(position).toString()
-
                     val userEmail = AuthRepository.getUserEmail()
+
                     binding.tvShowSelectedEmail.text = userEmail
                     binding.tvShowSelectedPlan.text = selectedPlan
-
-                    val price = if (selectedPlan in PremiumServicesRepository.goldenPrices) {
-                        PremiumServicesRepository.goldenPrices[selectedPlan]
-                    } else {
-                        PremiumServicesRepository.titaniumPrices[selectedPlan]
-                    }
-                    binding.tvShowInvoice.text = price
+                    binding.tvShowInvoice.text = service.prices[selectedPlan]
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>) {}
