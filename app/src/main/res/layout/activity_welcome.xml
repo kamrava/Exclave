@@ -57,7 +57,7 @@
         app:layout_constraintTop_toBottomOf="@+id/text_Welcome" />
 
     <TextView
-        android:id="@+id/text_note"
+        android:id="@+id/tvAbout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="@font/museo_san_rounded500"
@@ -66,10 +66,41 @@
         android:textColor="@color/white"
         android:textSize="25sp"
         android:textStyle="bold"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="60dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_appName" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/llLanguageSelector"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/background_nav_item"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:padding="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvAbout">
+
+        <Spinner
+            android:id="@+id/spLanguageSelector"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/background_nav_item"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="NotSibling" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_login"
@@ -84,7 +115,7 @@
         android:layout_marginTop="50dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_note" />
+        app:layout_constraintTop_toBottomOf="@+id/llLanguageSelector" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_register"

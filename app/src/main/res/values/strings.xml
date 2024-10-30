@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Location of UnitaVPN Strings <START>-->
+    <string name="language_english">English</string>
+    <string name="language_persian">Persian</string>
     <!-- VPN -->
     <string name="facebook_app_id">266286379591311</string>
     <string name="fb_login_protocol_scheme">fb266286379591311</string>
