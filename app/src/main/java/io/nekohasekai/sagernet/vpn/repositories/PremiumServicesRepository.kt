@@ -2,9 +2,11 @@ package io.nekohasekai.sagernet.vpn.repositories
 
 import android.annotation.SuppressLint
 
-
 @SuppressLint("StaticFieldLeak")
 object PremiumServicesRepository {
+
+    const val GOLDEN_SERVICE = "Golden Service"
+    const val TITANIUM_SERVICE = "Titanium Service"
 
     val goldenServiceItems = listOf(
         "Golden (unlimited traffic) - 2 users",

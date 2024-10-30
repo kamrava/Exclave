@@ -23,7 +23,7 @@ class PremiumActivity : BaseThemeActivity() {
         binding.spServiceSelector.adapter = ArrayAdapter(
             this,
             R.layout.spinner_item,
-            listOf("Golden Service", "Titanium Service")
+            listOf(PremiumServicesRepository.GOLDEN_SERVICE, PremiumServicesRepository.TITANIUM_SERVICE)
         )
 
         binding.spServiceSelector.onItemSelectedListener =
@@ -35,8 +35,11 @@ class PremiumActivity : BaseThemeActivity() {
                     id: Long
                 ) {
                     val selectedService = parent.getItemAtPosition(position).toString()
-                    val items =
-                        if (selectedService == "Golden Service") PremiumServicesRepository.goldenServiceItems else PremiumServicesRepository.titaniumServiceItems
+                    val items = if (selectedService == PremiumServicesRepository.GOLDEN_SERVICE) {
+                        PremiumServicesRepository.goldenServiceItems
+                    } else {
+                        PremiumServicesRepository.titaniumServiceItems
+                    }
 
                     binding.serviceSubItem.adapter = ArrayAdapter(
                         this@PremiumActivity,
@@ -67,14 +70,18 @@ class PremiumActivity : BaseThemeActivity() {
                     binding.tvShowSelectedEmail.text = userEmail
                     binding.tvShowSelectedPlan.text = selectedPlan
 
-                    val price =
-                        if (selectedPlan in PremiumServicesRepository.goldenPrices) PremiumServicesRepository.goldenPrices[selectedPlan] else PremiumServicesRepository.titaniumPrices[selectedPlan]
+                    val price = if (selectedPlan in PremiumServicesRepository.goldenPrices) {
+                        PremiumServicesRepository.goldenPrices[selectedPlan]
+                    } else {
+                        PremiumServicesRepository.titaniumPrices[selectedPlan]
+                    }
                     binding.tvShowInvoice.text = price
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>) {}
             }
     }
+
     private fun navigateToDashboard() {
         val intent = Intent(this, DashboardActivity::class.java)
         startActivity(intent)
