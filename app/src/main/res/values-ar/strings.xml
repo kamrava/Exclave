@@ -1,5 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Location of UnitaVPN Strings <START>-->
+    <string name="language_english">English</string>
+    <string name="language_Arabic">العربية</string>
+    <string name="language_German">Deutsch</string>
+    <string name="language_Spanish">Español</string>
+    <string name="language_French">Français</string>
+    <string name="language_Indonesian">Bahasa Indonesia</string>
+    <string name="language_Italian">Italiano</string>
+    <string name="language_Norwegian">Norsk</string>
+    <string name="language_Russian">Русский</string>
+    <string name="language_Turkish">Türkçe</string>
+    <string name="language_Ukrainian">Українська</string>
+    <string name="language_Chinese">中文</string>
+    <string name="language_Taiwanese">中文（繁體）</string>
+    <!-- VPN -->
+    <string name="dashboard_connect">اتصل</string>
+    <string name="premium">بريميوم</string>
+    <string name="upgrade_service">ترقية</string>
+    <string name="ping">بنغ</string>
+    <string name="preferences">التفضيلات</string>
+    <string name="general">عام</string>
+    <string name="service_activated_successfully">تم تفعيل الخدمة %s بنجاح</string>
+    <string name="service_name_placeholder">اختر خدمة</string>
+    <string name="account">الحساب</string>
+    <string name="about">حول</string>
+    <string name="privacy_policy">سياسة الخصوصية</string>
+    <string name="terms_of_service">شروط الخدمة</string>
+    <string name="ultra_fast_connection_speed">سرعة اتصال فائقة</string>
+    <string name="no_time_limit">بدون حد زمني</string>
+    <string name="verify">تحقق</string>
+    <string name="verifying">جارٍ التحقق…</string>
+    <string name="register">تسجيل</string>
+    <string name="Checking">جارٍ الفحص…</string>
+    <string name="login">تسجيل الدخول</string>
+    <string name="welcome">مرحبًا في</string>
+    <string name="expiration_date">تاريخ انتهاء الصلاحية</string>
+    <string name="try_again">حاول مرة أخرى</string>
+    <string name="something_is_wrong">هناك خطأ!</string>
+    <string name="email_already_registered">هذا البريد مسجل بالفعل</string>
+
+    <!-- Location of UnitaVPN Strings <END>-->
     <string name="menu_group">مجموعة</string>
     <string name="menu_configuration">ترتيب</string>
     <string name="logcat">تصدير معلومات التصحيح</string>

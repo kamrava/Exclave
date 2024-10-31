@@ -1,5 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Location of UnitaVPN Strings <START>-->
+    <string name="language_english">English</string>
+    <string name="language_Arabic">العربية</string>
+    <string name="language_German">Deutsch</string>
+    <string name="language_Spanish">Español</string>
+    <string name="language_French">Français</string>
+    <string name="language_Indonesian">Bahasa Indonesia</string>
+    <string name="language_Italian">Italiano</string>
+    <string name="language_Norwegian">Norsk</string>
+    <string name="language_Russian">Русский</string>
+    <string name="language_Turkish">Türkçe</string>
+    <string name="language_Ukrainian">Українська</string>
+    <string name="language_Chinese">中文</string>
+    <string name="language_Taiwanese">中文（繁體）</string>
+
+    <!-- VPN -->
+    <string name="dashboard_connect">Connecter</string>
+    <string name="premium">Premium</string>
+    <string name="upgrade_service">Améliorer</string>
+    <string name="ping">Ping</string>
+    <string name="preferences">Préférences</string>
+    <string name="general">Général</string>
+    <string name="service_activated_successfully">Service %s activé avec succès</string>
+    <string name="service_name_placeholder">Sélectionnez un service</string>
+    <string name="service_name">%s (%s)</string>
+    <string name="account">Compte</string>
+    <string name="comment">Commentaire</string>
+    <string name="about">À propos</string>
+    <string name="privacy_policy">Politique de confidentialité</string>
+    <string name="terms_of_service">Conditions d\'utilisation</string>
+    <string name="need_reload">Recharger le service proxy pour appliquer les changements</string>
+    <string name="ultra_fast_connection_speed">Vitesse de connexion ultra-rapide</string>
+    <string name="access_to_premium_virtual_locations">Accès aux emplacements virtuels premium</string>
+    <string name="ad_free_experience">Expérience sans publicité</string>
+    <string name="no_time_limit">Aucune limite de temps</string>
+    <string name="verify">Vérifier</string>
+    <string name="verifying">Vérification…</string>
+    <string name="verify_code">Code de vérification :</string>
+    <string name="register">Inscrire</string>
+    <string name="Checking">Vérification…</string>
+    <string name="update_now">Mettre à jour maintenant</string>
+    <string name="login">Connexion</string>
+    <string name="Logging_in">Connexion en cours…</string>
+    <string name="welcome">Bienvenue à</string>
+    <string name="info">Info</string>
+    <string name="expiration_date">Date d\'expiration</string>
+    <string name="try_again">Réessayer</string>
+    <string name="something_is_wrong">Quelque chose ne va pas !</string>
+    <string name="email_already_registered">Cet e-mail est déjà enregistré</string>
+
+    <!-- Location of UnitaVPN Strings <END>-->
     <string name="action_import_err">Échec de l\'importation.</string>
     <string name="delete_confirm_prompt">Êtes-vous sûr(e) de vouloir retirer ce profil \?</string>
     <string name="delete">Retirer</string>

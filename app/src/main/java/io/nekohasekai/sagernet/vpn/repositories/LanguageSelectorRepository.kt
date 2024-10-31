@@ -19,9 +19,20 @@ object LanguageSelectorRepository {
     ) {
         val languages = listOf(
             context.getString(R.string.language_english),
-            context.getString(R.string.language_persian)
+            context.getString(R.string.language_Arabic),
+            context.getString(R.string.language_German),
+            context.getString(R.string.language_Spanish),
+            context.getString(R.string.language_French),
+            context.getString(R.string.language_Indonesian),
+            context.getString(R.string.language_Italian),
+            context.getString(R.string.language_Norwegian),
+            context.getString(R.string.language_Russian),
+            context.getString(R.string.language_Turkish),
+            context.getString(R.string.language_Ukrainian),
+            context.getString(R.string.language_Chinese),
+            context.getString(R.string.language_Taiwanese)
         )
-        val languageCodes = listOf("en", "fa")
+        val languageCodes = listOf("en", "ar", "de", "es", "fr", "in", "it", "no", "ru", "tr", "uk", "zh", "tw")
 
         languageSpinner.adapter = ArrayAdapter(
             context,

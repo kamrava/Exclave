@@ -4,8 +4,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:fontFamily="@font/museo_san_rounded500"
     android:textSize="20sp"
-    android:gravity="left"
+    android:gravity="center"
     android:background="@drawable/background_spinner_item"
     android:textColor="@color/white"
     />

@@ -1,5 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Location of UnitaVPN Strings <START>-->
+    <string name="language_english">English</string>
+    <string name="language_Arabic">العربية</string>
+    <string name="language_German">Deutsch</string>
+    <string name="language_Spanish">Español</string>
+    <string name="language_French">Français</string>
+    <string name="language_Indonesian">Bahasa Indonesia</string>
+    <string name="language_Italian">Italiano</string>
+    <string name="language_Norwegian">Norsk</string>
+    <string name="language_Russian">Русский</string>
+    <string name="language_Turkish">Türkçe</string>
+    <string name="language_Ukrainian">Українська</string>
+    <string name="language_Chinese">中文</string>
+    <string name="language_Taiwanese">中文（繁體）</string>
+    <!-- VPN -->
+    <string name="dashboard_connect">Hubungkan</string>
+    <string name="premium">Premium</string>
+    <string name="upgrade_service">Tingkatkan</string>
+    <string name="ping">Ping</string>
+    <string name="preferences">Preferensi</string>
+    <string name="general">Umum</string>
+    <string name="service_activated_successfully">Layanan %s berhasil diaktifkan</string>
+    <string name="service_name_placeholder">Pilih Layanan</string>
+    <string name="account">Akun</string>
+    <string name="about">Tentang</string>
+    <string name="privacy_policy">Kebijakan Privasi</string>
+    <string name="terms_of_service">Ketentuan Layanan</string>
+    <string name="ultra_fast_connection_speed">Kecepatan koneksi ultra cepat</string>
+    <string name="no_time_limit">Tanpa batas waktu</string>
+    <string name="verify">Verifikasi</string>
+    <string name="verifying">Memverifikasi…</string>
+    <string name="register">Daftar</string>
+    <string name="Checking">Memeriksa…</string>
+    <string name="login">Masuk</string>
+    <string name="welcome">Selamat datang di</string>
+    <string name="expiration_date">Tanggal Kedaluwarsa</string>
+    <string name="try_again">Coba Lagi</string>
+    <string name="something_is_wrong">Terjadi kesalahan!</string>
+    <string name="email_already_registered">Email ini sudah terdaftar</string>
+
+    <!-- Location of UnitaVPN Strings <END>-->
     <string name="port_http">Proksi Port HTTP</string>
     <string name="port_proxy">Proksi Port SOCKS5</string>
     <string name="group_status_proxies_subscription">%d Proksi | Diperbarui pada %s</string>

@@ -1,5 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Location of UnitaVPN Strings <START>-->
+    <string name="language_english">English</string>
+    <string name="language_Arabic">العربية</string>
+    <string name="language_German">Deutsch</string>
+    <string name="language_Spanish">Español</string>
+    <string name="language_French">Français</string>
+    <string name="language_Indonesian">Bahasa Indonesia</string>
+    <string name="language_Italian">Italiano</string>
+    <string name="language_Norwegian">Norsk</string>
+    <string name="language_Russian">Русский</string>
+    <string name="language_Turkish">Türkçe</string>
+    <string name="language_Ukrainian">Українська</string>
+    <string name="language_Chinese">中文</string>
+    <string name="language_Taiwanese">中文（繁體）</string>
+    <!-- VPN -->
+    <string name="dashboard_connect">Connetti</string>
+    <string name="premium">Premium</string>
+    <string name="upgrade_service">Aggiorna</string>
+    <string name="ping">Ping</string>
+    <string name="preferences">Preferenze</string>
+    <string name="general">Generale</string>
+    <string name="service_activated_successfully">Servizio %s attivato con successo</string>
+    <string name="service_name_placeholder">Seleziona un Servizio</string>
+    <string name="account">Account</string>
+    <string name="about">Informazioni</string>
+    <string name="privacy_policy">Politica sulla Privacy</string>
+    <string name="terms_of_service">Termini di Servizio</string>
+    <string name="ultra_fast_connection_speed">Velocità di connessione ultra-rapida</string>
+    <string name="no_time_limit">Nessun limite di tempo</string>
+    <string name="verify">Verifica</string>
+    <string name="verifying">Verifica in corso…</string>
+    <string name="register">Registrati</string>
+    <string name="Checking">Verifica in corso…</string>
+    <string name="login">Accedi</string>
+    <string name="welcome">Benvenuto in</string>
+    <string name="expiration_date">Data di Scadenza</string>
+    <string name="try_again">Riprova</string>
+    <string name="something_is_wrong">Qualcosa è andato storto!</string>
+    <string name="email_already_registered">Questa email è già registrata</string>
+
+    <!-- Location of UnitaVPN Strings <END>-->
     <string name="logcat">Esporta informazioni di debug</string>
     <string name="version_x">Versione (%s)</string>
     <string name="app_version">Versione</string>

@@ -1,5 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Location of UnitaVPN Strings <START>-->
+    <string name="language_english">English</string>
+    <string name="language_Arabic">العربية</string>
+    <string name="language_German">Deutsch</string>
+    <string name="language_Spanish">Español</string>
+    <string name="language_French">Français</string>
+    <string name="language_Indonesian">Bahasa Indonesia</string>
+    <string name="language_Italian">Italiano</string>
+    <string name="language_Norwegian">Norsk</string>
+    <string name="language_Russian">Русский</string>
+    <string name="language_Turkish">Türkçe</string>
+    <string name="language_Ukrainian">Українська</string>
+    <string name="language_Chinese">中文</string>
+    <string name="language_Taiwanese">中文（繁體）</string>
+    <!-- VPN -->
+    <string name="dashboard_connect">Подключить</string>
+    <string name="premium">Премиум</string>
+    <string name="upgrade_service">Обновить</string>
+    <string name="ping">Пинг</string>
+    <string name="preferences">Настройки</string>
+    <string name="general">Общие</string>
+    <string name="service_activated_successfully">Сервис %s успешно активирован</string>
+    <string name="service_name_placeholder">Выберите сервис</string>
+    <string name="account">Аккаунт</string>
+    <string name="about">О приложении</string>
+    <string name="privacy_policy">Политика конфиденциальности</string>
+    <string name="terms_of_service">Условия обслуживания</string>
+    <string name="ultra_fast_connection_speed">Сверхбыстрая скорость соединения</string>
+    <string name="no_time_limit">Без ограничения по времени</string>
+    <string name="verify">Подтвердить</string>
+    <string name="verifying">Проверка…</string>
+    <string name="register">Регистрация</string>
+    <string name="Checking">Проверка…</string>
+    <string name="login">Вход</string>
+    <string name="welcome">Добро пожаловать в</string>
+    <string name="expiration_date">Дата окончания</string>
+    <string name="try_again">Попробовать снова</string>
+    <string name="something_is_wrong">Что-то пошло не так!</string>
+    <string name="email_already_registered">Этот Email уже зарегистрирован</string>
+
+    <!-- Location of UnitaVPN Strings <END>-->
     <string name="header_type">Тип заголовка</string>
     <string name="network">Сеть</string>
     <string name="security">Шифрование транспортного уровня</string>
