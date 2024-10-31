@@ -1,5 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Location of UnitaVPN Strings <START>-->
+    <string name="language_english">English</string>
+    <string name="language_Arabic">العربية</string>
+    <string name="language_German">Deutsch</string>
+    <string name="language_Spanish">Español</string>
+    <string name="language_French">Français</string>
+    <string name="language_Indonesian">Bahasa Indonesia</string>
+    <string name="language_Italian">Italiano</string>
+    <string name="language_Norwegian">Norsk</string>
+    <string name="language_Russian">Русский</string>
+    <string name="language_Turkish">Türkçe</string>
+    <string name="language_Ukrainian">Українська</string>
+    <string name="language_Chinese">中文</string>
+    <string name="language_Taiwanese">中文（繁體）</string>
+    <!-- VPN -->
+    <string name="dashboard_connect">Koble til</string>
+    <string name="premium">Premium</string>
+    <string name="upgrade_service">Oppgrader</string>
+    <string name="ping">Ping</string>
+    <string name="preferences">Preferanser</string>
+    <string name="general">Generell</string>
+    <string name="service_activated_successfully">Tjeneste %s aktivert</string>
+    <string name="service_name_placeholder">Velg en tjeneste</string>
+    <string name="account">Konto</string>
+    <string name="about">Om</string>
+    <string name="privacy_policy">Personvernerklæring</string>
+    <string name="terms_of_service">Tjenestevilkår</string>
+    <string name="ultra_fast_connection_speed">Ultraforbundet hastighet</string>
+    <string name="no_time_limit">Ingen tidsbegrensning</string>
+    <string name="verify">Verifiser</string>
+    <string name="verifying">Verifiserer…</string>
+    <string name="register">Registrer</string>
+    <string name="Checking">Sjekker…</string>
+    <string name="login">Logg inn</string>
+    <string name="welcome">Velkommen til</string>
+    <string name="expiration_date">Utløpsdato</string>
+    <string name="try_again">Prøv igjen</string>
+    <string name="something_is_wrong">Noe er galt!</string>
+    <string name="email_already_registered">Denne e-posten er allerede registrert</string>
+
+    <!-- Location of UnitaVPN Strings <END>-->
     <string name="apps_message">%d programmer</string>
     <string name="select_apps">Velg programmer</string>
     <string name="apps">Programmer</string>

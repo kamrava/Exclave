@@ -1,5 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Location of UnitaVPN Strings <START>-->
+    <string name="language_english">English</string>
+    <string name="language_Arabic">العربية</string>
+    <string name="language_German">Deutsch</string>
+    <string name="language_Spanish">Español</string>
+    <string name="language_French">Français</string>
+    <string name="language_Indonesian">Bahasa Indonesia</string>
+    <string name="language_Italian">Italiano</string>
+    <string name="language_Norwegian">Norsk</string>
+    <string name="language_Russian">Русский</string>
+    <string name="language_Turkish">Türkçe</string>
+    <string name="language_Ukrainian">Українська</string>
+    <string name="language_Chinese">中文</string>
+    <string name="language_Taiwanese">中文（繁體）</string>
+    <!-- VPN -->
+    <string name="dashboard_connect">連接</string>
+    <string name="premium">高級</string>
+    <string name="upgrade_service">升級</string>
+    <string name="ping">Ping</string>
+    <string name="preferences">偏好設定</string>
+    <string name="general">一般</string>
+    <string name="service_activated_successfully">服務 %s 已成功啟用</string>
+    <string name="service_name_placeholder">選擇一項服務</string>
+    <string name="account">帳號</string>
+    <string name="about">關於</string>
+    <string name="privacy_policy">隱私政策</string>
+    <string name="terms_of_service">服務條款</string>
+    <string name="ultra_fast_connection_speed">超高速連接速度</string>
+    <string name="no_time_limit">無時間限制</string>
+    <string name="verify">驗證</string>
+    <string name="verifying">正在驗證…</string>
+    <string name="register">註冊</string>
+    <string name="Checking">正在檢查…</string>
+    <string name="login">登入</string>
+    <string name="welcome">歡迎來到</string>
+    <string name="expiration_date">到期日</string>
+    <string name="try_again">再試一次</string>
+    <string name="something_is_wrong">出現了問題！</string>
+    <string name="email_already_registered">此電子郵件已註冊</string>
+
+    <!-- Location of UnitaVPN Strings <END>-->
     <string name="app_desc">適用於 Android 的通用代理工具鏈，由 Kotlin 編寫。</string>
     <string name="project">專案</string>
     <string name="github">原始碼</string>
