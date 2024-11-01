@@ -135,7 +135,7 @@ class ServiceNotification(
         .setTicker(service.getString(R.string.forward_success))
         .setContentTitle(profileName)
         .setOnlyAlertOnce(true)
-        .setContentIntent(SagerNet.configureIntent(service))
+//        .setContentIntent(SagerNet.configureIntent(service))
         .setSmallIcon(R.drawable.unitavpn_ic_service_active)
         .setCategory(NotificationCompat.CATEGORY_SERVICE)
         .setPriority(if (visible) NotificationCompat.PRIORITY_LOW else NotificationCompat.PRIORITY_MIN)
@@ -177,14 +177,14 @@ class ServiceNotification(
         }.build()
         builder.addAction(closeAction)
 
-        val switchAction = NotificationCompat.Action.Builder(
-            0, service.getString(R.string.action_switch), PendingIntent.getActivity(
-                service, 0, Intent(service, SwitchActivity::class.java), flags
-            )
-        ).apply {
-            setShowsUserInterface(false)
-        }.build()
-        builder.addAction(switchAction)
+//        val switchAction = NotificationCompat.Action.Builder(
+//            0, service.getString(R.string.action_switch), PendingIntent.getActivity(
+//                service, 0, Intent(service, SwitchActivity::class.java), flags
+//            )
+//        ).apply {
+//            setShowsUserInterface(false)
+//        }.build()
+//        builder.addAction(switchAction)
     }
 
     override fun onReceive(context: Context, intent: Intent) {
