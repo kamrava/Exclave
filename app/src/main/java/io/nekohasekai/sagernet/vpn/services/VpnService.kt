@@ -2,6 +2,7 @@ package io.nekohasekai.sagernet.vpn.services
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.view.View
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.app.AppCompatActivity
@@ -46,12 +47,26 @@ object VpnService {
         }
     }
 
-    fun startVpn() {
+    private fun startVpn() {
         if (!SagerNet.started) {
+            if (DataStore.selectedProxy == 0L) {
+                val bestServer = allServers.firstOrNull { it.isBestServer }
+                if (bestServer != null) {
+                    DataStore.selectedProxy = bestServer.id
+                }
+            }
+
+            allServers.forEach { server ->
+                server.dropdownItems.forEach { subItem ->
+                    subItem.isSelected = (subItem.id == DataStore.selectedProxy)
+                }
+            }
+
             connect.launch(null)
             listeners.forEach { it.onVpnStarted() }
         }
     }
+
 
     fun stopVpn() {
         if (canStop) {
