@@ -15,108 +15,68 @@ import io.nekohasekai.sagernet.vpn.repositories.AppRepository
 
 class MenuFragment : Fragment() {
 
-    private lateinit var binding: FragmentMenuBinding
+    private var _binding: FragmentMenuBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        binding = FragmentMenuBinding.inflate(inflater, container, false)
-        val view = binding.root
+    ): View {
+        _binding = FragmentMenuBinding.inflate(inflater, container, false)
+        setupClickListeners()
+        setupBackButtonHandling()
+        return binding.root
+    }
 
-        // Add click listener for iconAngle
-        binding.ivPreferencesIconAngle.setOnClickListener {
-            startActivity(Intent(activity, DashboardActivity::class.java))
+    private fun setupClickListeners() {
+        binding.apply {
+            ivPreferencesIconAngle.setOnClickListener { openActivity(DashboardActivity::class.java) }
+            llGeneral.setOnClickListener { loadFragment(GeneralFragment()) }
+            llAccount.setOnClickListener { loadFragment(AccountFragment()) }
+            llPremium.setOnClickListener { openActivity(PremiumActivity::class.java) }
+            llShare.setOnClickListener { shareLinkWithMessage(AppRepository.ShareCustomMessage) }
+            llTelegram.setOnClickListener { openUri(AppRepository.telegramLink) }
+            llPrivacyPolicy.setOnClickListener { openActivity(PrivacyPolicyActivity::class.java) }
+            llTermsOfService.setOnClickListener { openActivity(TermsOfServiceActivity::class.java) }
         }
-//<DO NOT DELETE THIS COMMENT CODE.IT WILL ADD IN FUTURE>
-//        // Add click listener for llGeneral
-//        binding.llGeneral.setOnClickListener {
-//            loadFragment(GeneralFragment())
-//        }
+    }
 
-        // Add click listener for llAccount
-        binding.llAccount.setOnClickListener {
-            loadFragment(AccountFragment())
-        }
-
-
-        // Add click listener for llPremium
-        binding.llPremium.setOnClickListener {
-            val premiumIntent = Intent(context, PremiumActivity::class.java)
-            startActivity(premiumIntent)
-        }
-//<DO NOT DELETE THIS COMMENT CODE.IT WILL ADD IN FUTURE>
-//        // Add click listener for llComment
-//        binding.llComment.setOnClickListener {
-//            loadFragment(CommentFragment())
-//        }
-
-
-        // Add click listener Message for llShare
-        binding.llShare.setOnClickListener {
-            shareLinkWithMessage(AppRepository.ShareCustomMessage)
-        }
-
-        // Add click listener for llTelegram
-        binding.llTelegram.setOnClickListener {
-            val telegramUri = Uri.parse(AppRepository.telegramLink)
-            val telegramIntent = Intent(Intent.ACTION_VIEW, telegramUri)
-            startActivity(telegramIntent)
-        }
-//<DO NOT DELETE THIS COMMENT CODE.IT WILL ADD IN FUTURE>
-//        // Add click listener for llAbout
-//        binding.llAbout.setOnClickListener {
-//            loadFragment(AboutFragment())
-//        }
-
-        // Add click listener for llPrivacyPolicy
-        binding.llPrivacyPolicy.setOnClickListener {
-            val intent = Intent(requireContext(), PrivacyPolicyActivity::class.java)
-            startActivity(intent)
-        }
-
-
-
-        // Add click listener for llTermsOfService
-        binding.llTermsOfService.setOnClickListener {
-            val intent = Intent(requireContext(), TermsOfServiceActivity::class.java)
-            startActivity(intent)
-        }
-
-        // Handle back button press
+    private fun setupBackButtonHandling() {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                // Do whatever you want when the back button is pressed in the fragment
-                val dashboardIntent = Intent(activity, DashboardActivity::class.java)
-                startActivity(dashboardIntent)
+                openActivity(DashboardActivity::class.java)
             }
         })
+    }
 
-        return view
+    private fun openActivity(activityClass: Class<*>) {
+        startActivity(Intent(requireContext(), activityClass))
+    }
+
+    private fun openUri(uri: String) {
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
+        startActivity(intent)
     }
 
     private fun loadFragment(fragment: Fragment) {
-        val fragmentManager = requireActivity().supportFragmentManager
-        val transaction = fragmentManager.beginTransaction()
-        transaction.replace(android.R.id.content, fragment)
-        transaction.addToBackStack(null) // Optional: Allows you to navigate back to the previous fragment
-        transaction.commit()
+        requireActivity().supportFragmentManager.beginTransaction()
+            .replace(android.R.id.content, fragment)
+            .addToBackStack(null)
+            .commit()
     }
 
-    // Function to share link with a custom message
     private fun shareLinkWithMessage(message: String) {
-        // Create an Intent with ACTION_SEND
         val sendIntent = Intent().apply {
             action = Intent.ACTION_SEND
             type = "text/plain"
-            putExtra(
-                Intent.EXTRA_TEXT,
-                "$message\n" + AppRepository.ShareApplicationLink
-            )
+            putExtra(Intent.EXTRA_TEXT, "$message\n${AppRepository.ShareApplicationLink}")
         }
-
-        // Start the system's chooser to share the content
         startActivity(Intent.createChooser(sendIntent, "Share link with:"))
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     companion object {

@@ -110,6 +110,16 @@
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_language" />
 
+        <ImageView
+            android:id="@+id/ivLanguageAngel"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_weight="1"
+            android:src="@drawable/ic_angle_small_down"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.appcompat.widget.AppCompatButton
