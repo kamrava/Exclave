@@ -21,7 +21,7 @@ open class BaseThemeActivity : ThemedActivity() {
         window.navigationBarColor = ContextCompat.getColor(this, R.color.navyBlue)
     }
     private fun loadLanguageLocale() {
-        val sharedPreferences = getSharedPreferences("app_settings", MODE_PRIVATE)
+        val sharedPreferences = getSharedPreferences("AppPrefs", MODE_PRIVATE)
         val languageCode = sharedPreferences.getString("language", "en") // Default to English
         if (languageCode != null) {
             val locale = Locale(languageCode)
