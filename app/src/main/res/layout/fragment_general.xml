@@ -27,7 +27,7 @@
             tools:ignore="UseCompoundDrawables">
 
             <ImageView
-                android:id="@+id/ivConnectionIconAngle"
+                android:id="@+id/ivGeneralIconAngle"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:src="@drawable/ic_angle_circle_left" />
@@ -46,207 +46,202 @@
         </LinearLayout>
 
 
-        <LinearLayout
-        android:id="@+id/llLocationOrder"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:layout_marginEnd="15dp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/background_nav_item"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:padding="12dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/llgeneral">
+        <!--        <LinearLayout-->
+        <!--        android:id="@+id/llLocationOrder"-->
+        <!--        android:layout_width="match_parent"-->
+        <!--        android:layout_height="wrap_content"-->
+        <!--        android:layout_marginStart="15dp"-->
+        <!--        android:layout_marginEnd="15dp"-->
+        <!--        android:layout_marginTop="20dp"-->
+        <!--        android:background="@drawable/background_nav_item"-->
+        <!--        android:orientation="horizontal"-->
+        <!--        android:gravity="center"-->
+        <!--        android:padding="12dp"-->
+        <!--        app:layout_constraintEnd_toEndOf="parent"-->
+        <!--        app:layout_constraintStart_toStartOf="parent"-->
+        <!--        app:layout_constraintTop_toBottomOf="@+id/llgeneral">-->
 
-        <ImageView
-            android:id="@+id/ivLocationOrderIcon"
-            android:layout_width="22dp"
-            android:layout_height="22dp"
-            android:layout_weight="1"
-            android:src="@drawable/ic_location_order" />
+        <!--        <ImageView-->
+        <!--            android:id="@+id/ivLocationOrderIcon"-->
+        <!--            android:layout_width="22dp"-->
+        <!--            android:layout_height="22dp"-->
+        <!--            android:layout_weight="1"-->
+        <!--            android:src="@drawable/ic_location_order" />-->
 
-        <TextView
-            android:id="@+id/tvLocationOrderTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_weight="2"
-            android:fontFamily="@font/museo_san_rounded700"
-            android:text="Location Order"
-            android:textColor="@color/white"
-            android:textStyle="bold"
-            android:textSize="14sp" />
+        <!--        <TextView-->
+        <!--            android:id="@+id/tvLocationOrderTitle"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginStart="10dp"-->
+        <!--            android:layout_weight="2"-->
+        <!--            android:fontFamily="@font/museo_san_rounded700"-->
+        <!--            android:text="Location Order"-->
+        <!--            android:textColor="@color/white"-->
+        <!--            android:textStyle="bold"-->
+        <!--            android:textSize="14sp" />-->
 
-        <TextView
-            android:id="@+id/tvLocationOrder"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_weight="20"
-            android:fontFamily="@font/museo_san_rounded700"
-            android:gravity="end"
-            android:text="Geography"
-            android:textColor="@color/lightGray"
-            android:textStyle="normal"
-            android:textSize="14sp" />
+        <!--        <TextView-->
+        <!--            android:id="@+id/tvLocationOrder"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginStart="10dp"-->
+        <!--            android:layout_weight="20"-->
+        <!--            android:fontFamily="@font/museo_san_rounded700"-->
+        <!--            android:gravity="end"-->
+        <!--            android:text="Geography"-->
+        <!--            android:textColor="@color/lightGray"-->
+        <!--            android:textStyle="normal"-->
+        <!--            android:textSize="14sp" />-->
 
-        <ImageView
-            android:id="@+id/ivLocationOrderAngel"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_weight="1"
-            android:src="@drawable/ic_angle_small_down" />
+        <!--        <ImageView-->
+        <!--            android:id="@+id/ivLocationOrderAngel"-->
+        <!--            android:layout_width="30dp"-->
+        <!--            android:layout_height="30dp"-->
+        <!--            android:layout_weight="1"-->
+        <!--            android:src="@drawable/ic_angle_small_down" />-->
 
-    </LinearLayout>
+        <!--    </LinearLayout>-->
 
-        <TextView
-            android:id="@+id/tvLocationOrderInfo"
+        <!--        <TextView-->
+        <!--            android:id="@+id/tvLocationOrderInfo"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginStart="15dp"-->
+        <!--            android:layout_marginEnd="15dp"-->
+        <!--            android:fontFamily="@font/museo_san_rounded700"-->
+        <!--            android:background="@drawable/background_nav_item_info"-->
+        <!--            android:text="Arange the Location List in ascending order of the alphabet, geography or latency."-->
+        <!--            android:padding="10dp"-->
+        <!--            android:justificationMode="inter_word"-->
+        <!--            android:gravity="fill_horizontal"-->
+        <!--            android:textColor="@color/lightGray"-->
+        <!--            android:textSize="12sp"-->
+        <!--            app:layout_constraintTop_toBottomOf="@+id/llLocationOrder"-->
+        <!--            tools:layout_editor_absoluteX="97dp" />-->
+
+        <!--        <LinearLayout-->
+        <!--            android:id="@+id/llDisplaylatency"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginStart="15dp"-->
+        <!--            android:layout_marginEnd="15dp"-->
+        <!--            android:layout_marginTop="20dp"-->
+        <!--            android:background="@drawable/background_nav_item"-->
+        <!--            android:orientation="horizontal"-->
+        <!--            android:gravity="center"-->
+        <!--            android:padding="12dp"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintStart_toStartOf="parent"-->
+        <!--            app:layout_constraintTop_toBottomOf="@+id/tvLocationOrderInfo">-->
+
+        <!--            <ImageView-->
+        <!--                android:id="@+id/ivDisplaylatencyIcon"-->
+        <!--                android:layout_width="22dp"-->
+        <!--                android:layout_height="22dp"-->
+        <!--                android:layout_weight="1"-->
+        <!--                android:src="@drawable/ic_latency" />-->
+
+        <!--            <TextView-->
+        <!--                android:id="@+id/tvDisplaylatencyTitle"-->
+        <!--                android:layout_width="wrap_content"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:layout_marginStart="10dp"-->
+        <!--                android:layout_weight="2"-->
+        <!--                android:fontFamily="@font/museo_san_rounded700"-->
+        <!--                android:text="Display Latency"-->
+        <!--                android:textColor="@color/white"-->
+        <!--                android:textStyle="bold"-->
+        <!--                android:textSize="14sp" />-->
+
+        <!--            <TextView-->
+        <!--                android:id="@+id/tvDisplaylatency"-->
+        <!--                android:layout_width="wrap_content"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:layout_marginStart="10dp"-->
+        <!--                android:layout_weight="20"-->
+        <!--                android:fontFamily="@font/museo_san_rounded700"-->
+        <!--                android:gravity="end"-->
+        <!--                android:text="Ms"-->
+        <!--                android:textColor="@color/lightGray"-->
+        <!--                android:textStyle="normal"-->
+        <!--                android:textSize="14sp" />-->
+
+        <!--            <ImageView-->
+        <!--                android:id="@+id/ivDisplaylatencyAngel"-->
+        <!--                android:layout_width="30dp"-->
+        <!--                android:layout_height="30dp"-->
+        <!--                android:layout_weight="1"-->
+        <!--                android:src="@drawable/ic_angle_small_down" />-->
+
+        <!--        </LinearLayout>-->
+
+        <!--        <TextView-->
+        <!--            android:id="@+id/tvDisplaylatencyInfo"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginStart="15dp"-->
+        <!--            android:layout_marginEnd="15dp"-->
+        <!--            android:fontFamily="@font/museo_san_rounded700"-->
+        <!--            android:background="@drawable/background_nav_item_info"-->
+        <!--            android:text="Display latency as signal strength bar or in milliseconds."-->
+        <!--            android:padding="10dp"-->
+        <!--            android:justificationMode="none"-->
+        <!--            android:gravity="fill_horizontal"-->
+        <!--            android:textColor="@color/lightGray"-->
+        <!--            android:textSize="12sp"-->
+        <!--            app:layout_constraintTop_toBottomOf="@+id/llDisplaylatency"-->
+        <!--            tools:layout_editor_absoluteX="97dp" />-->
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/llLanguageSelector"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:layout_marginEnd="15dp"
-            android:fontFamily="@font/museo_san_rounded700"
-            android:background="@drawable/background_nav_item_info"
-            android:text="Arange the Location List in ascending order of the alphabet, geography or latency."
-            android:padding="10dp"
-            android:justificationMode="inter_word"
-            android:gravity="fill_horizontal"
-            android:textColor="@color/lightGray"
-            android:textSize="12sp"
-            app:layout_constraintTop_toBottomOf="@+id/llLocationOrder"
-            tools:layout_editor_absoluteX="97dp" />
-
-        <LinearLayout
-            android:id="@+id/llDisplaylatency"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_marginEnd="15dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="30dp"
             android:background="@drawable/background_nav_item"
-            android:orientation="horizontal"
             android:gravity="center"
+            android:orientation="horizontal"
             android:padding="12dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvLocationOrderInfo">
+            app:layout_constraintTop_toBottomOf="@+id/llgeneral">
 
-            <ImageView
-                android:id="@+id/ivDisplaylatencyIcon"
-                android:layout_width="22dp"
-                android:layout_height="22dp"
-                android:layout_weight="1"
-                android:src="@drawable/ic_latency" />
-
-            <TextView
-                android:id="@+id/tvDisplaylatencyTitle"
-                android:layout_width="wrap_content"
+            <Spinner
+                android:id="@+id/spLanguageSelector"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_weight="2"
-                android:fontFamily="@font/museo_san_rounded700"
-                android:text="Display Latency"
+                android:layout_marginStart="40dp"
+                android:background="@drawable/background_nav_item"
                 android:textColor="@color/white"
+                android:textSize="14sp"
                 android:textStyle="bold"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/tvDisplaylatency"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_weight="20"
-                android:fontFamily="@font/museo_san_rounded700"
-                android:gravity="end"
-                android:text="Ms"
-                android:textColor="@color/lightGray"
-                android:textStyle="normal"
-                android:textSize="14sp" />
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="NotSibling" />
 
             <ImageView
-                android:id="@+id/ivDisplaylatencyAngel"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:id="@+id/ivLanguageSelector"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_language" />
+
+            <ImageView
+                android:id="@+id/ivLanguageAngel"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 android:layout_weight="1"
-                android:src="@drawable/ic_angle_small_down" />
+                android:src="@drawable/ic_angle_small_down"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/tvDisplaylatencyInfo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_marginEnd="15dp"
-            android:fontFamily="@font/museo_san_rounded700"
-            android:background="@drawable/background_nav_item_info"
-            android:text="Display latency as signal strength bar or in milliseconds."
-            android:padding="10dp"
-            android:justificationMode="none"
-            android:gravity="fill_horizontal"
-            android:textColor="@color/lightGray"
-            android:textSize="12sp"
-            app:layout_constraintTop_toBottomOf="@+id/llDisplaylatency"
-            tools:layout_editor_absoluteX="97dp" />
-
-        <LinearLayout
-        android:id="@+id/llLanguage"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:layout_marginEnd="15dp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/background_nav_item"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:padding="12dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvDisplaylatencyInfo">
-
-        <ImageView
-            android:id="@+id/ivLanguageIcon"
-            android:layout_width="22dp"
-            android:layout_height="22dp"
-            android:layout_weight="1"
-            android:src="@drawable/ic_language" />
-
-        <TextView
-            android:id="@+id/tvLanguageTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_weight="2"
-            android:fontFamily="@font/museo_san_rounded700"
-            android:text="Language"
-            android:textColor="@color/white"
-            android:textStyle="bold"
-            android:textSize="14sp" />
-
-        <TextView
-            android:id="@+id/tvLanguage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_weight="20"
-            android:fontFamily="@font/museo_san_rounded700"
-            android:gravity="end"
-            android:text="English"
-            android:textColor="@color/lightGray"
-            android:textStyle="normal"
-            android:textSize="14sp" />
-
-        <ImageView
-            android:id="@+id/ivLanguageAngel"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_weight="1"
-            android:src="@drawable/ic_angle_small_down" />
-
-    </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
             android:id="@+id/tvLanguageInfo"
@@ -262,81 +257,81 @@
             android:gravity="fill_horizontal"
             android:textColor="@color/lightGray"
             android:textSize="12sp"
-            app:layout_constraintTop_toBottomOf="@+id/llLanguage"
+            app:layout_constraintTop_toBottomOf="@+id/llLanguageSelector"
             tools:layout_editor_absoluteX="97dp" />
 
-        <LinearLayout
-            android:id="@+id/llAppearance"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_marginEnd="15dp"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/background_nav_item"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:padding="12dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvLanguageInfo">
+        <!--        <LinearLayout-->
+        <!--            android:id="@+id/llAppearance"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginStart="15dp"-->
+        <!--            android:layout_marginEnd="15dp"-->
+        <!--            android:layout_marginTop="20dp"-->
+        <!--            android:background="@drawable/background_nav_item"-->
+        <!--            android:orientation="horizontal"-->
+        <!--            android:gravity="center"-->
+        <!--            android:padding="12dp"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintStart_toStartOf="parent"-->
+        <!--            app:layout_constraintTop_toBottomOf="@+id/tvLanguageInfo">-->
 
-            <ImageView
-                android:id="@+id/ivAppearanceIcon"
-                android:layout_width="22dp"
-                android:layout_height="22dp"
-                android:layout_weight="1"
-                android:src="@drawable/ic_appearance" />
+        <!--            <ImageView-->
+        <!--                android:id="@+id/ivAppearanceIcon"-->
+        <!--                android:layout_width="22dp"-->
+        <!--                android:layout_height="22dp"-->
+        <!--                android:layout_weight="1"-->
+        <!--                android:src="@drawable/ic_appearance" />-->
 
-            <TextView
-                android:id="@+id/tvAppearanceTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_weight="2"
-                android:fontFamily="@font/museo_san_rounded700"
-                android:text="Appearance"
-                android:textColor="@color/white"
-                android:textStyle="bold"
-                android:textSize="14sp" />
+        <!--            <TextView-->
+        <!--                android:id="@+id/tvAppearanceTitle"-->
+        <!--                android:layout_width="wrap_content"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:layout_marginStart="10dp"-->
+        <!--                android:layout_weight="2"-->
+        <!--                android:fontFamily="@font/museo_san_rounded700"-->
+        <!--                android:text="Appearance"-->
+        <!--                android:textColor="@color/white"-->
+        <!--                android:textStyle="bold"-->
+        <!--                android:textSize="14sp" />-->
 
-            <TextView
-                android:id="@+id/tvAppearance"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_weight="20"
-                android:fontFamily="@font/museo_san_rounded700"
-                android:gravity="end"
-                android:text="Dark"
-                android:textColor="@color/lightGray"
-                android:textStyle="normal"
-                android:textSize="14sp" />
+        <!--            <TextView-->
+        <!--                android:id="@+id/tvAppearance"-->
+        <!--                android:layout_width="wrap_content"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:layout_marginStart="10dp"-->
+        <!--                android:layout_weight="20"-->
+        <!--                android:fontFamily="@font/museo_san_rounded700"-->
+        <!--                android:gravity="end"-->
+        <!--                android:text="Dark"-->
+        <!--                android:textColor="@color/lightGray"-->
+        <!--                android:textStyle="normal"-->
+        <!--                android:textSize="14sp" />-->
 
-            <ImageView
-                android:id="@+id/ivAppearanceAngel"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_weight="1"
-                android:src="@drawable/ic_angle_small_down" />
+        <!--            <ImageView-->
+        <!--                android:id="@+id/ivAppearanceAngel"-->
+        <!--                android:layout_width="30dp"-->
+        <!--                android:layout_height="30dp"-->
+        <!--                android:layout_weight="1"-->
+        <!--                android:src="@drawable/ic_angle_small_down" />-->
 
-        </LinearLayout>
+        <!--        </LinearLayout>-->
 
-        <TextView
-            android:id="@+id/tvAppearanceInfo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_marginEnd="15dp"
-            android:fontFamily="@font/museo_san_rounded700"
-            android:background="@drawable/background_nav_item_info"
-            android:text="Light or Dark"
-            android:padding="10dp"
-            android:justificationMode="inter_word"
-            android:gravity="fill_horizontal"
-            android:textColor="@color/lightGray"
-            android:textSize="12sp"
-            app:layout_constraintTop_toBottomOf="@+id/llAppearance"
-            tools:layout_editor_absoluteX="97dp" />
+        <!--        <TextView-->
+        <!--            android:id="@+id/tvAppearanceInfo"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginStart="15dp"-->
+        <!--            android:layout_marginEnd="15dp"-->
+        <!--            android:fontFamily="@font/museo_san_rounded700"-->
+        <!--            android:background="@drawable/background_nav_item_info"-->
+        <!--            android:text="Light or Dark"-->
+        <!--            android:padding="10dp"-->
+        <!--            android:justificationMode="inter_word"-->
+        <!--            android:gravity="fill_horizontal"-->
+        <!--            android:textColor="@color/lightGray"-->
+        <!--            android:textSize="12sp"-->
+        <!--            app:layout_constraintTop_toBottomOf="@+id/llAppearance"-->
+        <!--            tools:layout_editor_absoluteX="97dp" />-->
 
         <LinearLayout
             android:id="@+id/llVersion"
@@ -344,14 +339,14 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:layout_marginEnd="15dp"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="100dp"
             android:background="@drawable/background_nav_item"
             android:orientation="horizontal"
             android:gravity="center"
             android:padding="12dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvAppearanceInfo">
+            app:layout_constraintTop_toBottomOf="@+id/llLanguageSelector">
 
             <TextView
                 android:id="@+id/tvVersionTitle"
@@ -378,11 +373,7 @@
                 android:textStyle="normal"
                 android:textSize="14sp" />
 
-    </LinearLayout>
+        </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
-
-
-
-
