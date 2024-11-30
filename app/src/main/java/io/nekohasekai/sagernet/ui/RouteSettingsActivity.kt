@@ -33,6 +33,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.preference.EditTextPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceDataStore
@@ -50,13 +52,13 @@ import io.nekohasekai.sagernet.database.ProfileManager
 import io.nekohasekai.sagernet.database.RuleEntity
 import io.nekohasekai.sagernet.database.SagerDatabase
 import io.nekohasekai.sagernet.database.preference.OnPreferenceDataStoreChangeListener
+import io.nekohasekai.sagernet.ktx.Logs
 import io.nekohasekai.sagernet.ktx.app
 import io.nekohasekai.sagernet.ktx.onMainDispatcher
 import io.nekohasekai.sagernet.ktx.runOnDefaultDispatcher
 import io.nekohasekai.sagernet.utils.DirectBoot
 import io.nekohasekai.sagernet.utils.PackageCache
 import io.nekohasekai.sagernet.widget.AppListPreference
-import io.nekohasekai.sagernet.widget.ListListener
 import kotlinx.parcelize.Parcelize
 
 @Suppress("UNCHECKED_CAST")
@@ -277,6 +279,32 @@ class RouteSettingsActivity(
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.toolbar)) { v, insets ->
+            val bars = insets.getInsets(
+                WindowInsetsCompat.Type.systemBars()
+                        or WindowInsetsCompat.Type.displayCutout()
+            )
+            v.updatePadding(
+                top = bars.top,
+                left = bars.left,
+                right = bars.right,
+            )
+            WindowInsetsCompat.CONSUMED
+        }
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.settings)) { v, insets ->
+            val bars = insets.getInsets(
+                WindowInsetsCompat.Type.systemBars()
+                        or WindowInsetsCompat.Type.displayCutout()
+            )
+            v.updatePadding(
+                left = bars.left,
+                right = bars.right,
+                bottom = bars.bottom,
+            )
+            WindowInsetsCompat.CONSUMED
+        }
+
         setSupportActionBar(findViewById(R.id.toolbar))
         supportActionBar?.apply {
             setTitle(R.string.cag_route)
@@ -383,21 +411,23 @@ class RouteSettingsActivity(
 
     class MyPreferenceFragmentCompat : PreferenceFragmentCompat() {
 
-        lateinit var activity: RouteSettingsActivity
+        var activity: RouteSettingsActivity? = null
 
         override fun onCreatePreferencesFix(savedInstanceState: Bundle?, rootKey: String?) {
             preferenceManager.preferenceDataStore = DataStore.profileCacheStore
-            activity.apply {
-                createPreferences(savedInstanceState, rootKey)
+            try {
+                activity = (requireActivity() as RouteSettingsActivity).apply {
+                    createPreferences(savedInstanceState, rootKey)
+                }
+            } catch (e: Exception) {
+                Logs.w(e)
             }
         }
 
         override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
             super.onViewCreated(view, savedInstanceState)
 
-            ViewCompat.setOnApplyWindowInsetsListener(listView, ListListener)
-
-            activity.apply {
+            activity?.apply {
                 viewCreated(view, savedInstanceState)
             }
         }
@@ -416,7 +446,7 @@ class RouteSettingsActivity(
             }
             R.id.action_apply -> {
                 runOnDefaultDispatcher {
-                    activity.saveAndExit()
+                    activity?.saveAndExit()
                 }
                 true
             }
@@ -424,7 +454,7 @@ class RouteSettingsActivity(
         }
 
         override fun onDisplayPreferenceDialog(preference: Preference) {
-            activity.apply {
+            activity?.apply {
                 if (displayPreferenceDialog(preference)) return
             }
             super.onDisplayPreferenceDialog(preference)

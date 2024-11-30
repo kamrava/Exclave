@@ -98,7 +98,6 @@
     <string name="group_name">Group name</string>
     <string name="group_update">Update</string>
     <string name="group_subscription_link">Subscription link</string>
-    <string name="group_name_required">Group name required</string>
     <string name="group_create">Create group</string>
     <string name="group_edit">Edit group</string>
     <string name="group_status_empty">Empty group</string>
@@ -145,7 +144,6 @@
     <string name="connection_test_available">Success: HTTPS handshake took %d ms</string>
     <string name="connection_test_available_http">Success: HTTP handshake took %d ms</string>
     <string name="connection_test_error">Failed: %s</string>
-    <string name="connection_test_fail">Network unavailable</string>
     <string name="cag_dns">DNS settings</string>
     <string name="remote_dns">Remote DNS</string>
     <string name="direct_dns">Direct DNS</string>
@@ -166,9 +164,6 @@
     <string name="server_address">Server</string>
     <string name="server_port">Server port</string>
     <string name="username">Username</string>
-    <string name="username_opt">Username (Optional)</string>
-    <string name="password_opt">Password (Optional)</string>
-    <string name="key_opt">Key (Optional)</string>
     <string name="password">Password</string>
     <string name="enc_method">Encryption method</string>
     <string name="protocol">Protocol</string>
@@ -190,7 +185,6 @@
     <string name="kcp_seed">mKCP seed</string>
     <string name="grpc_service_name">gRPC service name</string>
     <string name="url">URL</string>
-    <string name="tls">Use TLS</string>
     <string name="sni">SNI</string>
     <string name="alpn">ALPN</string>
     <string name="certificates">Certificate</string>
@@ -230,19 +224,13 @@
     <string name="route_asset_updated">Updated</string>
     <string name="route_not_asset">Not an asset file: excepted .dat, but %s</string>
     <string name="route_opt_bypass_lan">Bypass private addresses</string>
-    <string name="route_opt_block_ads">Block ads</string>
-    <string name="route_opt_block_analysis">Block analysis</string>
     <string name="domain_strategy">Domain strategy</string>
     <string name="traffic_sniffing">Enable sniffing</string>
     <string name="enable_mux">Enable Mux</string>
     <string name="mux_sum">Mux is designed to reduce TCP handshake latency, not to increase connection throughput. Using Mux to watch videos, and is usually counterproductive for watching videos, downloading, or speed testing.</string>
     <string name="mux_concurrency">Mux concurrent Connections</string>
-    <string name="mux_for_all">Enable Mux for all possibly supported protocols</string>
-    <string name="mux_for_all_sum">Will not be able to connect if the server does not support it.</string>
-    <string name="tcp_keep_alive_interval">TCP keepactive interval</string>
     <string name="proxied_apps">Per-app VPN</string>
     <string name="proxied_apps_summary">Configure VPN mode for selected apps</string>
-    <string name="on">On</string>
     <string name="off">Off</string>
     <string name="search_apps">Search…</string>
     <string name="scanning">Scanning…</string>
@@ -260,7 +248,6 @@
     <string name="service_failed">Failed: </string>
     <string name="stop">Stop</string>
     <string name="stopping">Stopping…</string>
-    <string name="vpn_error">%s</string>
     <string name="vpn_permission_denied">VPN permission denied</string>
     <string name="reboot_required">Failed to start VPN service. You might need to reboot your device.</string>
     <!-- alert category -->
@@ -302,7 +289,6 @@
     <string name="circular_reference">Circular reference</string>
     <string name="circular_reference_sum">Route cannot contain itself.</string>
     <string name="clear_profiles">Clear</string>
-    <string name="action_from_link">From subscription</string>
     <string name="action_export_file">Export to file</string>
     <string name="action_export_clipboard">Export to Clipboard</string>
     <string name="action_export">Export</string>
@@ -330,8 +316,6 @@
         <item quantity="other">%d proxies added</item>
     </plurals>
     <string name="undo">Undo</string>
-    <string name="insecure">Insecure</string>
-    <string name="deprecated">Deprecated</string>
     <!-- tasker -->
     <!-- status -->
     <string name="connecting">Connecting…</string>
@@ -525,7 +509,6 @@
     <string name="route_ssid">Wi-Fi SSID</string>
     <string name="missing_permission">Missing permissions</string>
     <string name="location_disabled">Location disabled</string>
-    <string name="route_need_ssid">Routing rule `%s` requires access to your **Wi-Fi SSID**, but this requires **background location permission** and **location enabled** on Android 8.0 or above</string>
     <string name="route_need_location_enabled">Routing rule `%s` requires access to your **Wi-Fi SSID**, but this requires **location enabled**</string>
     <string name="route_need_background_location">Routing rule `%s` requires access to your **Wi-Fi SSID**, but this requires **background location permission**</string>
     <string name="route_need_fine_location">Routing rule `%s` requires access to your **Wi-Fi SSID**, but this requires **fine location permission**</string>
@@ -547,18 +530,15 @@
     <string name="backup_import_summary">Importing will overwrite existing data.</string>
     <string name="backup_importing">Importing…</string>
     <string name="use_local_dns_as_direct_dns">Use system DNS as direct DNS</string>
-
     <string name="tasker_settings">Tasker settings</string>
     <string name="tasker_action">Action</string>
     <string name="tasker_action_start_service">Start service</string>
     <string name="tasker_action_stop_service">Stop service</string>
     <string name="tasker_start_current_profile">Current profile</string>
     <string name="tasker_blurb_start_profile">Start profile %s</string>
-
     <string name="root_ca_provider">Root CA provider</string>
     <string name="root_ca_mozilla">Mozilla</string>
     <string name="root_ca_system">System</string>
-
     <string name="packet_encoding">Packet encoding</string>
     <string name="mtu">MTU</string>
     <string name="experimental_reduced_iv_head_entropy">This is GFWReport\'s proposal for a countermeasure for the random stream like protocol blocking behavior observed on GFW.
@@ -577,7 +557,6 @@
     <string name="reality_spider_x">REALITY SpiderX</string>
     <string name="reality_fingerprint">REALITY uTLS fingerprint</string>
     <string name="shadowtls_v3">ShadowTLS v3</string>
-    <string name="mieru_mux_level">Multiplexing level</string>
     <string name="wireguard_reserved">Reserved</string>
     <string name="shadowsocks_2022_implementation">Shadowsocks 2022 implementation</string>
     <string name="action_copy">Copy</string>
@@ -616,7 +595,7 @@
     <string name="plugin_settings">Plugin settings</string>
     <string name="hysteria2_plugin_settings_sum">These options only apply to plugins.</string>
     <string name="hysteria_enable_port_hopping_experimental">Enable Hysteria port hopping (Experimental)</string>
-    <string name="hysteria_enable_port_hopping_sum">This requires plugins and is incompatible with chain proxy. If disabled, a random port within the port hopping range will be used.</string>
+    <string name="hysteria_enable_port_hopping_sum">This is incompatible with chain proxy. If disabled, a random port within the port hopping range will be used.</string>
     <string name="enable_fragment">Enable TLS Client Hello fragmentation</string>
     <string name="enable_fragment_sum">May help circumvent SNI censorship. This option may get removed in the future.</string>
     <string name="fragment_length">Fragmentation length</string>
@@ -636,5 +615,6 @@
     <string name="cag_splithttp">SplitHTTP settings</string>
     <string name="ech_config">ECH Config</string>
     <string name="ech_doh_server">ECH DoH server</string>
-
+    <string name="splithttp_mode">Mode</string>
+    <string name="splithttp_extra" translatable="false">Extra</string>
 </resources>

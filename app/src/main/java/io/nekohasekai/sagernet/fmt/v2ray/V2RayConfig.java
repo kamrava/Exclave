@@ -281,6 +281,8 @@ public class V2RayConfig {
                     return VLiteUInboundConfigurationObject.class;
                 case "mixed":
                     return MixedInboundConfigurationObject.class;
+                case "wireguard":
+                    return WireGuardInboundConfigurationObject.class;
                 case "shadowsocks-2022":
                     return Shadowsocks2022InboundConfigurationObject.class;
                 case "shadowsocks-2022-multi":
@@ -429,6 +431,7 @@ public class V2RayConfig {
             public String email;
             public String address;
             public Integer port;
+            public String method;
 
         }
 
@@ -478,6 +481,16 @@ public class V2RayConfig {
             public String pass;
 
         }
+
+    }
+
+    public static class WireGuardInboundConfigurationObject implements InboundConfigurationObject {
+
+        public List<String> address;
+        public String secretKey;
+        public Integer mtu;
+        public Integer workers;
+        public List<WireGuardOutboundConfigurationObject.WireGuardPeerObject> peers;
 
     }
 
@@ -922,7 +935,6 @@ public class V2RayConfig {
         public TLSObject tlsSettings;
         public UTLSObject utlsSettings;
         public RealityObject realitySettings;
-        public TcpObject rawSettings;
         public TcpObject tcpSettings;
         public KcpObject kcpSettings;
         public WebSocketObject wsSettings;
@@ -973,7 +985,7 @@ public class V2RayConfig {
 
                 public String type;
                 public String packet;
-                public String delay; // String or Integer
+                public String delay;
 
             }
 
@@ -1023,14 +1035,11 @@ public class V2RayConfig {
 
         public Boolean show;
         public String dest; // String or Integer
-        public String target; // String or Integer
+        public String target; // String or Integer, alias of dest
         public String type;
         public Integer xver;
         public List<String> serverNames;
         public String privateKey;
-        public String minClientVer;
-        public String maxClientVer;
-        public Integer maxTimeDiff;
         public List<String> shortIds;
         public String serverName;
         public String publicKey;
@@ -1172,6 +1181,8 @@ public class V2RayConfig {
         public Boolean ignore_client_bandwidth;
         public Boolean use_udp_extension;
         public OBFSObject obfs;
+        public String hopPorts;
+        public Integer hopInterval;
 
         public static class CongestionObject {
             public String type; // invalid option
@@ -1191,7 +1202,12 @@ public class V2RayConfig {
         public String host;
         public String path;
         public Map<String, String> headers;
-        public Boolean noSSEHeader;
+        public String mode;
+        public String scMaxConcurrentPosts;
+        public String scMaxEachPostBytes;
+        public String scMinPostsIntervalMs;
+        public String xPaddingBytes;
+        public Boolean noGRPCHeader;
         public Boolean useBrowserForwarding;
 
     }

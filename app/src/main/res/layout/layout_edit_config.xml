@@ -2,6 +2,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?attr/colorPrimary"
     android:orientation="vertical">
 
     <include
@@ -9,12 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="@android:color/darker_gray"></LinearLayout>
-
     <FrameLayout
+        android:id="@+id/layout_editor"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">

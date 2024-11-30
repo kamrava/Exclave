@@ -35,10 +35,14 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.core.view.size
+import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -60,6 +64,8 @@ import io.nekohasekai.sagernet.databinding.LayoutProgressListBinding
 import io.nekohasekai.sagernet.fmt.AbstractBean
 import io.nekohasekai.sagernet.fmt.toUniversalLink
 import io.nekohasekai.sagernet.fmt.v2ray.toV2rayN
+import io.nekohasekai.sagernet.fmt.wireguard.toConf
+import io.nekohasekai.sagernet.fmt.wireguard.toV2rayN
 import io.nekohasekai.sagernet.group.GroupUpdater
 import io.nekohasekai.sagernet.group.Protocols
 import io.nekohasekai.sagernet.group.RawUpdater
@@ -139,6 +145,29 @@ class ConfigurationFragment @JvmOverloads constructor(
             toolbar.setNavigationOnClickListener {
                 requireActivity().finish()
             }
+        }
+        ViewCompat.setOnApplyWindowInsetsListener(toolbar) { v, insets ->
+            val bars = insets.getInsets(
+                WindowInsetsCompat.Type.systemBars()
+                        or WindowInsetsCompat.Type.displayCutout()
+            )
+            v.updatePadding(
+                top = bars.top,
+                left = bars.left,
+                right = bars.right,
+            )
+            WindowInsetsCompat.CONSUMED
+        }
+        ViewCompat.setOnApplyWindowInsetsListener(view.findViewById(R.id.group_tab)) { v, insets ->
+            val bars = insets.getInsets(
+                WindowInsetsCompat.Type.systemBars()
+                        or WindowInsetsCompat.Type.displayCutout()
+            )
+            v.updatePadding(
+                left = bars.left,
+                right = bars.right,
+            )
+            WindowInsetsCompat.CONSUMED
         }
 
         val searchView = toolbar.findViewById<SearchView>(R.id.action_search)
@@ -1073,6 +1102,12 @@ class ConfigurationFragment @JvmOverloads constructor(
                     }
                 }
 
+                try {
+                    requireActivity()
+                } catch (e: Exception) {
+                    Logs.w(e)
+                    return@runOnDefaultDispatcher
+                }
                 val runFunc = if (now) requireActivity()::runOnUiThread else groupPager::post
                 runFunc {
                     groupList = newGroupList
@@ -1282,6 +1317,18 @@ class ConfigurationFragment @JvmOverloads constructor(
             if (!::proxyGroup.isInitialized) return
 
             configurationListView = view.findViewById(R.id.configuration_list)
+            ViewCompat.setOnApplyWindowInsetsListener(configurationListView) { v, insets ->
+                val bars = insets.getInsets(
+                    WindowInsetsCompat.Type.systemBars()
+                            or WindowInsetsCompat.Type.displayCutout()
+                )
+                v.updatePadding(
+                    left = bars.left + dp2px(4),
+                    right = bars.right + dp2px(4),
+                    bottom = bars.bottom + dp2px(4),
+                )
+                WindowInsetsCompat.CONSUMED
+            }
             layoutManager = FixedLinearLayoutManager(configurationListView)
             configurationListView.layoutManager = layoutManager
             adapter = ConfigurationAdapter()
@@ -1740,6 +1787,7 @@ class ConfigurationFragment @JvmOverloads constructor(
 
                 editButton.isGone = parent.select
                 deleteButton.isGone = parent.select
+                shareButton.isGone = parent.select
 
                 runOnDefaultDispatcher {
                     val selected = (parent.selectedItem?.id
@@ -1755,7 +1803,7 @@ class ConfigurationFragment @JvmOverloads constructor(
                         val popup = PopupMenu(requireContext(), anchor)
                         popup.menuInflater.inflate(R.menu.profile_share_menu, popup.menu)
 
-                        if (proxyEntity.vmessBean == null) {
+                        if (proxyEntity.vmessBean == null && proxyEntity.wgBean == null) {
                             popup.menu.findItem(R.id.action_group_qr).subMenu?.removeItem(R.id.action_v2rayn_qr)
                             popup.menu.findItem(R.id.action_group_clipboard).subMenu?.removeItem(R.id.action_v2rayn_clipboard)
                         }
@@ -1765,7 +1813,7 @@ class ConfigurationFragment @JvmOverloads constructor(
                                 popup.menu.removeItem(R.id.action_group_qr)
                                 popup.menu.removeItem(R.id.action_group_clipboard)
                             }
-                            !proxyEntity.haveStandardLink() -> {
+                            proxyEntity.wgBean == null && !proxyEntity.haveStandardLink() -> {
                                 popup.menu.findItem(R.id.action_group_qr).subMenu?.removeItem(R.id.action_standard_qr)
                                 popup.menu.findItem(R.id.action_group_clipboard).subMenu?.removeItem(
                                     R.id.action_standard_clipboard
@@ -1773,7 +1821,7 @@ class ConfigurationFragment @JvmOverloads constructor(
                             }
                         }
 
-                        if (proxyEntity.brookBean != null) {
+                        if (proxyEntity.brookBean != null || proxyEntity.shadowtlsBean != null) {
                             popup.menu.removeItem(R.id.action_group_configuration)
                         }
 
@@ -1810,14 +1858,14 @@ class ConfigurationFragment @JvmOverloads constructor(
             override fun onMenuItemClick(item: MenuItem): Boolean {
                 try {
                     when (item.itemId) {
-                        R.id.action_standard_qr -> showCode(entity.toLink()!!)
-                        R.id.action_standard_clipboard -> export(entity.toLink()!!)
+                        R.id.action_standard_qr -> if (entity.wgBean != null) showCode(entity.wgBean?.toConf()!!) else showCode(entity.toLink()!!)
+                        R.id.action_standard_clipboard -> if (entity.wgBean != null) export(entity.wgBean?.toConf()!!) else export(entity.toLink()!!)
                         R.id.action_universal_qr -> showCode(entity.requireBean().toUniversalLink())
                         R.id.action_universal_clipboard -> export(
                             entity.requireBean().toUniversalLink()
                         )
-                        R.id.action_v2rayn_qr -> showCode(entity.vmessBean!!.toV2rayN())
-                        R.id.action_v2rayn_clipboard -> export(entity.vmessBean!!.toV2rayN())
+                        R.id.action_v2rayn_qr -> showCode(entity.vmessBean?.toV2rayN() ?: entity.wgBean?.toV2rayN() ?: error("unsupported"))
+                        R.id.action_v2rayn_clipboard -> export(entity.vmessBean?.toV2rayN() ?: entity.wgBean?.toV2rayN() ?: error("unsupported"))
                         R.id.action_config_export_clipboard -> export(entity.exportConfig().first)
                         R.id.action_config_export_file -> {
                             val cfg = entity.exportConfig()

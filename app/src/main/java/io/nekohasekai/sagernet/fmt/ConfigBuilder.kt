@@ -103,7 +103,12 @@ import io.nekohasekai.sagernet.fmt.v2ray.VLESSBean
 import io.nekohasekai.sagernet.fmt.v2ray.VMessBean
 import io.nekohasekai.sagernet.fmt.wireguard.WireGuardBean
 import io.nekohasekai.sagernet.ktx.app
+import io.nekohasekai.sagernet.ktx.getAny
+import io.nekohasekai.sagernet.ktx.getBoolean
+import io.nekohasekai.sagernet.ktx.getInteger
+import io.nekohasekai.sagernet.ktx.getString
 import io.nekohasekai.sagernet.ktx.isIpAddress
+import io.nekohasekai.sagernet.ktx.isValidHysteriaMultiPort
 import io.nekohasekai.sagernet.ktx.joinHostPort
 import io.nekohasekai.sagernet.ktx.listByLineOrComma
 import io.nekohasekai.sagernet.ktx.mkPort
@@ -160,9 +165,9 @@ fun buildV2RayConfig(
             val beans = SagerDatabase.proxyDao.getEntities(bean.proxies)
             val beansMap = beans.associateBy { it.id }
             val beanList = ArrayList<ProxyEntity>()
-            for (proxyId in bean.proxies) {
+            for ((index, proxyId) in bean.proxies.withIndex()) {
                 val item = beansMap[proxyId] ?: continue
-                if (!item.requireBean().canMapping()) error("Some configurations are incompatible with chain.")
+                if (!item.requireBean().canMapping() && index != 0) error("Some configurations are incompatible with chain.")
                 beanList.addAll(item.resolveChain())
             }
             return beanList.asReversed()
@@ -857,6 +862,41 @@ fun buildV2RayConfig(
                                                 if (bean.path.isNotBlank()) {
                                                     path = bean.path
                                                 }
+                                                if (bean.splithttpMode != "auto") {
+                                                    mode = bean.splithttpMode
+                                                }
+                                                if (bean.splithttpExtra.isNotBlank()) {
+                                                    JSONObject(bean.splithttpExtra).also { extra ->
+                                                        // fuck RPRX `extra`
+                                                        extra.getInteger("scMaxConcurrentPosts")?.also {
+                                                            scMaxConcurrentPosts = it.toString()
+                                                        } ?: extra.getString("scMaxConcurrentPosts")?.also {
+                                                            scMaxConcurrentPosts = it
+                                                        }
+                                                        extra.getInteger("scMaxEachPostBytes")?.also {
+                                                            scMaxEachPostBytes = it.toString()
+                                                        } ?: extra.getString("scMaxEachPostBytes")?.also {
+                                                            scMaxEachPostBytes = it
+                                                        }
+                                                        extra.getInteger("scMinPostsIntervalMs")?.also {
+                                                            scMinPostsIntervalMs = it.toString()
+                                                        } ?: extra.getString("scMinPostsIntervalMs")?.also {
+                                                            scMinPostsIntervalMs = it
+                                                        }
+                                                        extra.getInteger("xPaddingBytes")?.also {
+                                                            scMinPostsIntervalMs = it.toString()
+                                                        } ?: extra.getString("xPaddingBytes")?.also {
+                                                            scMinPostsIntervalMs = it
+                                                        }
+                                                        extra.getBoolean("noGRPCHeader")?.also {
+                                                            noGRPCHeader = it
+                                                        }
+                                                        @Suppress("UNCHECKED_CAST")
+                                                        (extra.getAny("headers") as? Map<String, String>)?.also {
+                                                            headers = it
+                                                        }
+                                                    }
+                                                }
                                                 if (bean.shUseBrowserForwarder) {
                                                     useBrowserForwarding = true
                                                     requireSh = true
@@ -971,7 +1011,7 @@ fun buildV2RayConfig(
                                             if (bean.peerPreSharedKey.isNotBlank()) {
                                                 preSharedKey = bean.peerPreSharedKey
                                             }
-                                            endpoint = joinHostPort(bean.finalAddress, bean.finalPort)
+                                            endpoint = joinHostPort(bean.serverAddress, bean.serverPort)
                                         })
                                     })
                                 if (currentDomainStrategy == "AsIs") {
@@ -1022,6 +1062,10 @@ fun buildV2RayConfig(
                                                 type = "salamander"
                                                 password = bean.obfs
                                             }
+                                        }
+                                        if (bean.serverPorts.isValidHysteriaMultiPort() && DataStore.hysteriaEnablePortHopping) {
+                                            hopPorts = bean.serverPorts
+                                            hopInterval = bean.hopInterval
                                         }
                                     }
                                     tlsSettings = TLSObject().apply {
@@ -1539,7 +1583,7 @@ fun buildV2RayConfig(
         }
 
         var hasDnsTagDirect = false
-        if (bypassDomain.isNotEmpty()) {
+        if (bypassDomain.isNotEmpty() || bypassDomainSkipFakeDns.isNotEmpty() || bootstrapDomain.isNotEmpty()) {
             dns.servers.addAll(remoteDns.map {
                 DnsObject.StringOrServerObject().apply {
                     valueY = DnsObject.ServerObject().apply {
@@ -1779,7 +1823,7 @@ fun buildCustomConfig(proxy: ProxyEntity, port: Int): V2rayBuildResult {
         })
     }
 
-    var requireWs = false
+    /* var requireWs = false
     var wsPort = 0
     if (config.containsKey("browserForwarder")) {
         config["browserForwarder"] = JSONObject(gson.toJson(BrowserForwarderObject().apply {
@@ -1799,7 +1843,7 @@ fun buildCustomConfig(proxy: ProxyEntity, port: Int): V2rayBuildResult {
             listenPort = mkPort()
             shPort = listenPort
         }))
-    }
+    } */
 
     val outbounds = try {
         config.getJSONArray("outbounds")?.filterIsInstance<JSONObject>()?.map { it ->
@@ -1854,10 +1898,10 @@ fun buildCustomConfig(proxy: ProxyEntity, port: Int): V2rayBuildResult {
     return V2rayBuildResult(
         config.toStringPretty(),
         emptyList(),
-        requireWs,
-        wsPort,
-        requireSh,
-        shPort,
+        false, // requireWs
+        0, // wsPort
+        false, // requireSh
+        0, // shPort
         outboundTags,
         outboundTags,
         emptyMap(),

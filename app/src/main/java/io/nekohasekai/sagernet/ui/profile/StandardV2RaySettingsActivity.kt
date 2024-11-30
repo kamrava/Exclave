@@ -127,6 +127,8 @@ abstract class StandardV2RaySettingsActivity : ProfileSettingsActivity<StandardV
         DataStore.serverQuicSecurity = quicSecurity
         DataStore.serverWsMaxEarlyData = wsMaxEarlyData
         DataStore.serverEarlyDataHeaderName = earlyDataHeaderName
+        DataStore.serverSplithttpMode = splithttpMode
+        DataStore.serverSplithttpExtra = splithttpExtra
         DataStore.serverUTLSFingerprint = utlsFingerprint
         DataStore.serverEchConfig = echConfig
         DataStore.serverEchDohServer = echDohServer
@@ -211,6 +213,8 @@ abstract class StandardV2RaySettingsActivity : ProfileSettingsActivity<StandardV
         quicSecurity = DataStore.serverQuicSecurity
         wsMaxEarlyData = DataStore.serverWsMaxEarlyData
         earlyDataHeaderName = DataStore.serverEarlyDataHeaderName
+        splithttpMode = DataStore.serverSplithttpMode
+        splithttpExtra = DataStore.serverSplithttpExtra
         utlsFingerprint = DataStore.serverUTLSFingerprint
         echConfig = DataStore.serverEchConfig
         echDohServer = DataStore.serverEchDohServer
@@ -280,6 +284,7 @@ abstract class StandardV2RaySettingsActivity : ProfileSettingsActivity<StandardV
 
     lateinit var wsCategory: PreferenceCategory
     lateinit var splithttpCategory: PreferenceCategory
+    lateinit var splithttpMode: SimpleMenuPreference
     lateinit var ssExperimentsCategory: PreferenceCategory
 
     lateinit var plugin: PluginPreference
@@ -326,6 +331,10 @@ abstract class StandardV2RaySettingsActivity : ProfileSettingsActivity<StandardV
         realitySpiderX = findPreference(Key.SERVER_REALITY_SPIDER_X)!!
         realityFingerprint = findPreference(Key.SERVER_REALITY_FINGERPRINT)!!
 
+        realityPublicKey.apply {
+            summaryProvider = PasswordSummaryProvider
+        }
+
         hy2UpMbps = findPreference(Key.SERVER_UPLOAD_SPEED)!!
         hy2UpMbps.apply {
             setOnBindEditTextListener(EditTextPreferenceModifiers.Number)
@@ -351,6 +360,7 @@ abstract class StandardV2RaySettingsActivity : ProfileSettingsActivity<StandardV
 
         wsCategory = findPreference(Key.SERVER_WS_CATEGORY)!!
         splithttpCategory = findPreference(Key.SERVER_SH_CATEGORY)!!
+        splithttpMode = findPreference(Key.SERVER_SPLITHTTP_MODE)!!
 
         when (bean) {
             is VLESSBean -> {
@@ -530,6 +540,9 @@ abstract class StandardV2RaySettingsActivity : ProfileSettingsActivity<StandardV
 
         wsCategory.isVisible = isWS
         splithttpCategory.isVisible = isSplitHTTP
+        if (splithttpMode.value !in resources.getStringArray(R.array.splithttp_mode_value)) {
+            splithttpMode.value = resources.getStringArray(R.array.splithttp_mode_value)[0]
+        }
 
         when (network) {
             "tcp" -> {

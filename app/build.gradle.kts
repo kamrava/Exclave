@@ -1,7 +1,7 @@
 plugins {
     id("com.android.application")
     id("kotlin-android")
-    id("com.google.devtools.ksp") version "2.0.21-1.0.25"
+    id("com.google.devtools.ksp") version "2.1.0-1.0.29"
     id("kotlin-parcelize")
     id("com.google.protobuf")
     id("com.google.gms.google-services")
@@ -70,27 +70,27 @@ dependencies {
     implementation(project(":library:termux:terminal-emulator"))
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0")
-    implementation("androidx.core:core-ktx:1.13.1")
+    implementation("androidx.core:core-ktx:1.15.0")
     implementation("androidx.activity:activity-ktx:1.9.3")
-    implementation("androidx.fragment:fragment-ktx:1.8.4")
+    implementation("androidx.fragment:fragment-ktx:1.8.5")
     implementation("androidx.browser:browser:1.8.0")
-    implementation("androidx.camera:camera-view:1.4.0-rc01")
-    implementation("androidx.camera:camera-lifecycle:1.4.0-rc01")
-    implementation("androidx.camera:camera-camera2:1.4.0-rc01")
+    implementation("androidx.camera:camera-view:1.4.0")
+    implementation("androidx.camera:camera-lifecycle:1.4.0")
+    implementation("androidx.camera:camera-camera2:1.4.0")
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
-    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-    implementation("androidx.navigation:navigation-fragment-ktx:2.8.3")
-    implementation("androidx.navigation:navigation-ui-ktx:2.8.3")
+    implementation("androidx.constraintlayout:constraintlayout:2.2.0")
+    implementation("androidx.navigation:navigation-fragment-ktx:2.8.4")
+    implementation("androidx.navigation:navigation-ui-ktx:2.8.4")
     implementation("androidx.appcompat:appcompat:1.7.0")
-    implementation("androidx.work:work-runtime-ktx:2.9.1")
-    implementation("androidx.work:work-multiprocess:2.9.1")
+    implementation("androidx.work:work-runtime-ktx:2.10.0")
+    implementation("androidx.work:work-multiprocess:2.10.0")
 
     implementation("com.takisoft.preferencex:preferencex:1.1.0")
     implementation("com.takisoft.preferencex:preferencex-simplemenu:1.1.0")
 
     implementation("com.google.android.material:material:1.12.0")
-    implementation("cn.hutool:hutool-core:5.8.32")
-    implementation("cn.hutool:hutool-json:5.8.32")
+    implementation("cn.hutool:hutool-core:5.8.34")
+    implementation("cn.hutool:hutool-json:5.8.34")
     implementation("com.google.code.gson:gson:2.11.0")
     implementation("com.google.zxing:core:3.5.3")
 
@@ -117,6 +117,6 @@ dependencies {
 
     implementation(project(":library:proto-stub"))
 
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.2")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.3")
 }
 
