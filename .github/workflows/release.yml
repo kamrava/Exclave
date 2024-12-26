@@ -28,8 +28,19 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
-          go-version: 1.23.3
+          go-version: 1.23.4
           cache-dependency-path: "**/go.sum"
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        if: steps.cache.outputs.cache-hit != 'true'
+        with:
+          distribution: 'temurin'
+          java-version: 21
+      - name: Setup Android NDK
+        id: setup-ndk
+        uses: nttld/setup-ndk@v1
+        with:
+          ndk-version: r27c
       - name: LibCore Cache
         id: cache
         uses: actions/cache@v4
@@ -39,9 +50,15 @@ jobs:
           key: ${{ hashFiles('.github/workflows/*', 'bin/lib/core/*', 'libcore_status') }}
       - name: Native Build
         if: steps.cache.outputs.cache-hit != 'true'
+        env:
+          ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
         run: |
-          export ANDROID_NDK_HOME=${ANDROID_NDK_LATEST_HOME}
           ./run lib core
+      - name: Upload LibCore
+        uses: actions/upload-artifact@v4
+        with:
+          path: app/libs/libcore.aar
+          name: "LibCore"
   build:
     name: Gradle Build
     runs-on: ubuntu-latest
@@ -100,7 +117,7 @@ jobs:
           path: artifacts
       - name: Release
         run: |
-          wget -O ghr.tar.gz https://github.com/tcnksm/ghr/releases/download/v0.16.2/ghr_v0.16.2_linux_amd64.tar.gz
+          wget -O ghr.tar.gz https://github.com/tcnksm/ghr/releases/download/v0.17.0/ghr_v0.17.0_linux_amd64.tar.gz
           tar -xvf ghr.tar.gz
           mv ghr*linux_amd64/ghr .
           mkdir apks

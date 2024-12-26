@@ -41,6 +41,7 @@ import com.danielstone.materialaboutlibrary.model.MaterialAboutCard
 import com.danielstone.materialaboutlibrary.model.MaterialAboutList
 import io.nekohasekai.sagernet.BuildConfig
 import io.nekohasekai.sagernet.R
+import io.nekohasekai.sagernet.database.DataStore
 import io.nekohasekai.sagernet.databinding.LayoutAboutBinding
 import io.nekohasekai.sagernet.fmt.PluginEntry
 import io.nekohasekai.sagernet.ktx.*
@@ -123,6 +124,9 @@ class AboutFragment : ToolbarFragment(R.layout.layout_about) {
                                 "https://github.com/dyhkwong/Exclave/releases"
                             )
                         }
+                        .setOnLongClickAction {
+                            DataStore.enableDebug = !DataStore.enableDebug
+                        }
                         .build())
                     .addItem(MaterialAboutActionItem.Builder()
                         .icon(R.drawable.ic_baseline_airplanemode_active_24)
@@ -178,7 +182,7 @@ class AboutFragment : ToolbarFragment(R.layout.layout_about) {
                         }
                         addItem(MaterialAboutActionItem.Builder()
                             .icon(R.drawable.ic_baseline_card_giftcard_24)
-                            .text(R.string.donate)
+                            .text(R.string.donate_to_original_author)
                             .subText(R.string.donate_info)
                             .setOnClickAction {
                                 requireContext().launchCustomTab(

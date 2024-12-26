@@ -88,6 +88,8 @@ object Key {
     const val RULES_GEOSITE_URL = "rulesGeositeUrl"
     const val RULES_GEOIP_URL = "rulesGeoipUrl"
     const val ENABLE_LOG = "enableLog"
+    const val ENABLE_DEBUG = "enableDebug"
+    const val PPROF_SERVER = "pprofServer"
 
     const val ALWAYS_SHOW_ADDRESS = "alwaysShowAddress"
     const val SHOW_GROUP_NAME = "showGroupName"
@@ -95,6 +97,7 @@ object Key {
     const val SHADOWSOCKS_2022_IMPLEMENTATION = "shadowsocks2022Implementation"
     const val PROVIDER_HYSTERIA2 = "providerHysteria2"
     const val HYSTERIA_ENABLE_PORT_HOPPING = "hysteriaEnablePortHopping"
+    const val PROVIDER_TUIC5 = "providerTuic5"
     const val PROVIDER_ROOT_CA = "providerRootCA"
 
     const val TUN_IMPLEMENTATION = "tunImplementation"
@@ -263,6 +266,10 @@ object Key {
     const val SUBSCRIPTION_USER_AGENT = "subscriptionUserAgent"
     const val SUBSCRIPTION_AUTO_UPDATE = "subscriptionAutoUpdate"
     const val SUBSCRIPTION_AUTO_UPDATE_DELAY = "subscriptionAutoUpdateDelay"
+
+    const val EDITING_ASSET_NAME = "editingAssetName"
+    const val ASSET_NAME = "assetName"
+    const val ASSET_URL = "assetUrl"
 
     const val TASKER_ACTION = "taskerAction"
     const val TASKER_PROFILE = "taskerProfile"

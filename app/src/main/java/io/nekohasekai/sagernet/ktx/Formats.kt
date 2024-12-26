@@ -29,8 +29,9 @@ import io.nekohasekai.sagernet.fmt.http.parseHttp
 import io.nekohasekai.sagernet.fmt.hysteria.parseHysteria
 import io.nekohasekai.sagernet.fmt.hysteria2.parseHysteria2
 import io.nekohasekai.sagernet.fmt.juicity.parseJuicity
+import io.nekohasekai.sagernet.fmt.mieru.parseMieru
 import io.nekohasekai.sagernet.fmt.naive.parseNaive
-import io.nekohasekai.sagernet.fmt.parseUniversal
+import io.nekohasekai.sagernet.fmt.parseBackupLink
 import io.nekohasekai.sagernet.fmt.shadowsocks.parseShadowsocks
 import io.nekohasekai.sagernet.fmt.shadowsocksr.parseShadowsocksR
 import io.nekohasekai.sagernet.fmt.socks.parseSOCKS
@@ -66,11 +67,12 @@ fun parseProxies(text: String): List<AbstractBean> {
         if (startsWith("exclave://")) {
             Logs.d("Try parse universal link: $this")
             runCatching {
-                entities.add(parseUniversal(this))
+                entities.add(parseBackupLink(this))
             }.onFailure {
                 Logs.w(it)
             }
-        } else if (startsWith("socks://") || startsWith("socks4://") || startsWith("socks4a://") || startsWith("socks5://")) {
+        } else if (startsWith("socks://") || startsWith("socks4://") || startsWith("socks4a://") ||
+            startsWith("socks5://") || startsWith("socks5h://")) {
             Logs.d("Try parse socks link: $this")
             runCatching {
                 entities.add(parseSOCKS(this))
@@ -158,6 +160,13 @@ fun parseProxies(text: String): List<AbstractBean> {
             Logs.d("Try parse wireguard link: $this")
             runCatching {
                 entities.add(parseV2rayNWireGuard(this))
+            }.onFailure {
+                Logs.w(it)
+            }
+        } else if (startsWith("mierus://")) {
+            Logs.d("Try parse mieru link: $this")
+            runCatching {
+                entities.add(parseMieru(this))
             }.onFailure {
                 Logs.w(it)
             }
