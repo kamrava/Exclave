@@ -29,7 +29,6 @@ import androidx.activity.result.component2
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.whenCreated
 import androidx.preference.EditTextPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceCategory
@@ -58,6 +57,7 @@ import io.nekohasekai.sagernet.ktx.app
 import io.nekohasekai.sagernet.ktx.listenForPackageChanges
 import io.nekohasekai.sagernet.ktx.readableMessage
 import io.nekohasekai.sagernet.ktx.runOnDefaultDispatcher
+import io.nekohasekai.sagernet.ktx.runOnMainDispatcher
 import io.nekohasekai.sagernet.ktx.showAllowingStateLoss
 import kotlinx.coroutines.launch
 
@@ -141,7 +141,7 @@ abstract class StandardV2RaySettingsActivity : ProfileSettingsActivity<StandardV
         DataStore.serverUploadSpeed = hy2UpMbps
         DataStore.serverDownloadSpeed = hy2DownMbps
         DataStore.serverPassword = hy2Password
-        DataStore.serverObfs = hy2ObfsPassword
+        // DataStore.serverObfs = hy2ObfsPassword
 
         DataStore.serverMekyaKcpSeed = mekyaKcpSeed
         DataStore.serverMekyaKcpHeaderType = mekyaKcpHeaderType
@@ -227,7 +227,7 @@ abstract class StandardV2RaySettingsActivity : ProfileSettingsActivity<StandardV
         hy2UpMbps = DataStore.serverUploadSpeed
         hy2DownMbps = DataStore.serverDownloadSpeed
         hy2Password = DataStore.serverPassword
-        hy2ObfsPassword = DataStore.serverObfs
+        // hy2ObfsPassword = DataStore.serverObfs
 
         mekyaKcpSeed = DataStore.serverMekyaKcpSeed
         mekyaKcpHeaderType = DataStore.serverMekyaKcpHeaderType
@@ -273,7 +273,7 @@ abstract class StandardV2RaySettingsActivity : ProfileSettingsActivity<StandardV
     lateinit var hy2UpMbps: EditTextPreference
     lateinit var hy2DownMbps: EditTextPreference
     lateinit var hy2Password: EditTextPreference
-    lateinit var hy2ObfsPassword: EditTextPreference
+    // lateinit var hy2ObfsPassword: EditTextPreference
 
     lateinit var mekyaKcpSeed: EditTextPreference
     lateinit var mekyaKcpHeaderType: SimpleMenuPreference
@@ -349,10 +349,10 @@ abstract class StandardV2RaySettingsActivity : ProfileSettingsActivity<StandardV
             title = resources.getString(R.string.hysteria2_password)
             dialogTitle = resources.getString(R.string.hysteria2_password)
         }
-        hy2ObfsPassword = findPreference(Key.SERVER_OBFS)!!
+        /* hy2ObfsPassword = findPreference(Key.SERVER_OBFS)!!
         hy2ObfsPassword.apply {
             summaryProvider = PasswordSummaryProvider
-        }
+        } */
 
         mekyaKcpSeed = findPreference(Key.SERVER_MEKYA_KCP_SEED)!!
         mekyaKcpHeaderType = findPreference(Key.SERVER_MEKYA_KCP_HEADER_TYPE)!!
@@ -361,6 +361,18 @@ abstract class StandardV2RaySettingsActivity : ProfileSettingsActivity<StandardV
         wsCategory = findPreference(Key.SERVER_WS_CATEGORY)!!
         splithttpCategory = findPreference(Key.SERVER_SH_CATEGORY)!!
         splithttpMode = findPreference(Key.SERVER_SPLITHTTP_MODE)!!
+
+        findPreference<SwitchPreference>(Key.SERVER_WS_BROWSER_FORWARDING)!!.setOnPreferenceChangeListener { _, newValue ->
+            if (newValue as Boolean) {
+                runOnMainDispatcher {
+                    MaterialAlertDialogBuilder(this@StandardV2RaySettingsActivity)
+                        .setMessage(getString(R.string.browser_forwarder_hint, packageName))
+                        .setPositiveButton(android.R.string.ok, null)
+                        .show()
+                }
+            }
+            true
+        }
 
         when (bean) {
             is VLESSBean -> {
@@ -388,7 +400,7 @@ abstract class StandardV2RaySettingsActivity : ProfileSettingsActivity<StandardV
                 encryption.setEntryValues(R.array.enc_method_value)
                 val sev = resources.getStringArray(R.array.enc_method_value)
                 if (encryption.value !in sev) {
-                    encryption.value = "aes-256-gcm"
+                    encryption.value = "none"
                 }
             }
             else -> {
@@ -521,7 +533,7 @@ abstract class StandardV2RaySettingsActivity : ProfileSettingsActivity<StandardV
         hy2UpMbps.isVisible = isHysteria2
         hy2DownMbps.isVisible = isHysteria2
         hy2Password.isVisible = isHysteria2
-        hy2ObfsPassword.isVisible = isHysteria2
+        // hy2ObfsPassword.isVisible = isHysteria2
         quicSecurity.isVisible = isQUIC
         mekyaKcpSeed.isVisible = isMekya
         mekyaKcpHeaderType.isVisible = isMekya

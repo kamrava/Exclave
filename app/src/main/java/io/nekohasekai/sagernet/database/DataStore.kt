@@ -131,6 +131,8 @@ object DataStore : OnPreferenceDataStoreChangeListener {
     var rulesGeositeUrl by configurationStore.string(Key.RULES_GEOSITE_URL) { "https://github.com/v2fly/domain-list-community/releases/latest/download/dlc.dat" }
     var rulesGeoipUrl by configurationStore.string(Key.RULES_GEOIP_URL) { "https://github.com/v2fly/geoip/releases/latest/download/geoip.dat" }
     var enableLog by configurationStore.boolean(Key.ENABLE_LOG) { BuildConfig.DEBUG }
+    var enableDebug by configurationStore.boolean(Key.ENABLE_DEBUG) { BuildConfig.DEBUG }
+    var pprofServer by configurationStore.string(Key.PPROF_SERVER)
     var enablePcap by configurationStore.boolean(Key.ENABLE_PCAP)
     var allowAppsBypassVpn by configurationStore.boolean(Key.ALLOW_APPS_BYPASS_VPN)
 
@@ -224,6 +226,7 @@ object DataStore : OnPreferenceDataStoreChangeListener {
 
     var shadowsocks2022Implementation by configurationStore.stringToInt(Key.SHADOWSOCKS_2022_IMPLEMENTATION)
     var providerHysteria2 by configurationStore.stringToInt(Key.PROVIDER_HYSTERIA2) { 1 }
+    var providerTuic5 by configurationStore.stringToInt(Key.PROVIDER_TUIC5)
     var hysteriaEnablePortHopping by configurationStore.boolean(Key.HYSTERIA_ENABLE_PORT_HOPPING)
     var providerRootCA by configurationStore.stringToInt(Key.PROVIDER_ROOT_CA)
 
@@ -371,6 +374,10 @@ object DataStore : OnPreferenceDataStoreChangeListener {
     var subscriptionUserAgent by profileCacheStore.string(Key.SUBSCRIPTION_USER_AGENT)
     var subscriptionAutoUpdate by profileCacheStore.boolean(Key.SUBSCRIPTION_AUTO_UPDATE)
     var subscriptionAutoUpdateDelay by profileCacheStore.stringToInt(Key.SUBSCRIPTION_AUTO_UPDATE_DELAY) { 360 }
+
+    var editingAssetName by profileCacheStore.string(Key.EDITING_ASSET_NAME)
+    var assetName by profileCacheStore.string(Key.ASSET_NAME)
+    var assetUrl by profileCacheStore.string(Key.ASSET_URL)
 
     var taskerAction by profileCacheStore.stringToInt(Key.TASKER_ACTION)
     var taskerProfile by profileCacheStore.stringToInt(Key.TASKER_PROFILE)

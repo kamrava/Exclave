@@ -1,6 +1,7 @@
 import cn.hutool.core.codec.Base64
 import com.android.build.api.dsl.*
 import com.android.build.gradle.AbstractAppExtension
+import com.android.build.gradle.internal.api.ApkVariantOutputImpl
 import com.android.build.gradle.internal.api.BaseVariantOutputImpl
 import org.apache.tools.ant.filters.StringInputStream
 import org.gradle.api.JavaVersion
@@ -97,6 +98,7 @@ fun Project.setupCommon(projectName: String) {
         buildTypes {
             getByName("release") {
                 isMinifyEnabled = true
+                vcsInfo.include = false
             }
         }
         compileOptions {
@@ -175,10 +177,15 @@ fun Project.setupAppCommon(projectName: String) {
                     storePassword = keystorePwd
                     keyAlias = alias
                     keyPassword = pwd
+                    enableV3Signing = true
                 }
             }
         } else if (requireFlavor().contains("OssRelease")) {
             return
+        }
+        dependenciesInfo {
+            includeInApk = false
+            includeInBundle = false
         }
         buildTypes {
             val key = signingConfigs.findByName("release")
@@ -209,6 +216,11 @@ fun Project.setupPlugin(projectName: String) {
     val targetAbi = requireTargetAbi()
 
     androidApp.apply {
+        dependenciesInfo {
+            includeInApk = false
+            includeInBundle = false
+        }
+
         this as AbstractAppExtension
 
         buildTypes {
@@ -278,7 +290,6 @@ fun Project.setupPlugin(projectName: String) {
         }
 
         applicationVariants.all {
-
             outputs.all {
                 this as BaseVariantOutputImpl
                 outputFileName = outputFileName.replace(
@@ -296,7 +307,7 @@ fun Project.setupPlugin(projectName: String) {
 fun Project.setupApp() {
     val pkgName = requireMetadata().getProperty("PACKAGE_NAME").trim()
     val verName = requireMetadata().getProperty("VERSION_NAME").trim()
-    val verCode = requireMetadata().getProperty("VERSION_CODE").trim().toInt()
+    val verCode = requireMetadata().getProperty("VERSION_CODE").trim().toInt() * 5
     androidApp.apply {
         defaultConfig {
             applicationId = pkgName
@@ -339,6 +350,15 @@ fun Project.setupApp() {
         }
 
         applicationVariants.all {
+            outputs.forEach { output ->
+                output as ApkVariantOutputImpl
+                when (output.filters.find { it.filterType == "ABI" }?.identifier) {
+                    "arm64-v8a" -> output.versionCodeOverride = verCode + 4
+                    "x86_64" -> output.versionCodeOverride = verCode + 3
+                    "armeabi-v7a" -> output.versionCodeOverride = verCode + 2
+                    "x86" -> output.versionCodeOverride = verCode + 1
+                }
+            }
             outputs.all {
                 this as BaseVariantOutputImpl
                 outputFileName = outputFileName.replace(project.name, "Exclave-$versionName")
@@ -353,8 +373,17 @@ fun Project.setupApp() {
                 requireFlavor().endsWith("Debug")
             }
             doLast {
+                downloadAssets(false)
+            }
+        }
+
+        tasks.register("updateAssets") {
+            outputs.upToDateWhen {
+                requireFlavor().endsWith("Debug")
+            }
+            doLast {
                 downloadRootCAList()
-                downloadAssets()
+                downloadAssets(true)
             }
         }
     }

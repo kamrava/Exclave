@@ -46,6 +46,7 @@ import io.nekohasekai.sagernet.ktx.app
 import io.nekohasekai.sagernet.ktx.getColorAttr
 import io.nekohasekai.sagernet.ui.SwitchActivity
 import io.nekohasekai.sagernet.utils.Theme
+import io.nekohasekai.sagernet.vpn.DashboardActivity
 
 /**
  * User can customize visibility of notification since Android 8.
@@ -135,11 +136,27 @@ class ServiceNotification(
         .setTicker(service.getString(R.string.forward_success))
         .setContentTitle(profileName)
         .setOnlyAlertOnce(true)
-        .setContentIntent(SagerNet.configureIntent(service))
+//        .setContentIntent(SagerNet.configureIntent(service))
         .setSmallIcon(R.drawable.unitavpn_ic_service_active)
         .setCategory(NotificationCompat.CATEGORY_SERVICE)
         .setPriority(if (visible) NotificationCompat.PRIORITY_LOW else NotificationCompat.PRIORITY_MIN)
+        .apply {
+            // Create an Intent for DashboardActivity
+            val dashboardIntent = Intent(service, DashboardActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            }
 
+            // Create a PendingIntent for the notification
+            val pendingIntent = PendingIntent.getActivity(
+                service,
+                0,
+                dashboardIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE // Required for Android 12+
+            )
+
+            // Set the PendingIntent for the notification's content intent
+            setContentIntent(pendingIntent)
+        }
     init {
         service as Context
         updateActions()
@@ -177,14 +194,14 @@ class ServiceNotification(
         }.build()
         builder.addAction(closeAction)
 
-        val switchAction = NotificationCompat.Action.Builder(
-            0, service.getString(R.string.action_switch), PendingIntent.getActivity(
-                service, 0, Intent(service, SwitchActivity::class.java), flags
-            )
-        ).apply {
-            setShowsUserInterface(false)
-        }.build()
-        builder.addAction(switchAction)
+//        val switchAction = NotificationCompat.Action.Builder(
+//            0, service.getString(R.string.action_switch), PendingIntent.getActivity(
+//                service, 0, Intent(service, SwitchActivity::class.java), flags
+//            )
+//        ).apply {
+//            setShowsUserInterface(false)
+//        }.build()
+//        builder.addAction(switchAction)
     }
 
     override fun onReceive(context: Context, intent: Intent) {
