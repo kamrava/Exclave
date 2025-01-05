@@ -1,5 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Location of UnitaVPN Strings <START>-->
+    <string name="language_english">English</string>
+    <string name="language_Arabic">العربية</string>
+    <string name="language_German">Deutsch</string>
+    <string name="language_Spanish">Español</string>
+    <string name="language_French">Français</string>
+    <string name="language_Indonesian">Bahasa Indonesia</string>
+    <string name="language_Italian">Italiano</string>
+    <string name="language_Norwegian">Norsk</string>
+    <string name="language_Russian">Русский</string>
+    <string name="language_Turkish">Türkçe</string>
+    <string name="language_Ukrainian">Українська</string>
+    <string name="language_Chinese">中文</string>
+    <string name="language_Taiwanese">中文（繁體）</string>
+    <!-- VPN -->
+    <string name="dashboard_connect">Conectar</string>
+    <string name="premium">Premium</string>
+    <string name="upgrade_service">Mejorar</string>
+    <string name="ping">Ping</string>
+    <string name="preferences">Preferencias</string>
+    <string name="general">General</string>
+    <string name="service_activated_successfully">Servicio %s activado con éxito</string>
+    <string name="service_name_placeholder">Seleccione un servicio</string>
+    <string name="account">Cuenta</string>
+    <string name="about">Acerca de</string>
+    <string name="privacy_policy">Política de privacidad</string>
+    <string name="terms_of_service">Términos de servicio</string>
+    <string name="ultra_fast_connection_speed">Velocidad de conexión ultra rápida</string>
+    <string name="no_time_limit">Sin límite de tiempo</string>
+    <string name="verify">Verificar</string>
+    <string name="verifying">Verificando…</string>
+    <string name="register">Registrar</string>
+    <string name="Checking">Comprobando…</string>
+    <string name="login">Iniciar sesión</string>
+    <string name="welcome">Bienvenido a</string>
+    <string name="expiration_date">Fecha de expiración</string>
+    <string name="try_again">Intentar de nuevo</string>
+    <string name="something_is_wrong">¡Algo está mal!</string>
+    <string name="email_already_registered">Este correo ya está registrado</string>
+
+    <!-- Location of UnitaVPN Strings <END>-->
     <string name="github">Código fuente</string>
     <string name="project">Proyecto</string>
     <string name="app_desc">La cadena de herramientas de proxy universal para Android, escrita en Kotlin.</string>

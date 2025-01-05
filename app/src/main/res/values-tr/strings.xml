@@ -1,5 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Location of UnitaVPN Strings <START>-->
+    <string name="language_english">English</string>
+    <string name="language_Arabic">العربية</string>
+    <string name="language_German">Deutsch</string>
+    <string name="language_Spanish">Español</string>
+    <string name="language_French">Français</string>
+    <string name="language_Indonesian">Bahasa Indonesia</string>
+    <string name="language_Italian">Italiano</string>
+    <string name="language_Norwegian">Norsk</string>
+    <string name="language_Russian">Русский</string>
+    <string name="language_Turkish">Türkçe</string>
+    <string name="language_Ukrainian">Українська</string>
+    <string name="language_Chinese">中文</string>
+    <string name="language_Taiwanese">中文（繁體）</string>
+    <!-- VPN -->
+    <string name="dashboard_connect">Bağlan</string>
+    <string name="premium">Premium</string>
+    <string name="upgrade_service">Yükselt</string>
+    <string name="ping">Ping</string>
+    <string name="preferences">Tercihler</string>
+    <string name="general">Genel</string>
+    <string name="service_activated_successfully">Hizmet %s Başarıyla Aktif Edildi</string>
+    <string name="service_name_placeholder">Bir Hizmet Seçin</string>
+    <string name="account">Hesap</string>
+    <string name="about">Hakkında</string>
+    <string name="privacy_policy">Gizlilik Politikası</string>
+    <string name="terms_of_service">Hizmet Şartları</string>
+    <string name="ultra_fast_connection_speed">Ultra hızlı bağlantı hızı</string>
+    <string name="no_time_limit">Zaman sınırı yok</string>
+    <string name="verify">Doğrula</string>
+    <string name="verifying">Doğrulanıyor…</string>
+    <string name="register">Kayıt Ol</string>
+    <string name="Checking">Kontrol ediliyor…</string>
+    <string name="login">Giriş Yap</string>
+    <string name="welcome">Hoş geldiniz\nto</string>
+    <string name="expiration_date">Son Kullanma Tarihi</string>
+    <string name="try_again">Tekrar Deneyin</string>
+    <string name="something_is_wrong">Bir şeyler yanlış!</string>
+    <string name="email_already_registered">Bu e-posta zaten kayıtlı</string>
+
+    <!-- Location of UnitaVPN Strings <END>-->
     <string name="version_x">Sürüm (%s)</string>
     <string name="app_version">Sürüm</string>
     <string name="github">Kaynak kodu</string>
