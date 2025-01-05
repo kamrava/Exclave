@@ -354,7 +354,6 @@
     <string name="grpc_service_name">Имя службы gRPC</string>
     <string name="kcp_seed">mKCP Seed</string>
     <string name="quic_key">Ключ QUIC</string>
-    <string name="quic_key">Быстрый КЛЮЧ</string>
     <string name="quic_security">Защита протокола QUIC</string>
     <string name="http_path">HTTP-путь</string>
     <string name="http_host">HTTP-хост</string>

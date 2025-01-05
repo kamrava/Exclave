@@ -43,7 +43,7 @@ object LanguageSelectorRepository {
         }
 
         // Set the spinner's selected position to the current language
-        val sharedPreferences = context.getSharedPreferences("app_settings", Context.MODE_PRIVATE)
+        val sharedPreferences = context.getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
         val currentLanguageCode =
             sharedPreferences.getString("language", Locale.getDefault().language)
         val currentLanguageIndex = languageCodes.indexOf(currentLanguageCode)
@@ -77,7 +77,7 @@ object LanguageSelectorRepository {
         context.resources.updateConfiguration(config, context.resources.displayMetrics)
 
         // Save language selection in SharedPreferences
-        val sharedPreferences = context.getSharedPreferences("app_settings", Context.MODE_PRIVATE)
+        val sharedPreferences = context.getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
         sharedPreferences.edit().putString("language", languageCode).apply()
 
         // Restart activity to apply language changes
